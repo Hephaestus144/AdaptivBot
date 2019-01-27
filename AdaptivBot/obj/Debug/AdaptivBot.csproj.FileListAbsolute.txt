@@ -85,3 +85,4 @@ C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\Adaptiv
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.pdb
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.g.cs
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.baml
+C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache

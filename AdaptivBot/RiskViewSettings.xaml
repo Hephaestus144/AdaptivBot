@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdaptivBot"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Risk View Extraction Settings" Height="400" Width="400"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -59,20 +60,82 @@
                 DockPanel.Dock="Top">
                 <Button 
                     Margin="0,0,0,15"
-                    Width="250">
+                    Width="220">
                     Delete Files for Selected Date 
                 </Button>
 
                 <Button 
-                    Margin="0,0,0,15">
+                    Margin="0,0,0,15"
+                    Width="220">
                     Copy Files to UAT
                 </Button>
 
                 <Button 
-                    Margin="0,0,0,15">
+                    Margin="0,0,0,15"
+                    Width="220">
                     Copy Files to Production
                 </Button>
             </StackPanel>
+
+            <DockPanel
+                DockPanel.Dock="Top"
+                Margin="0,0,0,15">
+                <materialDesign:Card
+                    Width="250"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right">
+                    <TextBox
+                        FontSize="12"
+                        Width="250"
+                        VerticalContentAlignment="Center"></TextBox>
+                </materialDesign:Card>
+                <TextBlock
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Margin="0,0,10,0">Base Folder</TextBlock>
+            </DockPanel>
+
+            <DockPanel
+                DockPanel.Dock="Top"
+                Margin="0,0,0,15">
+                <materialDesign:Card
+                    DockPanel.Dock="Right"
+                    Width="250"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        FontSize="12"
+                        Width="250"
+                        VerticalContentAlignment="Center"></TextBox>
+                </materialDesign:Card>
+                <TextBlock
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Margin="0,0,10,0">UAT Folder</TextBlock>
+            </DockPanel>
+
+            <DockPanel
+                DockPanel.Dock="Top"
+                Margin="0,0,0,15">
+                <materialDesign:Card
+                    Width="250"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right">
+                    <TextBox
+                        FontSize="12"
+                        Width="250"
+                        VerticalContentAlignment="Center"></TextBox>
+                </materialDesign:Card>
+                <TextBlock
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Margin="0,0,10,0">Production Folder</TextBlock>
+            </DockPanel>
 
             <StackPanel 
                 DockPanel.Dock="Bottom"
