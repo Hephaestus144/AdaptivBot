@@ -9,7 +9,6 @@ C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\MaterialDesignThemes.Wpf.dll
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\AutoItX3.Assembly.xml
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\MaterialDesignThemes.Wpf.xml
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\MainWindow.g.cs
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\App.g.cs
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot_MarkupCompile.cache
@@ -86,3 +85,9 @@ C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\Adaptiv
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.g.cs
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.baml
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.g.cs
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.baml
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.ResolveComReference.cache
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AlertUpdateUserCredentials.g.cs
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AlertUpdateUserCredentials.baml
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\Interop.SHDocVw.dll

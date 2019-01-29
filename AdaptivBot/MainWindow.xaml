@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:AdaptivBot"
         mc:Ignorable="d"
         Title="Adaptiv Bot Version 0.0" Height="800" Width="800"
@@ -211,7 +212,7 @@
                 IsReadOnly="True"
                 ToolTip="Select Adaptiv environment."
                 SelectedValuePath="Content"
-                SelectionChanged="LoadAdaptivPassword">
+                SelectionChanged="LoadAdaptivCredentials">
                 <ComboBoxItem>Production</ComboBoxItem>
                 <ComboBoxItem>Stress Environment</ComboBoxItem>
                 <ComboBoxItem>T5</ComboBoxItem>
@@ -373,12 +374,16 @@
                 Grid.ColumnSpan="7"
                 BorderThickness="2"/>
 
-        <WebBrowser Name="webBrowser"
+        <WindowsFormsHost
+            Name="webBrowserHost"
             Grid.Row="11"
             Grid.RowSpan="2"
             Grid.Column="1"
             Grid.ColumnSpan="7"
             Margin="2">
-        </WebBrowser>
+            <WindowsFormsHost.Child>
+                <wf:WebBrowser/>
+            </WindowsFormsHost.Child>
+        </WindowsFormsHost>
     </Grid>
 </Window>
