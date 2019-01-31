@@ -85,9 +85,14 @@ C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\Adaptiv
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.g.cs
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.baml
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.g.cs
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\RiskViewSettings.baml
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.ResolveComReference.cache
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AlertUpdateUserCredentials.g.cs
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AlertUpdateUserCredentials.baml
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\Interop.SHDocVw.dll
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\GeneralSettings.g.cs
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\RiskViewSettings.g.cs
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\GeneralSettings.baml
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\RiskViewSettings.baml
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\CustomerLimitUtilisationSettings.g.cs
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\CustomerLimitUtilisationSettings.baml

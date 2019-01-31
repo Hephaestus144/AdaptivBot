@@ -14,6 +14,39 @@ namespace AdaptivBot
               "  window.open('Deal_Home.aspx?List=CRS.Deals.RiskView','cpWork');" +
               "}";
 
+
+        public static string OpenCustomerLimitUtilisationReport
+            = "function OpenCustomerLimitUtilisationReport() " +
+              "{"                                                                 +
+              "  window.open('List_Main.htm?ListID=Reports.RSReports.CustomerLimitUtilisation','cpWork');" +
+              "}";
+
+
+        public static string SelectCustomerLimitUtilisationReport
+            = "function SelectCustomerLimitUtilisationReport()" +
+              "{"                                                                         +
+              "  var element = document.frames['cpWork'].document.getElementById('ReportsCombo');" +
+              "  element.selectedIndex = '1';"                                            +
+              "  element.onchange();"                                                     +
+              "}";
+
+        public static string GenerateCustomerLimitUtilisationReport
+            = "function GenerateCustomerLimitUtilisationReport(date)"                                  +
+              "{"                                                                                      +
+              "  document.getElementById('ReportViewerMain_ctl04_ctl03_txtValue').value=(date);"       +
+              "  document.getElementById('ReportViewerMain_ctl04_ctl05_ddValue').selectedIndex = '1';" +
+              "  document.getElementById('ReportViewerMain_ctl04_ctl07_ddValue').selectedIndex = '1';" +
+              "  document.getElementById('ReportViewerMain_ctl04_ctl00').click();"                     +
+              "}";
+
+
+        public static string ExportCustomerLimitUtilisationReportToCsv
+            = "function ExportCustomerLimitUtilisationReportToCsv()" +
+              "{"                                                    +
+              "  $find('ReportViewerMain').exportReport('CSV');"     +
+              "}";
+
+
         // Update this to add filter criteria
         public static string FilterRiskViewOnInstruments
             = "function FilterRiskViewOnInstruments(instruments)" +

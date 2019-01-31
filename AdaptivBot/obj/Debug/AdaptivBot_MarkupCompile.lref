@@ -2,5 +2,7 @@
 FC:\GitLab\AdaptivBot\AdaptivBot\App.xaml;;
 FC:\GitLab\AdaptivBot\AdaptivBot\AlertUpdateUserCredentials.xaml;;
 FC:\GitLab\AdaptivBot\AdaptivBot\MainWindow.xaml;;
-FC:\GitLab\AdaptivBot\AdaptivBot\RiskViewSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\SettingForms\GeneralSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\SettingForms\CustomerLimitUtilisationSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\SettingForms\RiskViewSettings.xaml;;
 

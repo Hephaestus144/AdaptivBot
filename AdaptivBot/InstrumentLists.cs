@@ -70,5 +70,22 @@ namespace AdaptivBot
             "Equity Tripartite Repo or Reverse Repo , Equity Forward Purchase or Sale, " +
             "Equity Buy or Sell Back Leg, Equity Loan or Borrow, " +
             "Equity Financing Loan or Borrow, Equity Collateral";
+
+
+        public static Dictionary<string, string> instruments
+            = new Dictionary<string, string>()
+            {
+                ["Agri"] = commodityAgricultureInstruments,
+                ["BM"] = commodityBaseMetalInstruments,
+                ["Bond"] = bondInstruments,
+                ["Credit"] = creditInstruments,
+                ["Energy"] = commodityEnergyInstruments,
+                ["Equity"] = equityInstruments,
+                ["FX"] = fxInstruments,
+                ["IR"] = interestRateInstruments,
+                ["PM"] = commodityPreciousMetalInstruments,
+                ["SecFinBond"] = secfinBondInstruments,
+                ["SecFinEquity"] = secfinEquityInstruments
+            };
     }
 }

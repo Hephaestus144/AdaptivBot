@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -95,9 +96,18 @@
     <Compile Include="AlertUpdateUserCredentials.xaml.cs">
       <DependentUpon>AlertUpdateUserCredentials.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GlobalConfigValues.cs" />
     <Compile Include="InstrumentLists.cs" />
     <Compile Include="JsScripts.cs" />
-    <Compile Include="RiskViewSettings.xaml.cs">
+    <Compile Include="Logger.cs" />
+    <Compile Include="RichTextBoxExtensions.cs" />
+    <Compile Include="SettingForms\GeneralSettings.xaml.cs">
+      <DependentUpon>GeneralSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingForms\CustomerLimitUtilisationSettings.xaml.cs">
+      <DependentUpon>CustomerLimitUtilisationSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingForms\RiskViewSettings.xaml.cs">
       <DependentUpon>RiskViewSettings.xaml</DependentUpon>
     </Compile>
     <Page Include="AlertUpdateUserCredentials.xaml">
@@ -117,7 +127,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RiskViewSettings.xaml">
+    <Page Include="SettingForms\GeneralSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingForms\CustomerLimitUtilisationSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SettingForms\RiskViewSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

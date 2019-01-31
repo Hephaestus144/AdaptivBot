@@ -6,7 +6,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:AdaptivBot"
         mc:Ignorable="d"
-        Title="Adaptiv Bot Version 0.0" Height="800" Width="800"
+        Title="Adaptiv Bot Version 0.0" Height="800" Width="1200"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -117,6 +117,26 @@
                     Settings
                 </TextBlock>
                 
+                <Button Name="btnGeneral_Settings"
+                        Click="btnGeneralSettings_Click"
+                        materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                        Margin="15,0,0,15">
+                    <Button.Content>
+                        <DockPanel>
+                            <TextBlock 
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left">General Settings</TextBlock>
+                            <materialDesign:PackIcon
+                                Kind="SettingsOutline"
+                                Width="16"
+                                Height="16"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"/>
+                        </DockPanel>
+                    </Button.Content>
+                </Button>
+
                 <Button Name="btnRiskView_Settings"
                         Click="RiskView_Settings_Click"
                         materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
@@ -228,7 +248,7 @@
 
         <DockPanel 
             Grid.Row="1"
-            Grid.RowSpan="5"
+            Grid.RowSpan="6"
             Grid.Column="3"
             Grid.ColumnSpan="4"
             Margin="20,0,0,0">
@@ -249,6 +269,7 @@
             <StackPanel
                 DockPanel.Dock="Left">
                 <DatePicker
+                    Name ="datePicker"
                     Width="180"
                     ToolTip="Only applicable to certain functions such Customer Limit Utilisation report extraction."
                     Margin="10,0,10,15"
@@ -256,9 +277,10 @@
                     HorizontalContentAlignment="Center"
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                 <CheckBox
-                HorizontalAlignment="Center">
+                    HorizontalAlignment="Center">
                     Override existing files
                 </CheckBox>
+
             </StackPanel>
 
             <StackPanel
@@ -299,6 +321,15 @@
                     VerticalAlignment="Center">
                     Deal Risk Carriers
                 </Button>
+
+                <Button 
+                    Name="btnQuitExecution"
+                    Click="btnExtract_CustomerLimitUtilisation_Click"  
+                    Margin="2,0,2,15"
+                    FontSize="12"
+                    VerticalAlignment="Center">
+                    Quit Execution
+                </Button>
             </StackPanel>
 
         </DockPanel>
@@ -330,8 +361,9 @@
                     DockPanel.Dock="Right"
                     UniformCornerRadius="6">
                     <ListBox
+                        Name="lstBxExtractedFiles"
                         MinHeight="120"
-                        MinWidth="338"
+                        MinWidth="340"
                         Margin="5,5,5,5"
                         Background="Transparent"
                         BorderThickness="0"/>
@@ -356,12 +388,21 @@
                     UniformCornerRadius="6"
                     DockPanel.Dock="Right">
                     <RichTextBox
+                        Name="rtbLogger"
                         MinHeight="120"
-                        MinWidth="338"
+                        MinWidth="500"
                         Margin="5,5,5,5"
                         Background="Transparent"
                         IsReadOnly="True"
-                        BorderThickness="0"/>
+                        BorderThickness="0"
+                        Foreground="LawnGreen"
+                        VerticalContentAlignment="Top">
+                        <RichTextBox.Resources>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </RichTextBox.Resources>
+                    </RichTextBox>
                 </materialDesign:Card>
             </DockPanel>
 
