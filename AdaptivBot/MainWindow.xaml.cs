@@ -133,25 +133,25 @@ namespace AdaptivBot
             AutoItX.Sleep(3000);
             if (AutoItX.WinExists("Windows Security") != 0)
             {
+                Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    logger.OkayText = "Entering credentials...";
+                }));
                 AutoItX.WinActivate("Windows Security");
                 AutoItX.Send(username);
                 AutoItX.Send("{TAB}");
                 AutoItX.Send(password);
                 AutoItX.Send("{TAB}");
                 AutoItX.Send("{ENTER}");
-                Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    logger.OkayText = "Entering credentials...";
-                }));
             }
             else
             {
                 Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Adaptiv already open"; }));
             }
 
+            Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Acknowledging disclaimer..."; }));
             AutoItX.WinWait("Adaptiv Disclaimer -- Webpage Dialog");
             AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
-            Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Acknowledging disclaimer..."; }));
             AutoItX.Send("{ENTER}");
         }
 
@@ -239,19 +239,23 @@ namespace AdaptivBot
             var password = txtPasswordBox.Password;
 
              
-            var currentAdaptivEnvironment =
-                cmbBxAdaptivEnvironments.SelectedValue.ToString();
+            var currentAdaptivEnvironment = cmbBxAdaptivEnvironments.SelectedValue.ToString();
 
             foreach (var instrumentBatch in InstrumentLists.instruments.Keys)
             {
                 await Task.Run(() => OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
 
                 #region wait for browser
-                while (!completedLoading)
+                //while (!completedLoading)
+                //{
+                //    await Task.Run(() => Thread.Sleep(100));
+                //}
+
+                if (webBrowser.Document?.GetElementById("MainFrame") is null)
                 {
                     await Task.Run(() => Thread.Sleep(100));
                 }
-                await Task.Run(() => Thread.Sleep(3000));
+                //await Task.Run(() => Thread.Sleep(3000));
                 completedLoading = false;
                 #endregion wait for browser
 
@@ -344,12 +348,15 @@ namespace AdaptivBot
             if (!injectedScripts.ContainsKey(scriptName))
             {
                 var doc = (HtmlDocument) webBrowser.Document;
-                var headElement = doc.GetElementsByTagName("head")[0];
-                var scriptElement = doc.CreateElement("script");
-                var element = (IHTMLScriptElement) scriptElement.DomElement;
-                element.text = script;
-                headElement.AppendChild(scriptElement);
-                injectedScripts.Add(scriptName, script);
+                var headElement = doc?.GetElementsByTagName("head")[0];
+                var scriptElement = doc?.CreateElement("script");
+                var element = (IHTMLScriptElement) scriptElement?.DomElement;
+                if (!(element is null))
+                {
+                    element.text = script;
+                    headElement.AppendChild(scriptElement);
+                    injectedScripts.Add(scriptName, script);
+                }
             }
         }
         
