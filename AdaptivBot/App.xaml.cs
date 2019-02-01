@@ -58,6 +58,12 @@ namespace AdaptivBot
             {
                 GlobalConfigValues.excelPathConfigured = YesNoMaybe.No;
             }
+
+            var configDocument =
+                XDocument.Load(GlobalConfigValues.Instance.adaptivBotConfigFile);
+            GlobalConfigValues.excelPath =
+                configDocument.Root.Element("ExcelExecutablePath").Value;
+
         }
     }
 }

@@ -27,6 +27,8 @@ namespace AdaptivBot
         public static string possibleExcelPath2
             = @"C:\Program Files\Microsoft Office\root\Office16\Excel.exe";
 
+        public static string excelPath;
+
         public static YesNoMaybe excelPathConfigured = YesNoMaybe.Maybe;
 
         public static YesNoMaybe createdConfigFile = YesNoMaybe.Maybe;

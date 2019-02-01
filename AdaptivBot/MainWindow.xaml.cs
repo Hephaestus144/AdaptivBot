@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using WebBrowser = System.Windows.Controls.WebBrowser;
 
 
 namespace AdaptivBot
@@ -121,8 +122,20 @@ namespace AdaptivBot
                 var window = new AlertUpdateUserCredentials();
                 window.Show();
                 return false;
-                // Add message box to warn user that the credentials that have been entered are different 
+                // TODO: Add message box to warn user that the credentials that have been entered are different 
                 // to the saved credentials & would they like to save them?
+            }
+
+            if (txtUserName.Text == "")
+            {
+                logger.ErrorText = "User name blank.";
+                return false;
+            }
+
+            if (txtPasswordBox.Password == "")
+            {
+                logger.ErrorText = "Password blank.";
+                return false;
             }
 
             return true;
@@ -183,6 +196,7 @@ namespace AdaptivBot
                 txtPasswordBox.Password = credentialStore.credential.Password;
             }
 
+            var displayEndDateTime = DateTime.Now.AddDays(-1);
         }
 
         private async void OpenAdaptivAndLogin(
@@ -223,6 +237,94 @@ namespace AdaptivBot
         }
 
 
+        private async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 20);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("{TAB}");
+            AutoItX.Send("{TAB}");
+            AutoItX.Send("{TAB}");
+            AutoItX.Send("{ENTER}");
+            Dispatcher.Invoke((Action)(() =>
+            {
+                logger.OkayText = $"Saving CSV file for {instrumentBatch}.";
+            })); 
+
+            AutoItX.WinWait("Save As", timeout: 20);
+            AutoItX.WinActivate("Save As");
+
+            AutoItX.Send("{DEL}");
+            // TODO: Make the output file name a parameter.
+            AutoItX.Send($"STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv");
+            AutoItX.Send("!d");
+            AutoItX.Send("{DEL}");
+
+            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
+            AutoItX.Send("!s");
+            AutoItX.Sleep(1000);
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((Action) (() =>
+                    {
+                        logger.WarningText =
+                            $"Overriding existing file for {instrumentBatch}.";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        logger.WarningText =
+                            $"File already exists for {instrumentBatch}.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{ENTER}");
+                }
+            }
+
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]").Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            { 
+                await Task.Run(() => Thread.Sleep(500));
+            }
+            // TODO: Checkbox to close window when complete.
+
+        }
+
+
+        private void InjectJavascript(string scriptName, string script)
+        {
+            if (!injectedScripts.ContainsKey(scriptName))
+            {
+                var doc = (HtmlDocument) webBrowser.Document;
+                var headElement = doc?.GetElementsByTagName("head")[0];
+                var scriptElement = doc?.CreateElement("script");
+                var element = (IHTMLScriptElement) scriptElement?.DomElement;
+                if (!(element is null))
+                {
+                    element.text = script;
+                    headElement.AppendChild(scriptElement);
+                    injectedScripts.Add(scriptName, script);
+                }
+            }
+        }
         private async void btnExtract_RiskView_Click(object sender, RoutedEventArgs e)
         {
             if (!StoreUserCredentials())
@@ -378,31 +480,174 @@ namespace AdaptivBot
                 $"Number of failed extractions: {numberOfFailedExtractions}";
         }
 
-
-        private async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+      
+        private async void btnExtract_CustomerLimitUtilisation_Click(object sender, RoutedEventArgs e)
         {
-            AutoItX.WinWait("File Download", timeout: 20);
-            AutoItX.WinActivate("File Download");
-            AutoItX.Send("{TAB}");
-            AutoItX.Send("{TAB}");
-            AutoItX.Send("{TAB}");
-            AutoItX.Send("{ENTER}");
-            Dispatcher.Invoke((Action)(() =>
+            var date = datePicker.SelectedDate;
+            if (date is null)
             {
-                logger.OkayText = $"Saving CSV file for {instrumentBatch}.";
-            })); 
+                logger.ErrorText = "Please select a date for extraction.";
+                return;
+            }
 
+            if (!StoreUserCredentials())
+            {
+                return;
+            }
+
+            // TODO: Use binding here.
+            var username = txtUserName.Text;
+            var password = txtPasswordBox.Password;
+
+            var currentAdaptivEnvironment =
+                cmbBxAdaptivEnvironments.SelectedValue.ToString();
+
+            StoreUserCredentials();
+
+            await Task.Run(() => OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
+
+            #region wait for browser
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            #endregion wait for browser
+
+            InjectJavascript(
+                nameof(JsScripts.OpenCustomerLimitUtilisationReport),
+                JsScripts.OpenCustomerLimitUtilisationReport);
+
+            webBrowser.Document.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
+
+
+
+            #region wait for browser
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            #endregion wait for browser
+
+
+            InjectJavascript(
+                nameof(JsScripts.FilterCustomerLimitUtilisationReport),
+                JsScripts.FilterCustomerLimitUtilisationReport);
+            webBrowser.Document.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
+
+            #region wait for browser
+            completedLoading = false;
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            #endregion wait for browser
+
+            InjectJavascript(
+                nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
+                JsScripts.ChooseCustomerLimitUtilisationReport);
+            await Task.Run(() => Thread.Sleep(1000));
+            webBrowser.Document.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
+
+            injectedScripts.Clear();
+
+
+            #region wait for browser
+            completedLoading = false;
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            #endregion wait for browser
+            await Task.Run(() => Thread.Sleep(1000));
+
+
+            InjectJavascript(
+                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
+                JsScripts.SelectCustomerLimitUtilisationReportDate);
+
+            webBrowser.Document.InvokeScript(
+                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
+                new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
+            
+            #region wait for browser
+            completedLoading = false;
+            while (!completedLoading)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
+            await Task.Run(() => Thread.Sleep(1000));
+            completedLoading = false;
+            #endregion wait for browser
+
+            InjectJavascript(
+                nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
+                JsScripts.GenerateCustomerLimitUtilisationReport);
+
+            webBrowser.Document.InvokeScript(
+                nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
+
+            while (webBrowser.Document.GetElementsByTagName("img").Count < 5)
+            {
+                await Task.Run(() => Thread.Sleep(1000));
+            }
+            await Task.Run(() => Thread.Sleep(3000));
+
+            InjectJavascript(
+                nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
+                JsScripts.ExportCustomerLimitUtilisationReportToCsv);
+
+            webBrowser.Document.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
+           
+
+            var overrideExistingFile =
+                (bool)chkBxOverrideExistingFiles.IsChecked;
+
+            await Task.Run(() => Thread.Sleep(1000));
+            await Task.Run(() => SaveCustomerLimitUtilisationReport((DateTime)date, overrideExistingFile));
+
+            var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
+
+            ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
+            logger.OkayText = "Complete";
+        }
+
+        private async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 200);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("!s");
             AutoItX.WinWait("Save As", timeout: 20);
             AutoItX.WinActivate("Save As");
 
             AutoItX.Send("{DEL}");
             // TODO: Make the output file name a parameter.
-            AutoItX.Send($"STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv");
+            AutoItX.Send($"CustomerLimitUtil {date:dd.MM.yyyy}.csv");
             AutoItX.Send("!d");
             AutoItX.Send("{DEL}");
 
-            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
+            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG");
             AutoItX.Send("!s");
+
             AutoItX.Sleep(1000);
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
@@ -410,10 +655,10 @@ namespace AdaptivBot
                 if (overrideExistingFile)
                 {
                     AutoItX.Send("!y");
-                    Dispatcher.Invoke((Action) (() =>
+                    Dispatcher.Invoke((Action)(() =>
                     {
                         logger.WarningText =
-                            $"Overriding existing file for {instrumentBatch}.";
+                            $"Overriding existing file.";
                     }));
                 }
                 else
@@ -422,7 +667,7 @@ namespace AdaptivBot
                     Dispatcher.Invoke((Action)(() =>
                     {
                         logger.WarningText =
-                            $"File already exists for {instrumentBatch}.";
+                            $"File already exists.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);
                     AutoItX.WinActivate("Save As");
@@ -442,186 +687,27 @@ namespace AdaptivBot
 
             await Task.Run(() => Thread.Sleep(100));
 
-            while (AutoItX.WinGetTitle("[ACTIVE]").Contains(".csv from adaptiv.standardbank.co.za Completed"))
-            { 
+            while (AutoItX.WinGetTitle("[ACTIVE]").Contains("Utilisation"))
+            {
                 await Task.Run(() => Thread.Sleep(500));
             }
-            // TODO: Checkbox to close window when complete.
-
-        }
-
-
-        private void InjectJavascript(string scriptName, string script)
-        {
-            if (!injectedScripts.ContainsKey(scriptName))
-            {
-                var doc = (HtmlDocument) webBrowser.Document;
-                var headElement = doc?.GetElementsByTagName("head")[0];
-                var scriptElement = doc?.CreateElement("script");
-                var element = (IHTMLScriptElement) scriptElement?.DomElement;
-                if (!(element is null))
-                {
-                    element.text = script;
-                    headElement.AppendChild(scriptElement);
-                    injectedScripts.Add(scriptName, script);
-                }
-            }
-        }
-        
-
-        private async void btnExtract_CustomerLimitUtilisation_Click(object sender, RoutedEventArgs e)
-        {
-            var date = datePicker.SelectedDate;
-            if (date is null)
-            {
-                return;
-            }
-
-            if (!StoreUserCredentials())
-            {
-                return;
-            }
-
-            // Wrap this in a function called login to Adaptiv or which checks if Adaptiv
-            // has already been  logged into.
-            // TODO: Couple to combobox Adaptiv environment.
-
-            // TODO: Use binding here.
-            var username = txtUserName.Text;
-            var password = txtPasswordBox.Password;
-
-
-            var currentAdaptivEnvironment =
-                cmbBxAdaptivEnvironments.SelectedValue.ToString();
-
-            StoreUserCredentials();
-
-            await Task.Run(() => OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(5000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            InjectJavascript(
-                nameof(JsScripts.OpenCustomerLimitUtilisationReport),
-                JsScripts.OpenCustomerLimitUtilisationReport);
-
-            webBrowser.Document.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
-
-            // TODO: What is this doing
-            InjectJavascript(
-                nameof(JsScripts.SelectCustomerLimitUtilisationReport),
-                JsScripts.SelectCustomerLimitUtilisationReport);
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(15000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            webBrowser.Document.InvokeScript(nameof(JsScripts.SelectCustomerLimitUtilisationReport));
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-
-            InjectJavascript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
-                JsScripts.GenerateCustomerLimitUtilisationReport);
-
-            #region wait for browser
-            //while (!completedLoading)
-            //{
-            //    await Task.Run(() => Thread.Sleep(100));
-            //}
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            webBrowser.Document.InvokeScript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
-                new object[] { ((DateTime)date).ToString("dd/MM/yyyy")});
-
-
-            InjectJavascript(
-                nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
-                JsScripts.ExportCustomerLimitUtilisationReportToCsv);
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(40000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            webBrowser.Document.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
-
-            await Task.Run(() => SaveCustomerLimitUtilisationReport((DateTime)date));
-
-            var workbookPath = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
-
-            
-            ConvertWorkbookFormats(workbookPath, ".csv", ".xlsx");
-        }
-
-        private void SaveCustomerLimitUtilisationReport(DateTime date)
-        {
-            AutoItX.WinWait("File Download", timeout: 200);
-            AutoItX.WinActivate("File Download");
-            AutoItX.Send("!s");
-            AutoItX.WinWait("Save As", timeout: 20);
-            AutoItX.WinActivate("Save As");
-
-            AutoItX.Send("{DEL}");
-            // TODO: Make the output file name a parameter.
-            AutoItX.Send($"CustomerLimitUtil {date:dd.MM.yyyy}.csv");
-            AutoItX.Send("!d");
-            AutoItX.Send("{DEL}");
-
-            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG");
-            AutoItX.Send("!s");
         }
 
         private void btnExtract_DealRiskCarriers_Click(object sender, RoutedEventArgs e)
         {
 
         }
-        public static void ConvertWorkbookFormats(string workbookPath, string extFrom, string extTo)
+
+        public static async void ConvertWorkbookFormats(string csvFile, string extFrom, string extTo)
         {
-
-            // TODO: must just act on single file.
-            var xlsFiles = Directory.GetFiles(workbookPath, "*." + extFrom, SearchOption.AllDirectories);
-            var sourceFiles = new List<string>(xlsFiles);
-            sourceFiles.RemoveAll(x => x.EndsWith("." + extTo));
-
-            var processes = new List<Process>(Process.GetProcesses());
-            //TODO: "Find excel directory"
-            var excelDirectory
-                = Path.GetDirectoryName(
-                    processes.First(x => x.ProcessName == "EXCEL").MainModule.FileName);
-
-            var excelcnvPath = Path.Combine(excelDirectory, "excelcnv.exe");
-            foreach (var sourceFile in sourceFiles)
+            while (!(File.Exists(csvFile)))
             {
-                var targetFile = Path.ChangeExtension(sourceFile, "." + extTo);
-                Process.Start($"\"{excelcnvPath}\"", $"-oice \"{sourceFile}\" \"{targetFile}\"");
+                await Task.Run(() => Thread.Sleep(1000));
             }
+
+            var excelcnvPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
+            var targetFile = Path.ChangeExtension(csvFile, "." + extTo);
+            Process.Start($"\"{excelcnvPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
         }
 
 
