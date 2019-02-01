@@ -240,7 +240,9 @@
                 <ComboBoxItem>T10</ComboBoxItem>
             </ComboBox>
 
-            <CheckBox Name="chkBxRememberMe"
+            <CheckBox
+                Name="chkBxRememberMe"
+                IsChecked="True"
                 Margin="0,0,0,15"
                 HorizontalAlignment="Center"
                 Content="Remember Me"/>
@@ -277,7 +279,9 @@
                     HorizontalContentAlignment="Center"
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                 <CheckBox
-                    HorizontalAlignment="Center">
+                    Name="chkBxOverrideExistingFiles"
+                    HorizontalAlignment="Center"
+                    IsChecked="True">
                     Override existing files
                 </CheckBox>
 
@@ -389,14 +393,15 @@
                     DockPanel.Dock="Right">
                     <RichTextBox
                         Name="rtbLogger"
-                        MinHeight="120"
+                        Height="120"
                         MinWidth="500"
                         Margin="5,5,5,5"
                         Background="Transparent"
                         IsReadOnly="True"
                         BorderThickness="0"
                         Foreground="LawnGreen"
-                        VerticalContentAlignment="Top">
+                        VerticalContentAlignment="Top"
+                        VerticalScrollBarVisibility="Visible">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>

@@ -240,81 +240,146 @@ namespace AdaptivBot
 
              
             var currentAdaptivEnvironment = cmbBxAdaptivEnvironments.SelectedValue.ToString();
-
+            int numberOfFailedExtractions = 0;
+            int numberOfSuccessfulExtractions = 0;
             foreach (var instrumentBatch in InstrumentLists.instruments.Keys)
             {
-                await Task.Run(() => OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
-
-                #region wait for browser
-                //while (!completedLoading)
-                //{
-                //    await Task.Run(() => Thread.Sleep(100));
-                //}
-
-                if (webBrowser.Document?.GetElementById("MainFrame") is null)
+                for (var errorCount = 0; errorCount < 3; errorCount++)
                 {
-                    await Task.Run(() => Thread.Sleep(100));
+                    try
+                    {
+                        await Task.Run(() =>
+                            OpenAdaptivAndLogin(username, password,
+                                currentAdaptivEnvironment));
+
+                        #region wait for browser
+
+                        while (!completedLoading)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        await Task.Run(() => Thread.Sleep(2000));
+                        completedLoading = false;
+
+                        #endregion wait for browser
+
+                        #region wait for browser
+
+                        while (!completedLoading)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        await Task.Run(() => Thread.Sleep(2000));
+                        completedLoading = false;
+
+                        #endregion wait for browser
+
+                        InjectJavascript(nameof(JsScripts.OpenRiskView),
+                            JsScripts.OpenRiskView);
+
+                        await Task.Run(() => Thread.Sleep(1000));
+                        webBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
+
+                        #region wait for browser
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            while (!completedLoading)
+                            {
+                                await Task.Run(() => Thread.Sleep(100));
+                            }
+
+                            completedLoading = false;
+                        }
+
+                        await Task.Run(() => Thread.Sleep(2000));
+
+                        #endregion wait for browser
+
+                        InjectJavascript(
+                            nameof(JsScripts.FilterRiskViewOnInstruments),
+                            JsScripts.FilterRiskViewOnInstruments);
+                        webBrowser.Document.InvokeScript(
+                            nameof(JsScripts.FilterRiskViewOnInstruments),
+                            new object[] {InstrumentLists.instruments[instrumentBatch]});
+
+
+                        #region wait for browser
+
+                        while (!completedLoading)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        await Task.Run(() => Thread.Sleep(1000));
+                        completedLoading = false;
+
+                        #endregion wait for browser
+
+
+                        InjectJavascript(nameof(JsScripts.ExportToCsv),
+                            JsScripts.ExportToCsv);
+                        webBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
+
+                        await Task.Run(() => Thread.Sleep(500));
+
+                        #region wait for browser
+
+                        while (!completedLoading)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        await Task.Run(() => Thread.Sleep(1000));
+                        completedLoading = false;
+
+                        #endregion wait for browser
+
+                        while (webBrowser.Document.GetElementsByTagName("A").Count == 0)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        foreach (HtmlElement link in webBrowser.Document
+                            .GetElementsByTagName("A"))
+                        {
+                            if (link.InnerText.Equals("exported file link"))
+                                link.InvokeMember("Click");
+                        }
+
+                        var overrideExistingFile =
+                            (bool) chkBxOverrideExistingFiles.IsChecked;
+                        await Task.Run(() =>
+                            SaveFile(instrumentBatch, overrideExistingFile));
+                        numberOfSuccessfulExtractions++;
+                        break;
+                    }
+                    catch (Exception exception)
+                    {
+                        if (errorCount < 2)
+                        {
+                            logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {++errorCount}";
+                        }
+                        else
+                        {
+                            numberOfFailedExtractions++;
+                            logger.ErrorText = $"{instrumentBatch} extraction failed 3 times. Moving on to next instrument set.";
+                        }
+                    }
                 }
-                //await Task.Run(() => Thread.Sleep(3000));
-                completedLoading = false;
-                #endregion wait for browser
-
-                InjectJavascript(nameof(JsScripts.OpenRiskView), JsScripts.OpenRiskView);
-
-                #region wait for browser
-                while (!completedLoading)
-                {
-                    await Task.Run(() => Thread.Sleep(100));
-                }
-                await Task.Run(() => Thread.Sleep(1000));
-                completedLoading = false;
-                #endregion wait for browser
-
-                webBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
-
-                #region wait for browser
-                while (!completedLoading)
-                {
-                    await Task.Run(() => Thread.Sleep(100));
-                }
-                await Task.Run(() => Thread.Sleep(1000));
-                completedLoading = false;
-                #endregion wait for browser
-
-                InjectJavascript(
-                        nameof(JsScripts.FilterRiskViewOnInstruments),
-                        JsScripts.FilterRiskViewOnInstruments);
-                webBrowser.Document.InvokeScript(
-                    nameof(JsScripts.FilterRiskViewOnInstruments),
-                    new object[] { InstrumentLists.instruments[instrumentBatch] });
-
-                
-                #region wait for browser
-                while (!completedLoading)
-                {
-                    await Task.Run(() => Thread.Sleep(100));
-                }
-                await Task.Run(() => Thread.Sleep(1000));
-                completedLoading = false;
-                #endregion wait for browser
-
-                InjectJavascript(nameof(JsScripts.ExportToCsv), JsScripts.ExportToCsv);
-                webBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
-
-                await Task.Run(() => Thread.Sleep(5000));
-
-                foreach (HtmlElement link in webBrowser.Document.GetElementsByTagName("A"))
-                {
-                    if (link.InnerText.Equals("exported file link"))
-                        link.InvokeMember("Click");
-                }
-
-                await Task.Run(() => SaveFile(instrumentBatch));
             }
+
+            logger.OkayText = "Completed";
+            logger.OkayText =
+                $"Number of successful extractions: {numberOfSuccessfulExtractions}";
+            logger.ErrorText =
+                $"Number of failed extractions: {numberOfFailedExtractions}";
         }
 
 
-        private void SaveFile(string instrumentBatch)
+        private async void SaveFile(string instrumentBatch, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
@@ -322,7 +387,11 @@ namespace AdaptivBot
             AutoItX.Send("{TAB}");
             AutoItX.Send("{TAB}");
             AutoItX.Send("{ENTER}");
-            //logger.StatusText = "Saving CSV file...";
+            Dispatcher.Invoke((Action)(() =>
+            {
+                logger.OkayText = $"Saving CSV file for {instrumentBatch}.";
+            })); 
+
             AutoItX.WinWait("Save As", timeout: 20);
             AutoItX.WinActivate("Save As");
 
@@ -334,12 +403,51 @@ namespace AdaptivBot
 
             AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
             AutoItX.Send("!s");
+            AutoItX.Sleep(1000);
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((Action) (() =>
+                    {
+                        logger.WarningText =
+                            $"Overriding existing file for {instrumentBatch}.";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        logger.WarningText =
+                            $"File already exists for {instrumentBatch}.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{ENTER}");
+                }
+            }
 
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]").Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            { 
+                await Task.Run(() => Thread.Sleep(500));
+            }
             // TODO: Checkbox to close window when complete.
 
-            //AutoItX.WinWait("Download Complete", timeout: 30);
-            //AutoItX.WinActivate("Download Complete");
-            //AutoItX.Send("{SPACE}");
         }
 
 

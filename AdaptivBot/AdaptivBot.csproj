@@ -100,7 +100,6 @@
     <Compile Include="InstrumentLists.cs" />
     <Compile Include="JsScripts.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="RichTextBoxExtensions.cs" />
     <Compile Include="SettingForms\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>

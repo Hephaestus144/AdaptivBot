@@ -21,7 +21,7 @@ namespace AdaptivBot
         public readonly RichTextBox RtbLogger;
 
 
-        public string RunningText
+        public string WarningText
         {
             get { return _text; }
             set
@@ -46,6 +46,7 @@ namespace AdaptivBot
                 paragraph.Inlines.Add(message);
                 loggerText.Blocks.Add(paragraph);
                 RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
             }
         }
 
@@ -74,6 +75,8 @@ namespace AdaptivBot
                 paragraph.Inlines.Add(timeStamp);
                 paragraph.Inlines.Add(message);
                 loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
             }
         }
 
@@ -102,6 +105,7 @@ namespace AdaptivBot
                 paragraph.Inlines.Add(message);
                 loggerText.Blocks.Add(paragraph);
                 RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
             }
         }
 
