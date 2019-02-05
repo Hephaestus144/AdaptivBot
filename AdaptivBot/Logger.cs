@@ -20,6 +20,44 @@ namespace AdaptivBot
         private string _text = "";
         public readonly RichTextBox RtbLogger;
 
+        public void HorizontalLine(Brush color)
+        {
+            var horizontalLine = new Run(new string('-', 80))
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = color
+            };
+
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Add(horizontalLine);
+            RtbLogger.Document.Blocks.Add(paragraph);
+        }
+
+        public void NewExtraction(string message)
+        {
+            HorizontalLine(Brushes.LawnGreen);
+
+            var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
+            {   
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var messageRun = new Run($"{message}")
+            {
+                FontWeight = FontWeights.Bold,
+                FontStyle = FontStyles.Italic,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Clear();
+            paragraph.Inlines.Add(timeStamp);
+            paragraph.Inlines.Add(messageRun);
+            RtbLogger.Document.Blocks.Add(paragraph);
+            RtbLogger.ScrollToEnd();
+        }
 
         public string WarningText
         {

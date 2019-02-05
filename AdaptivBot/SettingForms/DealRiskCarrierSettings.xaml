@@ -1,4 +1,4 @@
-﻿<Page x:Class="AdaptivBot.SettingForms.GeneralSettings"
+﻿<Page x:Class="AdaptivBot.SettingForms.DealRiskCarrierSettings"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,8 +7,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Loaded="GeneralSettings_OnLoaded"
-      Title="General Settings">
+      Title="Deal Risk Carrier Settings">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -42,11 +41,12 @@
                 VerticalAlignment="Bottom"
                 FontWeight="Bold"
                 Margin="0,15,5,0"
-                Text="General Settings"/>
+                Text="Deal Risk Carrier Settings"/>
             <Separator
                 DockPanel.Dock="Top"
                 Margin="0,0,0,10"/>
         </DockPanel>
+
 
         <DockPanel
             Grid.Row="1"
@@ -58,24 +58,9 @@
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 HorizontalAlignment="Right"
                 Margin="8">
-                Excel.exe Path 
+                Base Folder
             </TextBlock>
 
-            <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="8">
-                Qlikview UAT Folder
-            </TextBlock>
-
-            <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="8">
-                Qlikview Production Folder
-            </TextBlock>
         </DockPanel>
 
         <DockPanel
@@ -90,7 +75,7 @@
                 DockPanel.Dock="Top"
                 Margin="5">
                 <TextBox
-                    Name="txtBxExcelPath"
+                    Name="txtBoxBaseFolder"
                     FontSize="10"
                     Padding="5,0,5,0"
                     HorizontalAlignment="Stretch"
@@ -99,36 +84,27 @@
                     VerticalContentAlignment="Stretch"/>
             </materialDesign:Card>
 
-            <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
-                DockPanel.Dock="Top"
-                Margin="5">
-                <TextBox
-                    Name="txtBxQlikviewUATFolder"
-                    FontSize="10"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"/>
-            </materialDesign:Card>
-
-            <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
-                DockPanel.Dock="Top"
-                Margin="5">
-                <TextBox
-                    Name="txtBxQlikviewProductionFolder"
-                    FontSize="10"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"/>
-            </materialDesign:Card>
         </DockPanel>
+
+        <materialDesign:Card
+            Grid.Row="1"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center">
+            <DatePicker
+                Name ="datePickerCustomerLimitUtilisation"
+                ToolTip="Only used in 'Delete Files for Date' function."
+                materialDesign:HintAssist.Hint="Date"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontSize="10"
+                Margin="0,-4,0,0"
+                materialDesign:HintAssist.FloatingOffset="0,-10"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+        </materialDesign:Card>
 
 
         <DockPanel
@@ -141,9 +117,8 @@
                 VerticalAlignment="Top"
                 FontSize="10"
                 Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5"
-                ToolTip="Purges all Adaptiv credentials for the Bot from the Windows credential manager.">
-                Purge Adaptiv Credentials
+                Margin="5">
+                Delete Files for Date
             </Button>
 
             <Button
@@ -152,10 +127,45 @@
                 FontSize="10"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
-                Configure Task Scheduler
+                Copy Files to UAT
             </Button>
 
+            <Button
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="10"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="5">
+                Copy Files to Prod
+            </Button>
         </DockPanel>
 
+
+        <CheckBox
+            Name="chkBxOverrideExistingFiles"
+            Grid.Row="4"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalAlignment="Center"
+            IsChecked="True"
+            Margin="5,12,5,5"
+            FlowDirection="RightToLeft">
+            <TextBlock
+                Margin="0,-3,0,0">
+                Override existing files
+            </TextBlock> 
+        </CheckBox>
+        <Button
+            Grid.Row="4"
+            Grid.Column="7"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            FontSize="12"
+            Style="{StaticResource MaterialDesignRaisedAccentButton}"
+            Margin="5">
+            Run Extraction
+        </Button>
     </Grid>
 </Page>

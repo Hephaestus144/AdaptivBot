@@ -12,7 +12,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
+using System.Windows.Navigation;
+using System.Windows.Threading;
+using MaterialDesignThemes.Wpf.Transitions;
 using WebBrowser = System.Windows.Controls.WebBrowser;
+using NodaTime;
+using Duration = System.Windows.Duration;
 
 
 namespace AdaptivBot
@@ -22,9 +29,9 @@ namespace AdaptivBot
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool completedLoading = false;
+        public bool completedLoading = false;
 
-        private enum AdaptivEnvironments
+        public enum AdaptivEnvironments
         {
             Production,
             Stress,
@@ -33,20 +40,22 @@ namespace AdaptivBot
             T10
         };
 
-        private Dictionary<string, string> AdaptivEnvironmentUrls
+        public Dictionary<string, string> AdaptivEnvironmentUrls
             = new Dictionary<string, string>()
             {
-                ["Production"] =
-                    "https://adaptiv.standardbank.co.za/Adaptiv/default.aspx"
+                ["Production"]
+                    = "https://adaptiv.standardbank.co.za/Adaptiv/default.aspx",
+                ["StressEnvironment"]
+                    = "https://adaptivstressenv.standardbank.co.za/Adaptiv/default.aspx"
             };
 
 
-        private System.Windows.Forms.WebBrowser webBrowser;
+        public System.Windows.Forms.WebBrowser webBrowser;
 
-        private Dictionary<string, string> injectedScripts
+        public Dictionary<string, string> injectedScripts
             = new Dictionary<string, string>();
 
-        private SHDocVw.WebBrowser_V1 axBrowser = new SHDocVw.WebBrowser_V1();
+        public SHDocVw.WebBrowser_V1 axBrowser = new SHDocVw.WebBrowser_V1();
 
         public Logger logger;
 
@@ -80,11 +89,10 @@ namespace AdaptivBot
             {
                 logger.ErrorText = "Excel path configured.";
             }
-
         }
 
 
-        void axBrowser_NewWindow(
+        public void axBrowser_NewWindow(
             string URL,
             int Flags,
             string TargetFrameName,
@@ -102,7 +110,7 @@ namespace AdaptivBot
 
 
         #region Credential functions
-        private bool StoreUserCredentials()
+        public bool StoreUserCredentials()
         {
             var credentialStore = new CredentialStore($"AdaptivBot{cmbBxAdaptivEnvironments.SelectedValue}");
             if (!credentialStore.credentialsFound && (bool)chkBxRememberMe.IsChecked)
@@ -141,7 +149,7 @@ namespace AdaptivBot
             return true;
         }
 
-        private void EnterAdaptivCredentials(string username, string password)
+        public void EnterAdaptivCredentials(string username, string password)
         {
             AutoItX.Sleep(3000);
             if (AutoItX.WinExists("Windows Security") != 0)
@@ -168,7 +176,7 @@ namespace AdaptivBot
             AutoItX.Send("{ENTER}");
         }
 
-        private void LoadAdaptivCredentials(object sender, SelectionChangedEventArgs e)
+        public void LoadAdaptivCredentials(object sender, SelectionChangedEventArgs e)
         {
             var credentialStore =
                 new CredentialStore("AdaptivBot" + cmbBxAdaptivEnvironments.SelectedValue);
@@ -185,7 +193,7 @@ namespace AdaptivBot
         }
 
         #endregion Credential functions
-
+        
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -195,11 +203,20 @@ namespace AdaptivBot
                 txtUserName.Text = credentialStore.credential.Username;
                 txtPasswordBox.Password = credentialStore.credential.Password;
             }
-
-            var displayEndDateTime = DateTime.Now.AddDays(-1);
+            
+            var localDate = LocalDate.FromDateTime(DateTime.Now.AddDays(-1));
+            if (localDate.DayOfWeek == IsoDayOfWeek.Saturday)
+            {
+                localDate = localDate.PlusDays(-1);
+            }
+            else if (localDate.DayOfWeek == IsoDayOfWeek.Sunday)
+            {
+                localDate = localDate.PlusDays(-2);
+            }
+            
         }
 
-        private async void OpenAdaptivAndLogin(
+        public async void OpenAdaptivAndLogin(
             string username,
             string password,
             string currentAdaptivEnvironment)
@@ -226,7 +243,7 @@ namespace AdaptivBot
         }
 
 
-        private async void WaitForBrowser()
+        public async void WaitForBrowser()
         {
             while (!completedLoading)
             {
@@ -237,7 +254,7 @@ namespace AdaptivBot
         }
 
 
-        private async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+        public async void SaveFile(string instrumentBatch, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
@@ -309,7 +326,7 @@ namespace AdaptivBot
         }
 
 
-        private void InjectJavascript(string scriptName, string script)
+        public void InjectJavascript(string scriptName, string script)
         {
             if (!injectedScripts.ContainsKey(scriptName))
             {
@@ -325,8 +342,13 @@ namespace AdaptivBot
                 }
             }
         }
-        private async void btnExtract_RiskView_Click(object sender, RoutedEventArgs e)
+
+        public async void btnExtract_RiskView_Click(object sender, RoutedEventArgs e)
         {
+            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            
+            logger.NewExtraction("Risk View Reports Extraction Started");
+
             if (!StoreUserCredentials())
             {
                 return;
@@ -334,7 +356,6 @@ namespace AdaptivBot
             
             // Wrap this in a function called login to Adaptiv or which checks if Adaptiv
             // has already been  logged into.
-            // TODO: Couple to combobox Adaptiv environment.
 
             // TODO: Use binding here.
             var username = txtUserName.Text;
@@ -451,14 +472,14 @@ namespace AdaptivBot
                                 link.InvokeMember("Click");
                         }
 
-                        var overrideExistingFile =
-                            (bool) chkBxOverrideExistingFiles.IsChecked;
+                        var overrideExistingFile = true;
+                            //(bool) chkBxOverrideExistingFiles.IsChecked;
                         await Task.Run(() =>
                             SaveFile(instrumentBatch, overrideExistingFile));
                         numberOfSuccessfulExtractions++;
                         break;
                     }
-                    catch (Exception exception)
+                    catch (Exception)
                     {
                         if (errorCount < 2)
                         {
@@ -478,12 +499,16 @@ namespace AdaptivBot
                 $"Number of successful extractions: {numberOfSuccessfulExtractions}";
             logger.ErrorText =
                 $"Number of failed extractions: {numberOfFailedExtractions}";
+            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
+            logger.OkayText =
+                $"Extraction took: {(GlobalConfigValues.Instance.extractionEndTime - GlobalConfigValues.Instance.extractionStartTime).Minutes} minutes";
         }
 
       
-        private async void btnExtract_CustomerLimitUtilisation_Click(object sender, RoutedEventArgs e)
+        public async void btnExtract_CustomerLimitUtilisation_Click(object sender, RoutedEventArgs e)
         {
-            var date = datePicker.SelectedDate;
+            //TODO: Switch to Customer Limit function date
+            DateTime? date = (DateTime)DateTime.Now;// datePicker.SelectedDate;
             if (date is null)
             {
                 logger.ErrorText = "Please select a date for extraction.";
@@ -494,6 +519,8 @@ namespace AdaptivBot
             {
                 return;
             }
+
+            logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
 
             // TODO: Use binding here.
             var username = txtUserName.Text;
@@ -525,9 +552,7 @@ namespace AdaptivBot
                 nameof(JsScripts.OpenCustomerLimitUtilisationReport),
                 JsScripts.OpenCustomerLimitUtilisationReport);
 
-            webBrowser.Document.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
-
-
+            webBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
 
             #region wait for browser
             while (!completedLoading)
@@ -548,7 +573,7 @@ namespace AdaptivBot
             InjectJavascript(
                 nameof(JsScripts.FilterCustomerLimitUtilisationReport),
                 JsScripts.FilterCustomerLimitUtilisationReport);
-            webBrowser.Document.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
+            webBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
 
             #region wait for browser
             completedLoading = false;
@@ -564,7 +589,7 @@ namespace AdaptivBot
                 nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
                 JsScripts.ChooseCustomerLimitUtilisationReport);
             await Task.Run(() => Thread.Sleep(1000));
-            webBrowser.Document.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
+            webBrowser.Document?.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
 
             injectedScripts.Clear();
 
@@ -585,7 +610,7 @@ namespace AdaptivBot
                 nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
                 JsScripts.SelectCustomerLimitUtilisationReportDate);
 
-            webBrowser.Document.InvokeScript(
+            webBrowser.Document?.InvokeScript(
                 nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
                 new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
             
@@ -603,10 +628,10 @@ namespace AdaptivBot
                 nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
                 JsScripts.GenerateCustomerLimitUtilisationReport);
 
-            webBrowser.Document.InvokeScript(
+            webBrowser.Document?.InvokeScript(
                 nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
 
-            while (webBrowser.Document.GetElementsByTagName("img").Count < 5)
+            while (webBrowser.Document?.GetElementsByTagName("img").Count < 5)
             {
                 await Task.Run(() => Thread.Sleep(1000));
             }
@@ -616,11 +641,10 @@ namespace AdaptivBot
                 nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
                 JsScripts.ExportCustomerLimitUtilisationReportToCsv);
 
-            webBrowser.Document.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
-           
+            webBrowser.Document?.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
 
-            var overrideExistingFile =
-                (bool)chkBxOverrideExistingFiles.IsChecked;
+            var overrideExistingFile = true;
+                //(bool)chkBxOverrideExistingFiles.IsChecked;
 
             await Task.Run(() => Thread.Sleep(1000));
             await Task.Run(() => SaveCustomerLimitUtilisationReport((DateTime)date, overrideExistingFile));
@@ -631,7 +655,7 @@ namespace AdaptivBot
             logger.OkayText = "Complete";
         }
 
-        private async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
+        public async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 200);
             AutoItX.WinActivate("File Download");
@@ -693,10 +717,6 @@ namespace AdaptivBot
             }
         }
 
-        private void btnExtract_DealRiskCarriers_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         public static async void ConvertWorkbookFormats(string csvFile, string extFrom, string extTo)
         {
@@ -705,35 +725,9 @@ namespace AdaptivBot
                 await Task.Run(() => Thread.Sleep(1000));
             }
 
-            var excelcnvPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
+            var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
             var targetFile = Path.ChangeExtension(csvFile, "." + extTo);
-            Process.Start($"\"{excelcnvPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
-        }
-
-
-        private void RiskView_Settings_Click(object sender, RoutedEventArgs e)
-        {
-            var riskViewSettings = new RiskViewSettings();
-            riskViewSettings.Show();
-        }
-
-
-        private void CustomerLimitUtilisation_Settings_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new CustomerLimitUtilisationSettings();
-            window.Show();
-        }
-
-
-        private void DealRiskCarriers_Settings_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void btnGeneralSettings_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new GeneralSettings();
-            window.Show();
+            Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
         }
     }
 }

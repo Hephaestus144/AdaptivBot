@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>robot-9.ico</ApplicationIcon>
+    <ApplicationIcon>Images\robot-9.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoItX3.Assembly, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a646454c8d475470, processorArchitecture=MSIL">
@@ -46,15 +46,22 @@
     <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CredentialManagement.1.0.2\lib\net35\CredentialManagement.dll</HintPath>
     </Reference>
+    <Reference Include="Dragablz, Version=0.0.3.203, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.3.203\lib\net45\Dragablz.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.0.1205, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="NodaTime, Version=2.4.4.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.2.4.4\lib\net45\NodaTime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,7 +100,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AlertUpdateUserCredentials.xaml.cs">
+    <Compile Include="AlertForms\AlertUpdateUserCredentials.xaml.cs">
       <DependentUpon>AlertUpdateUserCredentials.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalConfigValues.cs" />
@@ -103,13 +110,19 @@
     <Compile Include="SettingForms\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\CustomerLimitUtilisationSettings.xaml.cs">
-      <DependentUpon>CustomerLimitUtilisationSettings.xaml</DependentUpon>
+    <Compile Include="SettingForms\PortfolioAnalysisSettings.xaml.cs">
+      <DependentUpon>PortfolioAnalysisSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingForms\DealRiskCarrierSettings.xaml.cs">
+      <DependentUpon>DealRiskCarrierSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingForms\RiskViewSettings.xaml.cs">
       <DependentUpon>RiskViewSettings.xaml</DependentUpon>
     </Compile>
-    <Page Include="AlertUpdateUserCredentials.xaml">
+    <Compile Include="SettingForms\CustomerLimitUtilisationSettings.xaml.cs">
+      <DependentUpon>CustomerLimitUtilisationSettings.xaml</DependentUpon>
+    </Compile>
+    <Page Include="AlertForms\AlertUpdateUserCredentials.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,16 +140,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingForms\GeneralSettings.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingForms\CustomerLimitUtilisationSettings.xaml">
+    <Page Include="SettingForms\PortfolioAnalysisSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SettingForms\DealRiskCarrierSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SettingForms\RiskViewSettings.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SettingForms\CustomerLimitUtilisationSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +188,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="robot-9.png" />
+    <Resource Include="Images\robot-9.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MSHTML">
@@ -190,11 +211,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Exclamation.png" />
+    <Resource Include="Images\Exclamation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="robot-9.ico" />
+    <Resource Include="Images\robot-9.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoItX.Dotnet.3.3.14.2\build\AutoItX.Dotnet.targets" Condition="Exists('..\packages\AutoItX.Dotnet.3.3.14.2\build\AutoItX.Dotnet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

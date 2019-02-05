@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\GitLab\AdaptivBot\AdaptivBot\App.xaml
-5-405473934
+71274316874
 
-18-102742711
-2856778927
-AlertUpdateUserCredentials.xaml;MainWindow.xaml;SettingForms\GeneralSettings.xaml;SettingForms\CustomerLimitUtilisationSettings.xaml;SettingForms\RiskViewSettings.xaml;
+20688067268
+31-664910911
+AlertForms\AlertUpdateUserCredentials.xaml;MainWindow.xaml;SettingForms\GeneralSettings.xaml;SettingForms\PortfolioAnalysisSettings.xaml;SettingForms\DealRiskCarrierSettings.xaml;SettingForms\RiskViewSettings.xaml;SettingForms\CustomerLimitUtilisationSettings.xaml;
 
 True
 

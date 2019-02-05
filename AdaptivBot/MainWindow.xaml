@@ -6,9 +6,11 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:AdaptivBot"
         mc:Ignorable="d"
-        Title="Adaptiv Bot Version 0.0" Height="800" Width="1200"
+        Height="800"
+        Width="1200"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -18,7 +20,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStyle="SingleBorderWindow"
         WindowState="Maximized"
-        Loaded="MainWindow_OnLoaded">
+        Loaded="MainWindow_OnLoaded"
+        Title="Adaptiv Bot Version 0.0">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -30,7 +33,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
+    
     <Grid>
         <Grid.Resources>
             <Style x:Key="BotButtonFramework"
@@ -45,56 +48,66 @@
         </Grid.Resources>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="0.15*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.15*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="15" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="0.15*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="15" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.3*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.5*" />
         </Grid.RowDefinitions>
 
         <Image HorizontalAlignment="Left"
                Grid.Row="1"
-               Grid.RowSpan="2"
                Grid.Column="2"
                Grid.ColumnSpan="2"
                Margin="40,0,0,0">
             <Image.Source>
-                <BitmapImage DecodePixelWidth="300" UriSource="/robot-9.png" />
+                <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot-9.png" />
             </Image.Source>
         </Image>
 
-        <materialDesign:PopupBox
+        <!--<materialDesign:PopupBox
                 Style="{StaticResource MaterialDesignMultiFloatingActionAccentPopupBox}"
                 PlacementMode="BottomAndAlignRightEdges"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Grid.Row="1"
                 Grid.RowSpan="2"
-                Grid.Column="7"
+                Grid.Column="5"
                 Height="40"
                 Width="40"
-                Margin="0,0,0,10">
+                Margin="0,0,0,10"
+                Content="Select Report">
             <materialDesign:PopupBox.ToggleCheckedContent>
                 <materialDesign:PackIcon
                         Kind="Pencil"
@@ -119,7 +132,6 @@
                 </TextBlock>
                 
                 <Button Name="btnGeneral_Settings"
-                        Click="btnGeneralSettings_Click"
                         materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
                         materialDesign:ShadowAssist.ShadowDepth="Depth5"
                         Margin="15,0,0,15">
@@ -176,30 +188,31 @@
                     <Button.Margin>15,0,0,15</Button.Margin>
                 </Button>
             </StackPanel>
-        </materialDesign:PopupBox>
+        </materialDesign:PopupBox>-->
 
-        
-        <StackPanel
+        <DockPanel  
             Grid.Row="1"
-            Grid.RowSpan="6"
+            Grid.RowSpan="4"
             Grid.Column="1"
             Grid.ColumnSpan="2">
             <TextBlock
+                DockPanel.Dock="Top"
                 Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 Text="Adaptiv Bot"
-                Margin="0,0,0,15"/>
+                Margin="0,0,0,10"/>
 
             <materialDesign:Card
-                Margin="0,0,0,15"
-                UniformCornerRadius="6">
+                DockPanel.Dock="Top"
+                Margin="5"
+                UniformCornerRadius="4">
                 <TextBox Name="txtUserName"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Padding="0,-5,0,0"
-                         Height="30"
                          HorizontalContentAlignment="Center"
                          VerticalContentAlignment="Center"
-                         FontSize="12"
+                         FontSize="10"
+                         Margin="5"
                          materialDesign:HintAssist.Hint="User Name"
                          materialDesign:HintAssist.FloatingScale="0.6"
                          materialDesign:HintAssist.FloatingOffset="-70,-8"/>
@@ -207,89 +220,105 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                Margin="0,0,0,15"
-                UniformCornerRadius="6">
+                DockPanel.Dock="Top"
+                Margin="5"
+                UniformCornerRadius="4">
                 <PasswordBox Name="txtPasswordBox" 
                              Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                              Padding="0,-5,0,0" 
+                             Margin="5"
                              PasswordChar="•"
-                             Height="30"
                              HorizontalContentAlignment="Center"
                              VerticalContentAlignment="Center"
-                             FontSize="12"
+                             FontSize="10"
                              materialDesign:HintAssist.Hint="Password"
                              materialDesign:HintAssist.FloatingScale="0.6"
                              materialDesign:HintAssist.FloatingOffset="-70,-8" >
                 </PasswordBox>
             </materialDesign:Card>
 
-            <ComboBox
-                Name="cmbBxAdaptivEnvironments"
-                Width="180"
-                Margin="0,0,0,15"
-                HorizontalContentAlignment="Center"
-                SelectedIndex="0"
-                IsEditable="True"
-                IsReadOnly="True"
-                ToolTip="Select Adaptiv environment."
-                SelectedValuePath="Content"
-                SelectionChanged="LoadAdaptivCredentials">
-                <ComboBoxItem>Production</ComboBoxItem>
-                <ComboBoxItem>Stress Environment</ComboBoxItem>
-                <ComboBoxItem>T5</ComboBoxItem>
-                <ComboBoxItem>T8</ComboBoxItem>
-                <ComboBoxItem>T10</ComboBoxItem>
-            </ComboBox>
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5">
+                <ComboBox
+                    Name="cmbBxAdaptivEnvironments"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="True"
+                    IsReadOnly="True"
+                    ToolTip="Select Adaptiv environment."
+                    SelectedValuePath="Content"
+                    SelectionChanged="LoadAdaptivCredentials">
+                    <ComboBoxItem>Production</ComboBoxItem>
+                    <ComboBoxItem>Stress Environment</ComboBoxItem>
+                    <ComboBoxItem>T5</ComboBoxItem>
+                    <ComboBoxItem>T8</ComboBoxItem>
+                    <ComboBoxItem>T10</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
 
             <CheckBox
+                DockPanel.Dock="Top"
                 Name="chkBxRememberMe"
                 IsChecked="True"
-                Margin="0,0,0,15"
-                HorizontalAlignment="Center"
-                Content="Remember Me"/>
-        </StackPanel>
+                FlowDirection="RightToLeft"
+                VerticalAlignment="Top"
+                Margin="5"
+                FontSize="10"
+                HorizontalAlignment="Center">
+                <TextBlock
+                    Margin="0,-2,0,0">
+                    Remember Me
+                </TextBlock>
+            </CheckBox>
+        </DockPanel>
 
         <DockPanel 
             Grid.Row="1"
-            Grid.RowSpan="6"
+            Grid.RowSpan="4"
             Grid.Column="3"
-            Grid.ColumnSpan="4"
+            Grid.ColumnSpan="2"
             Margin="20,0,0,0">
-
-
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
                 FontWeight="Bold"
-                Text="Report Extraction"
+                Text="Select Function"
                 Margin="0,15,5,0"/>
             <Separator
                 DockPanel.Dock="Top"
                 Margin="0,0,0,10"/>
             
-            <StackPanel
-                DockPanel.Dock="Left">
-                <DatePicker
-                    Name ="datePicker"
-                    Width="180"
-                    ToolTip="Only applicable to certain functions such Customer Limit Utilisation report extraction."
-                    Margin="10,0,10,15"
-                    materialDesign:HintAssist.Hint="Date"
+            <materialDesign:Card
+                UniformCornerRadius="4"
+                Margin="5,2,5,5">
+                <ComboBox
+                    Name="cmbBxSelectFunction"
+                    FontSize="10"
+                    Margin="5"
                     HorizontalContentAlignment="Center"
-                    DisplayDateEnd="{Binding displayEndDateTime}"
-                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-                <CheckBox
-                    Name="chkBxOverrideExistingFiles"
-                    HorizontalAlignment="Center"
-                    IsChecked="True">
-                    Override existing files
-                </CheckBox>
-
-            </StackPanel>
-
-            <StackPanel
+                    VerticalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="True"
+                    IsReadOnly="True"
+                    ToolTip="Select Adaptiv environment."
+                    SelectedValuePath="Content"
+                    VerticalAlignment="Top">
+                    <ComboBoxItem>Porfolio Analysis</ComboBoxItem>
+                    <ComboBoxItem>Risk View Reports</ComboBoxItem>
+                    <ComboBoxItem>Customer Limit Utilisation</ComboBoxItem>
+                    <ComboBoxItem>Deal Risk Carriers</ComboBoxItem>
+                    <ComboBoxItem>General Settings</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+            <!--<StackPanel
+                Orientation="Horizontal">
+                <StackPanel
                 DockPanel.Dock="Right">
                 <StackPanel.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -302,9 +331,16 @@
                 </StackPanel.Resources>
 
                 <Button 
+                    Margin="5"
+                    FontSize="12"
+                    VerticalAlignment="Center">
+                    Portfolio Analysis
+                </Button>
+
+                <Button 
                     Name="btnExtract_RiskView"
-                    Click="btnExtract_RiskView_Click"
-                    Margin="2,0,2,15"
+                    Click="LoadRiskViewSettings"
+                    Margin="5"
                     FontSize="12"
                     VerticalAlignment="Center">
                     Risk View
@@ -312,8 +348,8 @@
 
                 <Button 
                     Name="btnExtract_CustomerLimitUtilisation"
-                    Click="btnExtract_CustomerLimitUtilisation_Click"  
-                    Margin="2,0,2,15"
+                    Click="LoadCustomerLimitUtilisationSettings"  
+                    Margin="5"
                     FontSize="12"
                     VerticalAlignment="Center">
                     Customer Limit Utilisation
@@ -322,116 +358,249 @@
                 <Button 
                     Name="btnExtract_DealRiskCarriers"
                     Click="btnExtract_DealRiskCarriers_Click"
-                    Margin="2,0,2,15"
+                    Margin="5"
                     FontSize="12"
                     VerticalAlignment="Center">
                     Deal Risk Carriers
                 </Button>
 
-                <Button 
-                    Name="btnQuitExecution"
-                    Click="btnExtract_CustomerLimitUtilisation_Click"  
-                    Margin="2,0,2,15"
-                    FontSize="12"
-                    VerticalAlignment="Center">
-                    Quit Execution
-                </Button>
             </StackPanel>
 
-        </DockPanel>
-        
-        <StackPanel
-            Grid.Row="7"
-            Grid.RowSpan="4"
-            Grid.Column="1"
-            Grid.ColumnSpan="7"
-            Orientation="Horizontal">
-
-            <DockPanel
-                Margin="0,0,20,0">
-                <TextBlock 
-                    DockPanel.Dock="Left"
-                    Foreground="{StaticResource SecondaryAccentBrush}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Text="Extracted Files"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Margin="0,6,6,0">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="-90"></RotateTransform>
-                    </TextBlock.LayoutTransform>
-                </TextBlock>
-
-                <materialDesign:Card
-                    DockPanel.Dock="Right"
-                    UniformCornerRadius="6">
-                    <ListBox
-                        Name="lstBxExtractedFiles"
-                        MinHeight="120"
-                        MinWidth="340"
-                        Margin="5,5,5,5"
-                        Background="Transparent"
-                        BorderThickness="0"/>
-                </materialDesign:Card>
-            </DockPanel>
-
-            <DockPanel>
-                <TextBlock
-                    DockPanel.Dock="Left"
-                    Foreground="{StaticResource SecondaryAccentBrush}"
-                    Text="Logger"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Margin="0,6,6,0"
-                    VerticalAlignment="Top">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="-90"></RotateTransform>
-                    </TextBlock.LayoutTransform>
-                </TextBlock>
-
-                <materialDesign:Card
-                    UniformCornerRadius="6"
+                <StackPanel
                     DockPanel.Dock="Right">
-                    <RichTextBox
-                        Name="rtbLogger"
-                        Height="120"
-                        MinWidth="500"
-                        Margin="5,5,5,5"
-                        Background="Transparent"
-                        IsReadOnly="True"
-                        BorderThickness="0"
-                        Foreground="LawnGreen"
-                        VerticalContentAlignment="Top"
-                        VerticalScrollBarVisibility="Visible">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>
-                    </RichTextBox>
-                </materialDesign:Card>
-            </DockPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="LawnGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Resources>
 
-        </StackPanel>
+                    <Button 
+                        Margin="5"
+                        FontSize="12"
+                        VerticalAlignment="Center">
+                        General Settings
+                    </Button>
 
-        <Border BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                Grid.Row="11"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                Grid.ColumnSpan="7"
-                BorderThickness="2"/>
+                    <Button 
+                        Margin="5"
+                        FontSize="12"
+                        VerticalAlignment="Center">
+                        Quit Execution
+                    </Button>
+                </StackPanel>
+            </StackPanel>-->
 
-        <WindowsFormsHost
-            Name="webBrowserHost"
-            Grid.Row="11"
-            Grid.RowSpan="2"
+        </DockPanel>
+
+
+        <dragablz:TabablzControl 
+            Grid.Row="5"
+            Grid.RowSpan="3"
             Grid.Column="1"
-            Grid.ColumnSpan="7"
-            Margin="2">
-            <WindowsFormsHost.Child>
-                <wf:WebBrowser/>
-            </WindowsFormsHost.Child>
-        </WindowsFormsHost>
+            Grid.ColumnSpan="6"
+            Margin="8">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+            <TabItem Header="Tab No. 1" IsSelected="True">
+                <DockPanel>
+                    <TextBlock
+                        DockPanel.Dock="Top"
+                        Foreground="{StaticResource SecondaryAccentBrush}"
+                        Text="Logger"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        VerticalAlignment="Top"
+                        Margin="11,0,0,0">
+                    </TextBlock>
+                    <materialDesign:Card
+                        UniformCornerRadius="6"
+                        DockPanel.Dock="Right"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Margin="5">
+                        <RichTextBox
+                            Name="rtbLogger"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            Background="Transparent"
+                            IsReadOnly="True"
+                            BorderThickness="0"
+                            Foreground="LawnGreen"
+                            VerticalContentAlignment="Top"
+                            VerticalScrollBarVisibility="Visible">
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </RichTextBox.Resources>
+                        </RichTextBox>
+                    </materialDesign:Card>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Tab No. 2">
+                <TextBlock>We Have Tearable Tabs!</TextBlock>
+            </TabItem>
+        </dragablz:TabablzControl>
+
+        
+
+        
+        <DockPanel
+            Grid.Row="5"
+            Grid.RowSpan="3"
+            Grid.Column="8"
+            Grid.ColumnSpan="8">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Foreground="{StaticResource SecondaryAccentBrush}"
+                Text="Extracted Files"
+                FontSize="16"
+                FontWeight="Bold"
+                VerticalAlignment="Top"
+                Margin="11,0,0,0">
+            </TextBlock>
+            <materialDesign:Card
+                UniformCornerRadius="6"
+                DockPanel.Dock="Right"
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Margin="5">
+                <ListBox
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Margin="5"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="LawnGreen"
+                    VerticalContentAlignment="Top">
+                </ListBox>
+            </materialDesign:Card>
+        </DockPanel>
+
+        <DockPanel 
+            Grid.Row="0"
+            Grid.RowSpan="5"
+            Grid.Column="8"
+            Grid.ColumnSpan="8">
+
+            <materialDesign:Transitioner
+                SelectedIndex="{Binding ElementName=cmbBxSelectFunction, Path=SelectedIndex}">
+                
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="frmPortfolioAnalysisSettings"
+                        NavigationUIVisibility="Hidden"
+                        Source="SettingForms/PortfolioAnalysisSettings.xaml">
+                    </Frame>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="frmRiskViewSettings"
+                        NavigationUIVisibility="Hidden"
+                        Source="SettingForms/RiskViewSettings.xaml">
+                    </Frame>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="frmCustomerLimitUtilisationSettings"
+                        NavigationUIVisibility="Hidden"
+                        Source="SettingForms/CustomerLimitUtilisationSettings.xaml"/>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="frmDealRiskCarrierSettings"
+                        NavigationUIVisibility="Hidden"
+                        Source="SettingForms/DealRiskCarrierSettings.xaml"/>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="frmGeneralSettings"
+                        NavigationUIVisibility="Hidden"
+                        Source="SettingForms/GeneralSettings.xaml"/>
+                </materialDesign:TransitioningContent>
+            </materialDesign:Transitioner>
+               
+        </DockPanel>
+
+        
+        <DockPanel
+            Grid.Row="9"
+            Grid.RowSpan="6"
+            Grid.Column="1"
+            Grid.ColumnSpan="15">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Foreground="{StaticResource SecondaryAccentBrush}"
+                Text="Web Browser"
+                FontSize="16"
+                FontWeight="Bold"
+                VerticalAlignment="Top"
+                Margin="11,0,0,0"/>
+            <Border
+                DockPanel.Dock="Top"
+                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                BorderThickness="2"/>
+            <Border
+                DockPanel.Dock="Left"
+                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                BorderThickness="2"/>
+            <Border
+                DockPanel.Dock="Bottom"
+                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                BorderThickness="2"/>
+            <Border
+                DockPanel.Dock="Right"
+                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                BorderThickness="2"/>
+            <WindowsFormsHost
+                Name="webBrowserHost"
+
+                Margin="2">
+                <WindowsFormsHost.Child>
+                    <wf:WebBrowser/>
+                </WindowsFormsHost.Child>
+            </WindowsFormsHost>
+        </DockPanel>
     </Grid>
 </Window>

@@ -12,26 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace AdaptivBot.SettingForms
 {
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class CustomerLimitUtilisationSettings : Page
+    public partial class DealRiskCarrierSettings : Page
     {
-        public CustomerLimitUtilisationSettings()
+        public DealRiskCarrierSettings()
         {
             InitializeComponent();
-        }
-
-        private void CustomerLimitUtilisationSettings_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var configDocument =
-                XDocument.Load(GlobalConfigValues.Instance.adaptivBotConfigFile);
-            txtBoxBaseFolder.Text =
-                configDocument.Root.Element("ExcelExecutablePath").Value;
         }
     }
 }

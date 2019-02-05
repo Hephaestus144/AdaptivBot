@@ -1,161 +1,215 @@
-﻿<Window x:Class="AdaptivBot.RiskViewSettings"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AdaptivBot"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
-        Title="Risk View Extraction Settings" Height="500" Width="500"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Auto"
-        ResizeMode="NoResize"
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+﻿<Page x:Class="AdaptivBot.SettingForms.RiskViewSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AdaptivBot.SettingForms"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Title="Risk View Settings">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopUpBox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="15"/>
-        </Grid.RowDefinitions>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="9">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                Foreground="{DynamicResource SecondaryAccentBrush}"
+                VerticalAlignment="Bottom"
+                FontWeight="Bold"
+                Margin="0,15,5,0"
+                Text="Risk View Settings"/>
+            <Separator
+                DockPanel.Dock="Top"
+                Margin="0,0,0,10"/>
+        </DockPanel>
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="2"
+            Grid.Column="0">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                HorizontalAlignment="Right"
+                Margin="8">
+                Base Folder
+            </TextBlock>
+
+        </DockPanel>
+
+        <DockPanel
+            Grid.Row="1"
             Grid.Column="1"
+            Grid.ColumnSpan="4">
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    FontSize="10"
+                    Padding="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"/>
+            </materialDesign:Card>
+        </DockPanel>
+
+        <materialDesign:Card
+            Grid.Row="1"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center">
+            <DatePicker
+                Name ="datePicker"
+                ToolTip="Only used in 'Delete Files for Date' function."
+                materialDesign:HintAssist.Hint="Date"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontSize="10"
+                Margin="0,-4,0,0"
+                materialDesign:HintAssist.FloatingOffset="0,-10"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+        </materialDesign:Card>
+
+        <DockPanel
+            Grid.Row="2"
+            Grid.RowSpan="3"
+            Grid.Column="3"
             Grid.ColumnSpan="2">
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Margin="0,0,0,15">
-                Risk View Extraction Settings
+                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                Margin="5,0,0,0">
+                Instruments
             </TextBlock>
-
-            <StackPanel
-                DockPanel.Dock="Top">
-                <Button 
-                    Margin="0,0,0,15"
-                    Width="220">
-                    Delete Files for Selected Date 
-                </Button>
-
-                <Button 
-                    Margin="0,0,0,15"
-                    Width="220">
-                    Copy Files to UAT
-                </Button>
-
-                <Button 
-                    Margin="0,0,0,15"
-                    Width="220">
-                    Copy Files to Production
-                </Button>
-            </StackPanel>
-
-            <DockPanel
+            <materialDesign:Card
                 DockPanel.Dock="Top"
-                Margin="0,0,0,15">
-                <materialDesign:Card
-                    Width="350"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Right">
-                    <TextBox
-                        FontSize="12"
-                        Width="350"
-                        Padding="3,0,3,0"
-                        VerticalContentAlignment="Center"></TextBox>
-                </materialDesign:Card>
-                <TextBlock
-                    FontSize="12"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Right"
-                    Margin="0,0,10,0">Base Folder</TextBlock>
-            </DockPanel>
-
-            <DockPanel
-                DockPanel.Dock="Top"
-                Margin="0,0,0,15">
-                <materialDesign:Card
-                    DockPanel.Dock="Right"
-                    Width="350"
-                    HorizontalAlignment="Right">
-                    <TextBox
-                        FontSize="12"
-                        Width="350"
-                        Padding="3,0,3,0"
-                        VerticalContentAlignment="Center"></TextBox>
-                </materialDesign:Card>
-                <TextBlock
-                    FontSize="12"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Right"
-                    Margin="0,0,10,0">UAT Folder</TextBlock>
-            </DockPanel>
-
-            <DockPanel
-                DockPanel.Dock="Top"
-                Margin="0,0,0,15">
-                <materialDesign:Card
-                    Width="350"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Right">
-                    <TextBox
-                        FontSize="12"
-                        Width="350"
-                        Padding="3,0,3,0"
-                        VerticalContentAlignment="Center"></TextBox>
-                </materialDesign:Card>
-                <TextBlock
-                    FontSize="12"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Right"
-                    Margin="0,0,10,0">Production Folder</TextBlock>
-            </DockPanel>
-
-            <StackPanel 
-                DockPanel.Dock="Bottom"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Orientation="Horizontal">
-                <Button Name="btnSaveSettings"
-                        Margin="0,0,20,0"
-                        Width="100">
-                    Save    
-                </Button>
-                <Button Name="btnCancelSettings"
-                        Width="100">
-                    Cancel
-                </Button>
-            </StackPanel>
+                Margin="5"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Center">
+                <ListBox
+                    Name="lstBxInstruments"
+                    ToolTip="To select multiple items hold down shift and left click on them one by one."
+                    SelectionMode="Multiple"
+                    FontSize="10"
+                    Margin="5">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True" >
+                                    <Setter Property="FontWeight" Value="DemiBold" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Trigger>
+                            </Style.Triggers>
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightColorKey}" Color="Transparent"/>
+                            </Style.Resources>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBoxItem>Commodities : Agri</ListBoxItem>
+                    <ListBoxItem>Commodities : Base Metals</ListBoxItem>
+                    <ListBoxItem>Commodities : Energy</ListBoxItem>
+                    <ListBoxItem>Commodities : Precious Metals</ListBoxItem>
+                    <ListBoxItem>Credit</ListBoxItem>
+                    <ListBoxItem>Equities</ListBoxItem>
+                    <ListBoxItem>Foreign Exchange</ListBoxItem>
+                    <ListBoxItem>Interest Rates</ListBoxItem>
+                    <ListBoxItem>Securities Financing : Bonds</ListBoxItem>
+                    <ListBoxItem>Securities Financing : Equities</ListBoxItem>
+                </ListBox>
+            </materialDesign:Card>
         </DockPanel>
+
+        <DockPanel
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Grid.Column="7"
+            Grid.ColumnSpan="2">
+            <Button
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="10"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="5">
+                Delete Files for Date
+            </Button>
+
+            <Button
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="10"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="5">
+                Copy Files to UAT
+            </Button>
+
+            <Button
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="10"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="5">
+                Copy Files to Prod
+            </Button>
+        </DockPanel>
+
+
+        <CheckBox
+            Name="chkBxOverrideExistingFiles"
+            Grid.Row="4"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalAlignment="Center"
+            IsChecked="True"
+            Margin="5,12,5,5"
+            FlowDirection="RightToLeft">
+            <TextBlock
+                Margin="0,-3,0,0">
+                Override existing files
+            </TextBlock> 
+        </CheckBox>
+        <Button
+            Name="btnRunExtraction"
+            Grid.Row="4"
+            Grid.Column="7"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            FontSize="12"
+            Style="{StaticResource MaterialDesignRaisedAccentButton}"
+            Margin="5" Click="btnRunExtraction_Click">
+            Run Extraction
+        </Button>
     </Grid>
-</Window>
+</Page>

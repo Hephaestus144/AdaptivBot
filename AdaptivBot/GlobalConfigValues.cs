@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AdaptivBot
 {
@@ -12,6 +9,7 @@ namespace AdaptivBot
         No,
         Maybe
     }
+
 
     public class GlobalConfigValues
     {
@@ -23,6 +21,9 @@ namespace AdaptivBot
         public string adaptivBotConfigFile;
         public static string possibleExcelPath1
             = @"C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe";
+
+        public DateTime extractionStartTime;
+        public DateTime extractionEndTime;
 
         public static string possibleExcelPath2
             = @"C:\Program Files\Microsoft Office\root\Office16\Excel.exe";
