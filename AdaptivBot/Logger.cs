@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using Brushes = System.Windows.Media.Brushes;
-using System.Threading;
-using System.Windows.Threading;
+
 
 namespace AdaptivBot
 {
@@ -103,7 +98,7 @@ namespace AdaptivBot
 
         public void ExtractionComplete(string message)
         {
-            HorizontalLine(Brushes.LawnGreen, '-', 100);
+            DashedHorizontalLine(Brushes.LawnGreen);
 
             var completeRun = new Run($"\n>>>>>>>>  Complete : ")
             {
@@ -291,7 +286,7 @@ namespace AdaptivBot
         }
 
 
-        public Logger(System.Windows.Controls.RichTextBox rtbLogger)
+        public Logger(RichTextBox rtbLogger)
         {
             RtbLogger = rtbLogger;
         }

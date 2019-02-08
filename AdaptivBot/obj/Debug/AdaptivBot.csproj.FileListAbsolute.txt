@@ -105,3 +105,4 @@ C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\SettingForms\RiskViewSettings.baml
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\Dragablz.dll
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\Dragablz.pdb
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\Dragablz.xml
+C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache

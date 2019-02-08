@@ -524,13 +524,15 @@
             </TextBlock> 
         </CheckBox>
         <Button
+            Name="btnRunExtraction"
             Grid.Row="7"
             Grid.Column="9"
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5,5,5,10">
+            Margin="5,5,5,10"
+            Click="btnRunExtraction_Click">
             Run Extraction
         </Button>
     </Grid>

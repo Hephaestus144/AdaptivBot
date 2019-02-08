@@ -226,7 +226,6 @@ namespace AdaptivBot
                 Dispatcher.BeginInvoke((Action) (() =>
                 {
                     iconNetworkType.Kind = PackIconKind.EthernetCable;
-                    btnNetworkType.Background = Brushes.Orange;
                 }));
             }
             else
@@ -234,6 +233,7 @@ namespace AdaptivBot
                 Dispatcher.BeginInvoke((Action)(() =>
                 {
                     iconNetworkType.Kind = PackIconKind.Wifi;
+                    btnNetworkType.Background = Brushes.Orange;
                 }));
             }
         }
@@ -387,16 +387,6 @@ namespace AdaptivBot
             //Action to be taken on page loading completion
         }
 
-
-        public async void WaitForBrowser()
-        {
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(1000));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-        }
 
 
         public async void SaveFile(string instrumentBatch, bool overrideExistingFile)
@@ -586,155 +576,6 @@ namespace AdaptivBot
         }
 
       
-        public async void btnExtract_CustomerLimitUtilisation_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO: Switch to Customer Limit function date
-            DateTime? date = (DateTime)DateTime.Now;// datePicker.SelectedDate;
-            if (date is null)
-            {
-                logger.ErrorText = "Please select a date for extraction.";
-                return;
-            }
-
-            if (!StoreUserCredentials())
-            {
-                return;
-            }
-
-            logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
-
-            // TODO: Use binding here.
-            var username = txtUserName.Text;
-            var password = txtPasswordBox.Password;
-
-            var currentAdaptivEnvironment =
-                cmbBxAdaptivEnvironments.SelectedValue.ToString();
-
-            StoreUserCredentials();
-
-            await Task.Run(() => OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            InjectJavascript(
-                nameof(JsScripts.OpenCustomerLimitUtilisationReport),
-                JsScripts.OpenCustomerLimitUtilisationReport);
-
-            webBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
-
-            #region wait for browser
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-
-            InjectJavascript(
-                nameof(JsScripts.FilterCustomerLimitUtilisationReport),
-                JsScripts.FilterCustomerLimitUtilisationReport);
-            webBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
-
-            #region wait for browser
-            completedLoading = false;
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            InjectJavascript(
-                nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
-                JsScripts.ChooseCustomerLimitUtilisationReport);
-            await Task.Run(() => Thread.Sleep(1000));
-            webBrowser.Document?.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
-
-            injectedScripts.Clear();
-
-
-            #region wait for browser
-            completedLoading = false;
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-            await Task.Run(() => Thread.Sleep(1000));
-
-
-            InjectJavascript(
-                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
-                JsScripts.SelectCustomerLimitUtilisationReportDate);
-
-            webBrowser.Document?.InvokeScript(
-                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
-                new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
-            
-            #region wait for browser
-            completedLoading = false;
-            while (!completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-            await Task.Run(() => Thread.Sleep(1000));
-            completedLoading = false;
-            #endregion wait for browser
-
-            InjectJavascript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
-                JsScripts.GenerateCustomerLimitUtilisationReport);
-
-            webBrowser.Document?.InvokeScript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
-
-            while (webBrowser.Document?.GetElementsByTagName("img").Count < 5)
-            {
-                await Task.Run(() => Thread.Sleep(1000));
-            }
-            await Task.Run(() => Thread.Sleep(3000));
-
-            InjectJavascript(
-                nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
-                JsScripts.ExportCustomerLimitUtilisationReportToCsv);
-
-            webBrowser.Document?.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
-
-            var overrideExistingFile = true;
-                //(bool)chkBxOverrideExistingFiles.IsChecked;
-
-            await Task.Run(() => Thread.Sleep(1000));
-            await Task.Run(() => SaveCustomerLimitUtilisationReport((DateTime)date, overrideExistingFile));
-
-            var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
-
-            ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
-            logger.OkayText = "Complete";
-        }
 
 
         public async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
