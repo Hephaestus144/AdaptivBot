@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using ListBox = System.Windows.Controls.ListBox;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using System.Windows.Documents;
-using AdaptivBot.Annotations;
-using WebBrowser = System.Windows.Controls.WebBrowser;
+using System.Windows.Forms;
+using AutoIt;
+using Application = System.Windows.Application;
 
 
 namespace AdaptivBot.SettingForms
@@ -23,6 +19,9 @@ namespace AdaptivBot.SettingForms
     /// </summary>
     public partial class RiskViewSettings : Page
     {
+        private readonly MainWindow window = (MainWindow)Application.Current.MainWindow;
+
+
         public RiskViewSettings()
         {
             InitializeComponent();
@@ -33,8 +32,7 @@ namespace AdaptivBot.SettingForms
         {
             GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
 
-            var window = (MainWindow) App.Current.MainWindow;
-
+            
             window?.logger.NewExtraction("Risk View Reports Extraction Started");
 
             if (!window.StoreUserCredentials())
@@ -174,7 +172,7 @@ namespace AdaptivBot.SettingForms
 
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
                         await Task.Run(() =>
-                            window.SaveFile(instrumentBatch, overrideExistingFile));
+                            SaveFile(instrumentBatch, overrideExistingFile));
                         numberOfSuccessfulExtractions++;
                         break;
                     }
@@ -215,6 +213,96 @@ namespace AdaptivBot.SettingForms
             window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
 
+
+        public async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 20);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("{TAB 3}");
+            AutoItX.Send("{ENTER}");
+            Dispatcher.Invoke((System.Action)(() =>
+            {
+                window.logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
+            }));
+
+            AutoItX.WinWait("Save As", timeout: 20);
+            AutoItX.WinActivate("Save As");
+
+            AutoItX.Send("{DEL}");
+            // TODO: Make the output file name a parameter.
+            AutoItX.Send(
+                $"STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv");
+            AutoItX.Send("!d");
+            AutoItX.Send("{DEL}");
+
+            AutoItX.Send(
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
+            AutoItX.Send("!s");
+            AutoItX.Sleep(1000);
+            var fileSaved = true;
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        window.logger.WarningText =
+                            $"Overriding existing file for {instrumentBatch}...";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        window.logger.WarningText =
+                            $"File already exists for {instrumentBatch}.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{TAB 10}");
+                    AutoItX.Send("{ENTER}");
+                    fileSaved = false;
+                }
+            }
+
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]")
+                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
+
+            var filePath =
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
+
+            while (!File.Exists(filePath))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
+
+            if (fileSaved)
+            {
+                var fileSize = (new FileInfo(filePath).Length >= 1048576)
+                    ? $"{(new FileInfo(filePath).Length / 1048576):n}" + " MB"
+                    : $"{(new FileInfo(filePath).Length / 1024):n}" + " KB";
+                Dispatcher.Invoke((System.Action)(() =>
+                {
+                    window.extractedFiles.Add(new ExtractedFile()
+                    {
+                        FilePath = filePath,
+                        FileName = Path.GetFileName(filePath),
+                        FileType = $"Risk View : {instrumentBatch}",
+                        FileSize = fileSize
+                    });
+                }));
+            }
+            // TODO: Checkbox to close window when complete.
+
+        }
 
 
         private void RiskViewSettings_OnLoaded(object sender, RoutedEventArgs e)

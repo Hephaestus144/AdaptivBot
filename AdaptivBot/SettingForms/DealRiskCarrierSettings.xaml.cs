@@ -192,11 +192,7 @@ namespace AdaptivBot.SettingForms
 
                     Excel.Application xlApp = new Excel.Application();
                     Excel.Workbook wb = xlApp.Workbooks.Open(xlsxDrcFilePath);
-                    //Excel.Worksheet ws = wb.Sheets.Add();
                     var wsName = "All RC Files Combined";
-                    //Excel.Workbook riskCarrierWorkbook =
-                    //    xlApp.Workbooks.Open(
-                    //        @"\\pcibtignass1\capr2\RtB\DRC\Upload\Risk_Carrier_File_02.csv");
 
                     var csvContents = new List<object[,]>();
                     var riskCarrierFilePaths =

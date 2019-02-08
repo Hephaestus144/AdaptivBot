@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using AutoIt;
 
 
 namespace AdaptivBot.SettingForms
@@ -13,6 +15,8 @@ namespace AdaptivBot.SettingForms
     /// </summary>
     public partial class CustomerLimitUtilisationSettings : Page
     {
+        private readonly MainWindow window = (MainWindow)Application.Current.MainWindow;
+
         public CustomerLimitUtilisationSettings()
         {
             InitializeComponent();
@@ -29,7 +33,7 @@ namespace AdaptivBot.SettingForms
 
         public async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            var window = (MainWindow)Application.Current.MainWindow;
+            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
             var date = datePicker.SelectedDate;
             
             if (date is null)
@@ -92,7 +96,7 @@ namespace AdaptivBot.SettingForms
             window.completedLoading = false;
             #endregion wait for browser
 
-
+            window.logger.OkayText = "Filtering customer limit utilisation report...";
             window.InjectJavascript(
                 nameof(JsScripts.FilterCustomerLimitUtilisationReport),
                 JsScripts.FilterCustomerLimitUtilisationReport);
@@ -108,6 +112,8 @@ namespace AdaptivBot.SettingForms
             window.completedLoading = false;
             #endregion wait for browser
 
+            window.logger.OkayText =
+                $"Opening customer limit utilisation report for {((DateTime)date):dd-MMM-yyyy}...";
             window.InjectJavascript(
                 nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
                 JsScripts.ChooseCustomerLimitUtilisationReport);
@@ -170,12 +176,90 @@ namespace AdaptivBot.SettingForms
             //(bool)chkBxOverrideExistingFiles.IsChecked;
 
             await Task.Run(() => Thread.Sleep(1000));
-            await Task.Run(() => window.SaveCustomerLimitUtilisationReport((DateTime)date, overrideExistingFile));
+            await Task.Run(() => SaveCustomerLimitUtilisationReport((DateTime)date, overrideExistingFile));
 
             var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
 
+            var fileSize = (new FileInfo(csvFile).Length >= 1048576)
+                ? $"{(new FileInfo(csvFile).Length / 1048576):n}" + " MB"
+                : $"{(new FileInfo(csvFile).Length / 1024):n}"    + " KB";
+            Dispatcher.Invoke((System.Action)(() =>
+            {
+                window.extractedFiles.Add(new ExtractedFile()
+                {
+                    FilePath = csvFile,
+                    FileName = Path.GetFileName(csvFile),
+                    FileType = $"Customer Limit Utilisation",
+                    FileSize = fileSize
+                });
+            }));
+
+            window.logger.OkayText = "Converting csv extraction to xlsx...";
             MainWindow.ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
-            window.logger.OkayText = "Complete";
+            window.logger.ExtractionComplete("Customer Limit Utilisation");
+            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
+            var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
+                           GlobalConfigValues.Instance.extractionStartTime;
+            window.logger.OkayTextWithoutTime
+                = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
+            window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+        }
+
+
+        public async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 200);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("!s");
+            AutoItX.WinWait("Save As", timeout: 20);
+            AutoItX.WinActivate("Save As");
+
+            AutoItX.Send("{DEL}");
+            // TODO: Make the output file name a parameter.
+            AutoItX.Send($"CustomerLimitUtil {date:dd.MM.yyyy}.csv");
+            AutoItX.Send("!d");
+            AutoItX.Send("{DEL}");
+
+            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG");
+            AutoItX.Send("!s");
+            Dispatcher.Invoke((Action)(() =>
+            {
+                window.logger.WarningText =
+                    $"Saving csv file...";
+            }));
+            AutoItX.Sleep(1000);
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        window.logger.WarningText =
+                            $"Overriding existing file...";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        window.logger.WarningText =
+                            $"File already exists.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{ENTER}");
+                }
+            }
+
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]").Contains("Utilisation"))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
         }
 
 
