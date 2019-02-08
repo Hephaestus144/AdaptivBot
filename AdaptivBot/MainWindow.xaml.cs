@@ -8,14 +8,17 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Office.Interop.Outlook;
 using Action = System.Action;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace AdaptivBot
 {
@@ -144,9 +147,10 @@ namespace AdaptivBot
         public MainWindow()
         {
             InitializeComponent();
-
+            
             dgExtractedFiles.ItemsSource = extractedFiles;
-
+            NetworkChange.NetworkAddressChanged +=
+                new NetworkAddressChangedEventHandler(AddressCallbackChange);
             // Deals with new windows created by browser.
             webBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
             axBrowser = (SHDocVw.WebBrowser_V1)webBrowser.ActiveXInstance;
@@ -178,6 +182,61 @@ namespace AdaptivBot
             }
         }
 
+        public bool IsUsingEthernet(Logger _logger)
+        {
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.OperationalStatus == OperationalStatus.Up
+                    && ni.NetworkInterfaceType.ToString()
+                        .IndexOf("Ethernet", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        _logger.OkayText = "Ethernet connection restored.";
+                    }));
+                    return true;
+                }
+            }
+
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.OperationalStatus == OperationalStatus.Up)
+                {
+                    Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        _logger.WarningText = "Connected to WIFI.";
+                        _logger.WarningText = "For stability use Ethernet instead.";
+                    }));
+                    return false;
+                }
+            }
+
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                _logger.ErrorText = "Network not detected.";
+            }));
+            return false;
+        }
+
+
+        void AddressCallbackChange(object sender, EventArgs e)
+        {
+            if (IsUsingEthernet(this.logger))
+            {
+                Dispatcher.BeginInvoke((Action) (() =>
+                {
+                    iconNetworkType.Kind = PackIconKind.EthernetCable;
+                    btnNetworkType.Background = Brushes.Orange;
+                }));
+            }
+            else
+            {
+                Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    iconNetworkType.Kind = PackIconKind.Wifi;
+                }));
+            }
+        }
 
         public void axBrowser_NewWindow(
             string URL,
@@ -290,6 +349,15 @@ namespace AdaptivBot
             {
                 txtUserName.Text = credentialStore.credential.Username;
                 txtPasswordBox.Password = credentialStore.credential.Password;
+            }
+
+            if (IsUsingEthernet(this.logger))
+            {
+                iconNetworkType.Kind = PackIconKind.EthernetCable;
+            }
+            else
+            {
+                iconNetworkType.Kind = PackIconKind.Wifi;
             }
         }
 

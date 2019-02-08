@@ -17,9 +17,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -34,14 +39,14 @@
         <DockPanel
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="9">
+            Grid.ColumnSpan="11">
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
-                FontWeight="Bold"
-                Margin="0,15,5,0"
+                FontWeight="DemiBold"
+                Margin="0,20,5,-5"
                 Text="Portfolio Analysis Settings"/>
             <Separator
                 DockPanel.Dock="Top"
@@ -50,14 +55,14 @@
 
         <materialDesign:Card
             Grid.Row="1"
-            Grid.Column="5"
+            Grid.Column="7"
             Grid.ColumnSpan="2"
             Margin="5"
             VerticalAlignment="Top"
             VerticalContentAlignment="Center">
             <DatePicker
-                Name ="datePickerCustomerLimitUtilisation"
-                ToolTip="Only used in 'Delete Files for Date' function."
+                Name ="datePicker"
+                ToolTip="Only used in the customer limit utilisation extraction."
                 materialDesign:HintAssist.Hint="Date"
                 HorizontalContentAlignment="Center"
                 VerticalAlignment="Center"
@@ -73,21 +78,13 @@
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
-            Grid.Column="7"
+            Grid.Column="9"
             Grid.ColumnSpan="2">
-            <Button
-                DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                Delete Files for Date
-            </Button>
 
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to UAT
@@ -96,38 +93,59 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to Prod
             </Button>
         </DockPanel>
 
-
+        <Button
+            Grid.Row="7"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            FontSize="12"
+            Style="{StaticResource MaterialDesignFlatButton}"
+            Margin="5,5,5,10">
+            <Button.Content>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock>Save Settings</TextBlock>
+                    <materialDesign:PackIcon
+                        Kind="ContentSaveSettingsOutline"
+                        Width="16"
+                        Height="16"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Button.Content>
+        </Button>
         <CheckBox
             Name="chkBxOverrideExistingFiles"
-            Grid.Row="4"
-            Grid.Column="5"
+            Grid.Row="7"
+            Grid.Column="7"
             Grid.ColumnSpan="2"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="True"
-            Margin="5,12,5,5"
+            Margin="5,10,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
                 Margin="0,-3,0,0">
                 Override existing files
-            </TextBlock> 
+            </TextBlock>
         </CheckBox>
         <Button
-            Grid.Row="4"
-            Grid.Column="7"
+            Grid.Row="7"
+            Grid.Column="9"
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5">
+            Margin="5,5,5,10">
             Run Extraction
         </Button>
     </Grid>

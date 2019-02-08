@@ -20,7 +20,7 @@ namespace AdaptivBot
         private string _text = "";
         public readonly RichTextBox RtbLogger;
 
-        public void HorizontalLine(Brush color, char lineCharacter = '-', int lineLength = 80)
+        public void HorizontalLine(Brush color, char lineCharacter = '-', int lineLength = 97)
         {
             var horizontalLine = new Run(new string(lineCharacter, lineLength))
             {
@@ -35,7 +35,7 @@ namespace AdaptivBot
 
         public void DashedHorizontalLine(Brush color)
         {
-            var dashedLine = string.Concat(Enumerable.Repeat("-  ", 40));
+            var dashedLine = string.Concat(Enumerable.Repeat("-  ", 43));
             var horizontalLine = new Run(dashedLine)
             {
                 FontWeight = FontWeights.Bold,
@@ -103,16 +103,9 @@ namespace AdaptivBot
 
         public void ExtractionComplete(string message)
         {
-            HorizontalLine(Brushes.LawnGreen, '>', $"Complete : {message}".Length);
+            HorizontalLine(Brushes.LawnGreen, '-', 100);
 
-            var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
-            {
-                FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
-                FontFamily = new FontFamily("Courier")
-            };
-
-            var completeRun = new Run($"\nComplete : ")
+            var completeRun = new Run($"\n>>>>>>>>  Complete : ")
             {
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.LawnGreen,
@@ -120,8 +113,15 @@ namespace AdaptivBot
             };
 
             
-            var messageRun = new Run($" {message}")
+            var messageRun = new Run($" {message} ")
             {
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var chevrons = new Run("  <<<<<<<<")
+            {
+                FontWeight = FontWeights.Bold,
                 Foreground = Brushes.LawnGreen,
                 FontFamily = new FontFamily("Courier")
             };
@@ -130,6 +130,7 @@ namespace AdaptivBot
             paragraph.Inlines.Clear();
             paragraph.Inlines.Add(completeRun);
             paragraph.Inlines.Add(messageRun);
+            paragraph.Inlines.Add(chevrons);
             RtbLogger.Document.Blocks.Add(paragraph);
             RtbLogger.ScrollToEnd();
         }
@@ -215,6 +216,73 @@ namespace AdaptivBot
 
                 var paragraph = new Paragraph();
                 paragraph.Inlines.Add(timeStamp);
+                paragraph.Inlines.Add(message);
+                loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
+            }
+        }
+
+        public string WarningTextWithoutTime
+        {
+            get => _text;
+            set
+            {
+                var loggerText = new FlowDocument();
+                _text += "\n" + value;
+
+                var message = new Run($"{value}")
+                {
+                    Foreground = Brushes.Orange,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var paragraph = new Paragraph();
+                paragraph.Inlines.Add(message);
+                loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
+            }
+        }
+
+
+        public string ErrorTextWithoutTime
+        {
+            get => _text;
+            set
+            {
+                var loggerText = new FlowDocument();
+                _text += "\n" + value;
+                
+                var message = new Run($"{value}")
+                {
+                    Foreground = Brushes.Red,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var paragraph = new Paragraph();
+                paragraph.Inlines.Add(message);
+                loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
+            }
+        }
+
+        public string OkayTextWithoutTime
+        {
+            get => _text;
+            set
+            {
+                var loggerText = new FlowDocument();
+                _text += "\n" + value;
+
+                var message = new Run($"{value}")
+                {
+                    Foreground = Brushes.LawnGreen,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var paragraph = new Paragraph();
                 paragraph.Inlines.Add(message);
                 loggerText.Blocks.Add(paragraph);
                 RtbLogger.Document.Blocks.Add(paragraph);

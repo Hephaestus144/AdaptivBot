@@ -91,108 +91,15 @@
 
         <Image HorizontalAlignment="Left"
                Grid.Row="1"
-               Grid.RowSpan="2"
+               Grid.RowSpan="3"
                Grid.Column="2"
                Grid.ColumnSpan="2"
-               Margin="25,0,0,20">
+               Margin="8,0,0,45">
             <Image.Source>
                 <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot-9.png" />
             </Image.Source>
         </Image>
 
-        <!--<materialDesign:PopupBox
-                Style="{StaticResource MaterialDesignMultiFloatingActionAccentPopupBox}"
-                PlacementMode="BottomAndAlignRightEdges"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Grid.Row="1"
-                Grid.RowSpan="2"
-                Grid.Column="5"
-                Height="40"
-                Width="40"
-                Margin="0,0,0,10"
-                Content="Select Report">
-            <materialDesign:PopupBox.ToggleCheckedContent>
-                <materialDesign:PackIcon
-                        Kind="Pencil"
-                        Width="24"
-                        Height="24" />
-            </materialDesign:PopupBox.ToggleCheckedContent>
-            <StackPanel>
-                <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedAccentButton}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="DodgerBlue"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Resources>
-                <TextBlock
-                    Foreground="LawnGreen"
-                    Margin="15,0,0,15"
-                    HorizontalAlignment="Right">
-                    Settings
-                </TextBlock>
-                
-                <Button Name="btnGeneral_Settings"
-                        materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                        Margin="15,0,0,15">
-                    <Button.Content>
-                        <DockPanel>
-                            <TextBlock 
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left">General Settings</TextBlock>
-                            <materialDesign:PackIcon
-                                Kind="SettingsOutline"
-                                Width="16"
-                                Height="16"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"/>
-                        </DockPanel>
-                    </Button.Content>
-                </Button>
-
-                <Button Name="btnRiskView_Settings"
-                        Click="RiskView_Settings_Click"
-                        materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                        Margin="15,0,0,15">
-                    Risk View
-                </Button>
-                <Button Name="btnCustomerLimitUtilisation_Settings"
-                        Click="CustomerLimitUtilisation_Settings_Click"
-                        materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                        Margin="15,0,0,15">
-                    Customer Limit Utilisation
-                </Button>
-                <Button Name="btnDealRiskCarriers_Settings"
-                        materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                        Margin="15,0,0,15">
-                    Deal Risk Carriers
-                </Button>
-                <Button materialDesign:ShadowAssist.ShadowEdges="Bottom,Left"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                    <Button.Content>
-                        <DockPanel>
-                            <TextBlock 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Left">Report a Bug</TextBlock>
-                            <materialDesign:PackIcon
-                                    Kind="Bugfood"
-                                    Width="16"
-                                    Height="16"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Right"/>
-                        </DockPanel>
-                    </Button.Content>
-                    <Button.Margin>15,0,0,15</Button.Margin>
-                </Button>
-            </StackPanel>
-        </materialDesign:PopupBox>-->
 
         <DockPanel  
             Grid.Row="1"
@@ -215,7 +122,7 @@
                          Padding="0,-5,0,0"
                          HorizontalContentAlignment="Center"
                          VerticalContentAlignment="Center"
-                         FontSize="10"
+                         FontSize="12"
                          Margin="5"
                          materialDesign:HintAssist.Hint="User Name"
                          materialDesign:HintAssist.FloatingScale="0.6"
@@ -234,7 +141,7 @@
                              PasswordChar="•"
                              HorizontalContentAlignment="Center"
                              VerticalContentAlignment="Center"
-                             FontSize="10"
+                             FontSize="12"
                              materialDesign:HintAssist.Hint="Password"
                              materialDesign:HintAssist.FloatingScale="0.6"
                              materialDesign:HintAssist.FloatingOffset="-70,-8" >
@@ -251,11 +158,21 @@
                     FontSize="10"
                     HorizontalContentAlignment="Center"
                     SelectedIndex="0"
-                    IsEditable="True"
+                    IsEditable="False"
                     IsReadOnly="True"
                     ToolTip="Select Adaptiv environment."
                     SelectedValuePath="Content"
                     SelectionChanged="LoadAdaptivCredentials">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <ComboBoxItem>Production</ComboBoxItem>
                     <ComboBoxItem>Stress Environment</ComboBoxItem>
                     <ComboBoxItem>T5</ComboBoxItem>
@@ -293,10 +210,10 @@
                 VerticalAlignment="Bottom"
                 FontWeight="Bold"
                 Text="Select Function"
-                Margin="0,15,5,0"/>
+                Margin="5,15,5,0"/>
             <Separator
                 DockPanel.Dock="Top"
-                Margin="0,0,0,10"/>
+                Margin="4,0,4,10"/>
             
             <materialDesign:Card
                 DockPanel.Dock="Top"
@@ -308,11 +225,21 @@
                     Margin="5"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    IsEditable="True"
+                    IsEditable="False"
                     IsReadOnly="True"
-                    ToolTip="Select Adaptiv environment."
+                    ToolTip="Select the process you want the bot to run."
                     SelectedValuePath="Content"
                     VerticalAlignment="Top">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <ComboBoxItem>Porfolio Analysis</ComboBoxItem>
                     <ComboBoxItem>Risk View Reports</ComboBoxItem>
                     <ComboBoxItem>Customer Limit Utilisation</ComboBoxItem>
@@ -325,9 +252,24 @@
                 Name="btnEmailBug"
                 DockPanel.Dock="Top"
                 FontSize="11"
-                Margin="5"
-                ToolTip="Cancel the current executing process.">
-                Email Bug/Suggestion
+                Margin="5,7,5,5"
+                ToolTip="Email the development team to alert them of a bug or a feature you'd like to add.">
+                <Button.Content>
+                    <DockPanel>
+                        <TextBlock
+                            VerticalAlignment="Center">
+                            Email Bug/Suggestion
+                        </TextBlock>
+                        <materialDesign:PackIcon
+                            Kind="Bugfood"
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"/>
+                        </DockPanel>
+                </Button.Content>
+                
             </Button>
 
             <Button
@@ -335,14 +277,14 @@
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 FontSize="11"
-                Margin="5"
+                Margin="5,8,5,5"
                 ToolTip="Cancel the current executing process.">
                 Quit Execution
             </Button>
 
         </DockPanel>
 
-
+    
         <materialDesign:Flipper
             Grid.Row="5"
             Grid.RowSpan="4"
@@ -377,18 +319,19 @@
                     Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                     Foreground="{StaticResource SecondaryAccentBrush}"
                     Text="Logger"
-                    Margin="10,0,0,5"
-                    VerticalAlignment="Bottom">
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Top">
                 </TextBlock>
                 <materialDesign:Card
-                    UniformCornerRadius="6"
                     Grid.Row="1"
                     Grid.RowSpan="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
-                    VerticalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    HorizontalAlignment="Stretch">
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Margin="5,-8,0,0"
+                    UniformCornerRadius="6">
                     <RichTextBox
                         Name="rtbLogger"
                         VerticalAlignment="Stretch"
@@ -414,18 +357,19 @@
                     Grid.Column="4"
                     VerticalAlignment="Top"
                     Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="View the files extracted by the processes you just ran."
                     Command="{x:Static materialDesign:Flipper.FlipCommand}">
                         <StackPanel
                             Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="10">
-                            Extracted Files
-                        </TextBlock>
-                        <materialDesign:PackIcon
-                            Kind="ArrowRightBoldOutline"
-                            Margin="5,0,0,0"
-                            HorizontalAlignment="Right" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="10">
+                                Extracted Files
+                            </TextBlock>
+                            <materialDesign:PackIcon
+                                Kind="ArrowRightBoldOutline"
+                                Margin="5,0,0,0"
+                                HorizontalAlignment="Right" />
                         </StackPanel>
                 </Button>
             </Grid>
@@ -478,6 +422,14 @@
                             IsReadOnly="True"
                             AutoGenerateColumns="False"
                             VerticalContentAlignment="Top">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Margin" Value="5"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
                             <DataGrid.ContextMenu>
                                 <ContextMenu
                                     FontSize="10">
@@ -544,6 +496,25 @@
             </materialDesign:Flipper.BackContent>
         </materialDesign:Flipper>
 
+
+        <DockPanel 
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="5"
+            Margin="20,0,0,0">
+            <Button
+                Name="btnNetworkType"
+                Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                <materialDesign:PackIcon
+                    Name="iconNetworkType"
+                    Kind="EthernetCable"
+                    Width="40"
+                    Height="40"/>
+            </Button>
+        </DockPanel>
+
+
         <DockPanel 
             Grid.Row="0"
             Grid.RowSpan="9"
@@ -552,7 +523,7 @@
 
             <materialDesign:Transitioner
                 SelectedIndex="{Binding ElementName=cmbBxSelectFunction, Path=SelectedIndex}">
-                
+
                 <materialDesign:TransitioningContent>
                     <materialDesign:TransitioningContent.OpeningEffects>
                         <materialDesign:TransitionEffect Kind="SlideInFromTop" />
@@ -615,10 +586,10 @@
                         Source="SettingForms/GeneralSettings.xaml"/>
                 </materialDesign:TransitioningContent>
             </materialDesign:Transitioner>
-               
+
         </DockPanel>
 
-        
+
         <DockPanel
             Grid.Row="9"
             Grid.RowSpan="7"
@@ -629,7 +600,7 @@
                 Style="{StaticResource MaterialDesignTitleTextBlock}"
                 Foreground="{StaticResource SecondaryAccentBrush}"
                 Text="Web Browser"
-                Margin="4,0,0,0"/>
+                Margin="4,-10,0,5"/>
             <Border
                 DockPanel.Dock="Top"
                 BorderBrush="{DynamicResource PrimaryHueDarkBrush}"

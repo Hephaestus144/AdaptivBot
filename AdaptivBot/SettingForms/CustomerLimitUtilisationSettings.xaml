@@ -36,18 +36,20 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="9">
+            Grid.ColumnSpan="11">
                 <TextBlock
                     DockPanel.Dock="Top"
                     Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                     Foreground="{DynamicResource SecondaryAccentBrush}"
                     VerticalAlignment="Bottom"
-                    FontWeight="Bold"
+                    FontWeight="DemiBold"
                     Margin="0,20,5,-5"
                     Text="Customer Limit Utilisation Settings"/>
             <Separator
@@ -64,7 +66,7 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 HorizontalAlignment="Right"
-                Margin="9,0,9,9">
+                Margin="9">
                 Base Extraction Folder
             </TextBlock>
 
@@ -91,7 +93,7 @@
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="2"
-            Grid.ColumnSpan="4">
+            Grid.ColumnSpan="5">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -148,12 +150,31 @@
 
         </DockPanel>
 
+        <materialDesign:Card
+            Grid.Row="1"
+            Grid.Column="7"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center">
+            <DatePicker
+                Name ="datePicker"
+                materialDesign:HintAssist.Hint="Date"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                DisplayDateEnd="{Binding Source={x:Static adaptivBot:GlobalDataBindingValues.Instance}, Path=DisplayDateEnd}"
+                FontSize="10"
+                Margin="0,-4,0,0"
+                materialDesign:HintAssist.FloatingOffset="0,-10"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+        </materialDesign:Card>
 
 
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
-            Grid.Column="7"
+            Grid.Column="9"
             Grid.ColumnSpan="2">
 
             <Button
@@ -162,7 +183,7 @@
                 FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
-                Copy Files to UAT
+                Copy File to UAT
             </Button>
 
             <Button
@@ -171,21 +192,331 @@
                 FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
-                Copy Files to Prod
+                Copy File to Prod
             </Button>
         </DockPanel>
 
+        <DockPanel
+            Grid.Row="3"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                Margin="8,2,0,-2">
+                Filters
+            </TextBlock>
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5">
+                <ComboBox
+                    Name="cmbBxFilterCategory1"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content"
+                    SelectionChanged="CmbBxFilterCategory1_OnSelectionChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterCategory2"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5"
+                Visibility="Hidden">
+                <ComboBox
+                    Name="cmbBxFilterCategory2"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content"
+                    SelectionChanged="CmbBxFilterCategory2_OnSelectionChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterCategory3"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5"
+                Visibility="Hidden">
+                <ComboBox
+                    Name="cmbBxFilterCategory3"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
+                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+        </DockPanel>
+
+        <DockPanel
+            Grid.Row="3"
+            Grid.RowSpan="3"
+            Grid.Column="2"
+            Grid.ColumnSpan="2">
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,22,5,5">
+                <ComboBox
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>starts with</ComboBoxItem>
+                    <ComboBoxItem>contains</ComboBoxItem>
+                    <ComboBoxItem>does not contain</ComboBoxItem>
+                    <ComboBoxItem>equal to</ComboBoxItem>
+                    <ComboBoxItem>not equal to</ComboBoxItem>
+                    <ComboBoxItem>greater than</ComboBoxItem>
+                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
+                    <ComboBoxItem>less than</ComboBoxItem>
+                    <ComboBoxItem>less than or equal to</ComboBoxItem>
+                    <ComboBoxItem>in</ComboBoxItem>
+                    <ComboBoxItem>not in</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterOperation2"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5"
+                Visibility="Hidden">
+                <ComboBox
+                    Name="cmbBxFilterOperation2"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content"
+                    Visibility="Hidden">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>starts with</ComboBoxItem>
+                    <ComboBoxItem>contains</ComboBoxItem>
+                    <ComboBoxItem>does not contain</ComboBoxItem>
+                    <ComboBoxItem>equal to</ComboBoxItem>
+                    <ComboBoxItem>not equal to</ComboBoxItem>
+                    <ComboBoxItem>greater than</ComboBoxItem>
+                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
+                    <ComboBoxItem>less than</ComboBoxItem>
+                    <ComboBoxItem>less than or equal to</ComboBoxItem>
+                    <ComboBoxItem>in</ComboBoxItem>
+                    <ComboBoxItem>not in</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterOperation3"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5"
+                Visibility="Hidden">
+                <ComboBox
+                    Name="cmbBxFilterOperation3"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content"
+                    Visibility="Hidden">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>starts with</ComboBoxItem>
+                    <ComboBoxItem>contains</ComboBoxItem>
+                    <ComboBoxItem>does not contain</ComboBoxItem>
+                    <ComboBoxItem>equal to</ComboBoxItem>
+                    <ComboBoxItem>not equal to</ComboBoxItem>
+                    <ComboBoxItem>greater than</ComboBoxItem>
+                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
+                    <ComboBoxItem>less than</ComboBoxItem>
+                    <ComboBoxItem>less than or equal to</ComboBoxItem>
+                    <ComboBoxItem>in</ComboBoxItem>
+                    <ComboBoxItem>not in</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+        </DockPanel>
+
+
+        <DockPanel
+            Grid.Row="3"
+            Grid.RowSpan="3"
+            Grid.Column="4"
+            Grid.ColumnSpan="3">
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,22,5,5">
+                <TextBox
+                    Margin="7"
+                    FontSize="10"
+                    HorizontalContentAlignment="Left"/>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterCriteria2"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,4,5,5"
+                Visibility="Hidden">
+                <TextBox
+                     Name="txtBxFilterCriteria2"
+                     Margin="7"
+                     FontSize="10"
+                     HorizontalContentAlignment="Left"
+                     Visibility="Hidden"/>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterCriteria3"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,4,5,5"
+                Visibility="Hidden">
+                <TextBox
+                    Name="txtBxFilterCriteria3"
+                    Margin="7"
+                    FontSize="10"
+                    HorizontalContentAlignment="Left"
+                    Visibility="Hidden"/>
+            </materialDesign:Card>
+
+        </DockPanel>
+
+
+        <Button
+            Grid.Row="7"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            FontSize="12"
+            Style="{StaticResource MaterialDesignFlatButton}"
+            Margin="5,5,5,10">
+            <Button.Content>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock>Save Settings</TextBlock>
+                    <materialDesign:PackIcon
+                        Kind="ContentSaveSettingsOutline"
+                        Width="16"
+                        Height="16"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Button.Content> 
+        </Button>
 
         <CheckBox
             Name="chkBxOverrideExistingFiles"
-            Grid.Row="4"
-            Grid.Column="5"
+            Grid.Row="7"
+            Grid.Column="7"
             Grid.ColumnSpan="2"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="True"
-            Margin="5,50,5,5"
+            Margin="5,10,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
                 Margin="0,-3,0,0">
@@ -193,13 +524,13 @@
             </TextBlock> 
         </CheckBox>
         <Button
-            Grid.Row="4"
-            Grid.Column="7"
+            Grid.Row="7"
+            Grid.Column="9"
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5">
+            Margin="5,5,5,10">
             Run Extraction
         </Button>
     </Grid>

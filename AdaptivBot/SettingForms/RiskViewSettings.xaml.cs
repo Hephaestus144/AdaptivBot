@@ -194,23 +194,23 @@ namespace AdaptivBot.SettingForms
             }
 
             window.logger.ExtractionComplete("Risk View Extraction");
-            window.logger.OkayText =
+            window.logger.OkayTextWithoutTime =
                 $"Number of successful extractions: {numberOfSuccessfulExtractions}";
             if (numberOfFailedExtractions > 0)
             {
-                window.logger.ErrorText =
+                window.logger.ErrorTextWithoutTime =
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
             else
             {
-                window.logger.OkayText =
+                window.logger.OkayTextWithoutTime =
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
 
             GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
             var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
                            GlobalConfigValues.Instance.extractionStartTime;
-            window.logger.OkayText
+            window.logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
