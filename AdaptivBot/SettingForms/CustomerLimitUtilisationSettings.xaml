@@ -5,13 +5,20 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:adaptivBot="clr-namespace:AdaptivBot"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Title="Customer Limit Utilisation Extraction Settings"
       Loaded="CustomerLimitUtilisationSettings_OnLoaded">
+    <Page.Resources>
+        <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -31,26 +38,23 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <materialDesign:TransitioningContent
+        <DockPanel
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="9"
-            OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft}">
-            <DockPanel>
-                    <TextBlock
-                        DockPanel.Dock="Top"
-                        Style="{DynamicResource MaterialDesignCaptionTextBlock}"
-                        Foreground="{DynamicResource SecondaryAccentBrush}"
-                        VerticalAlignment="Bottom"
-                        FontWeight="Bold"
-                        Margin="0,15,5,0"
-                        Text="Customer Limit Utilisation Settings"/>
-                <Separator
-                        DockPanel.Dock="Top"
-                        Margin="0,0,0,10"/>
-                
-            </DockPanel>
-        </materialDesign:TransitioningContent>
+            Grid.ColumnSpan="9">
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                    Foreground="{DynamicResource SecondaryAccentBrush}"
+                    VerticalAlignment="Bottom"
+                    FontWeight="Bold"
+                    Margin="0,20,5,-5"
+                    Text="Customer Limit Utilisation Settings"/>
+            <Separator
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,10"/>
+        </DockPanel>
+        
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -60,17 +64,34 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 HorizontalAlignment="Right"
-                Margin="8">
-                Base Folder
+                Margin="9,0,9,9">
+                Base Extraction Folder
             </TextBlock>
 
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                HorizontalAlignment="Right"
+                Margin="9"
+                ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant.">
+                Sub Extraction Folder
+            </TextBlock>
+
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                HorizontalAlignment="Right"
+                Margin="9"
+                ToolTip="e.g. CustLimitUtil[yyyy-MM-dd].xlsx">
+                File Name Format
+            </TextBlock>
         </DockPanel>
 
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="2"
-            Grid.ColumnSpan="3">
+            Grid.ColumnSpan="4">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -79,36 +100,54 @@
                 Margin="5">
                 <TextBox
                     Name="txtBoxBaseFolder"
-                    FontSize="10"
+                    FontSize="12"
                     Padding="5,0,5,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+                    VerticalContentAlignment="Stretch"
+                    ToolTip="The folder to which the file will be saved."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
             </materialDesign:Card>
 
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    Name="txtSubExtractionFolder"
+                    FontSize="12"
+                    Padding="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    Name="txtFileNameFormat"
+                    FontSize="12"
+                    Padding="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
+            </materialDesign:Card>
 
         </DockPanel>
 
-        <materialDesign:Card
-            Grid.Row="1"
-            Grid.Column="5"
-            Grid.ColumnSpan="2"
-            Margin="5"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center">
-            <DatePicker
-                Name ="datePickerCustomerLimitUtilisation"
-                ToolTip="Only used in 'Delete Files for Date' function."
-                materialDesign:HintAssist.Hint="Date"
-                HorizontalContentAlignment="Center"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
-                FontSize="10"
-                Margin="0,-4,0,0"
-                materialDesign:HintAssist.FloatingOffset="0,-10"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-        </materialDesign:Card>
 
 
         <DockPanel
@@ -116,19 +155,11 @@
             Grid.RowSpan="3"
             Grid.Column="7"
             Grid.ColumnSpan="2">
-            <Button
-                DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                Delete Files for Date
-            </Button>
 
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to UAT
@@ -137,7 +168,7 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="12"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to Prod
@@ -154,7 +185,7 @@
             VerticalContentAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="True"
-            Margin="5,12,5,5"
+            Margin="5,50,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
                 Margin="0,-3,0,0">

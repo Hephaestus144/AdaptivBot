@@ -17,8 +17,8 @@ namespace AdaptivBot
 
         private static readonly object padlock = new object();
 
-        public string adaptivBotDirectory;
-        public string adaptivBotConfigFile;
+        public string AdaptivBotDirectory;
+        public string AdaptivBotConfigFilePath;
         public static string possibleExcelPath1
             = @"C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe";
 
@@ -30,31 +30,30 @@ namespace AdaptivBot
 
         public static string excelPath;
 
-        public static YesNoMaybe excelPathConfigured = YesNoMaybe.Maybe;
+        public static YesNoMaybe ExcelPathConfigured = YesNoMaybe.Maybe;
 
-        public static YesNoMaybe createdConfigFile = YesNoMaybe.Maybe;
+        public static YesNoMaybe CreatedConfigFile = YesNoMaybe.Maybe;
 
         public static string defaultConfigFileContent
-            = "<AdaptivBot>\n"                                                          +
-              "\t<ExcelExecutablePath></ExcelExecutablePath>"                           +
-              "\n"                                                                      +
-              "\t<RiskViewReports>\n"                                                   +
-              "\t\t<BaseExtractionFolderPath></BaseExtractionFolderPath>\n"             +
-              "\t\t<UATExtractionServerPath></UATExtractionServerPath>\n"               +
-              "\t\t<ProductionExtractionServerPath></ProductionExtractionServerPath>\n" +
-              "\t</RiskViewReports>\n"                                                  +
-              "\n"                                                                      +
-              "\t<CustomerLimitUtilisationReports>\n"                                   +
-              "\t\t<BaseExtractionFolderPath></BaseExtractionFolderPath>\n"             +
-              "\t\t<UATExtractionServerPath></UATExtractionServerPath>\n"               +
-              "\t\t<ProductionExtractionServerPath></ProductionExtractionServerPath>\n" +
-              "\t</CustomerLimitUtilisationReports>\n"                                  +
-              "\n"                                                                      +
-              "\t<DealRiskCarrierReport>\n"                                             +
-              "\t\t<BaseExtractionFolderPath></BaseExtractionFolderPath>\n"             +
-              "\t\t<UATExtractionServerPath></UATExtractionServerPath>\n"               +
-              "\t\t<ProductionExtractionServerPath></ProductionExtractionServerPath>\n" +
-              "\t</DealRiskCarrierReport>\n"                                            +
+            = "<AdaptivBot>\n"                                                                                                    +
+              "\t<ExcelExecutablePath></ExcelExecutablePath>"                                                                     +
+              "\n"                                                                                                                +
+              "\t<GeneralSettings>\n"                                                                                             +
+              "\t\t<QlikviewUATFolder>\\\\10952APPJNB0001\\PS.Portfolio_Sensitivities\\8.Import\\New</QlikviewUATFolder>\n"       +
+              "\t\t<QlikviewProductionFolder>\\\\10952appprdsdc4\\Portfolio Analysis\\8.Import\\New</QlikviewProductionFolder>\n" +
+              "\t</GeneralSettings>"                                                                                              +
+              "\n"                                                                                                                +
+              "\t<RiskViewSettings>\n"                                                                                            +
+              "\t\t<BaseFolder>\\\\pcibtighnas1\\cbsdata\\Portfolio Analysis\\Data</BaseFolder>\n"                                +
+              "\t</RiskViewSettings>\n"                                                                                           +
+              "\n"                                                                                                                +
+              "\t<CustomerLimitUtilisationSettings>\n"                                                                            +
+              "\t\t<BaseFolder>\\\\pcibtighnas1\\cbsdata\\Portfolio Analysis\\Data\\Cust Util</BaseFolder>\n"                     +
+              "\t</CustomerLimitUtilisationSettings>\n"                                                                           +
+              "\n"                                                                                                                +
+              "\t<DealRiskCarrierSettings>\n"                                                                                     +
+              "\t\t<BaseFolder>\\\\pcibtighnas1\\cbsdata\\Portfolio Analysis\\Data\\DRC</BaseFolder>\n"                           +
+              "\t</DealRiskCarrierSettings>\n"                                                                                    +
               "\t</AdaptivBot>\n";
 
         private GlobalConfigValues()

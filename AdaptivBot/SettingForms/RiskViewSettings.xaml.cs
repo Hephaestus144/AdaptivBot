@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
+using ListBox = System.Windows.Controls.ListBox;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using AdaptivBot;
+using AdaptivBot.Annotations;
+using WebBrowser = System.Windows.Controls.WebBrowser;
+
 
 namespace AdaptivBot.SettingForms
 {
@@ -28,36 +28,48 @@ namespace AdaptivBot.SettingForms
             InitializeComponent();
         }
         
+
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
             GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
 
             var window = (MainWindow) App.Current.MainWindow;
 
-            window.logger.NewExtraction("Risk View Reports Extraction Started");
+            window?.logger.NewExtraction("Risk View Reports Extraction Started");
 
             if (!window.StoreUserCredentials())
             {
                 return;
             }
 
-            // Wrap this in a function called login to Adaptiv or which checks if Adaptiv
-            // has already been  logged into.
 
             // TODO: Use binding here.
             var username = window.txtUserName.Text;
             var password = window.txtPasswordBox.Password;
 
+            var selectedInstruments = new List<string>();
+
+            foreach (var selectedItem in lstBxInstruments.SelectedItems)
+            {
+                selectedInstruments.Add(InstrumentLists.InstrumentGuiMapping[
+                    selectedItem.ToString()
+                        .Replace("System.Windows.Controls.ListBoxItem: ", "")]);
+            }
+
+            var instrumentsToLoopOver = (selectedInstruments.Count != 0)
+                ? selectedInstruments
+                : InstrumentLists.instruments.Keys.ToList();
 
             var currentAdaptivEnvironment = window.cmbBxAdaptivEnvironments.SelectedValue.ToString();
-            int numberOfFailedExtractions = 0;
-            int numberOfSuccessfulExtractions = 0;
-            foreach (var instrumentBatch in InstrumentLists.instruments.Keys)
+            var numberOfFailedExtractions = 0;
+            var numberOfSuccessfulExtractions = 0;
+            foreach (var instrumentBatch in instrumentsToLoopOver)
             {
                 for (var errorCount = 0; errorCount < 3; errorCount++)
                 {
                     try
                     {
+                        window.logger.NewProcess($"{instrumentBatch} risk view extraction started...");
                         await Task.Run(() =>
                             window.OpenAdaptivAndLogin(username, password,
                                 currentAdaptivEnvironment));
@@ -90,7 +102,7 @@ namespace AdaptivBot.SettingForms
                             JsScripts.OpenRiskView);
 
                         await Task.Run(() => Thread.Sleep(1000));
-                        window.webBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
+                        window.webBrowser.Document?.InvokeScript(nameof(JsScripts.OpenRiskView));
 
                         #region wait for browser
 
@@ -108,6 +120,7 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
+                        window.logger.OkayText = $"Filtering for {instrumentBatch}...";
                         window.InjectJavascript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             JsScripts.FilterRiskViewOnInstruments);
@@ -180,15 +193,34 @@ namespace AdaptivBot.SettingForms
                 }
             }
 
-            window.logger.OkayText = "Completed";
+            window.logger.ExtractionComplete("Risk View Extraction");
             window.logger.OkayText =
                 $"Number of successful extractions: {numberOfSuccessfulExtractions}";
-            window.logger.ErrorText =
-                $"Number of failed extractions: {numberOfFailedExtractions}";
+            if (numberOfFailedExtractions > 0)
+            {
+                window.logger.ErrorText =
+                    $"Number of failed extractions: {numberOfFailedExtractions}";
+            }
+            else
+            {
+                window.logger.OkayText =
+                    $"Number of failed extractions: {numberOfFailedExtractions}";
+            }
+
             GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            window.logger.OkayText =
-                $"Extraction took: {(GlobalConfigValues.Instance.extractionEndTime - GlobalConfigValues.Instance.extractionStartTime).Minutes} minutes";
+            var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
+                           GlobalConfigValues.Instance.extractionStartTime;
+            window.logger.OkayText
+                = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
+            window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
 
+
+
+        private void RiskViewSettings_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var xdp = (XmlDataProvider) this.Resources["RiskViewSettingsXml"];
+            xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+        }
     }
 }

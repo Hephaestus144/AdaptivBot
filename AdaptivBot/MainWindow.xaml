@@ -27,7 +27,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopUpBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -76,6 +78,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="0.3*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -88,9 +91,10 @@
 
         <Image HorizontalAlignment="Left"
                Grid.Row="1"
+               Grid.RowSpan="2"
                Grid.Column="2"
                Grid.ColumnSpan="2"
-               Margin="40,0,0,0">
+               Margin="25,0,0,20">
             <Image.Source>
                 <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot-9.png" />
             </Image.Source>
@@ -295,15 +299,15 @@
                 Margin="0,0,0,10"/>
             
             <materialDesign:Card
+                DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5,2,5,5">
                 <ComboBox
                     Name="cmbBxSelectFunction"
-                    FontSize="10"
+                    FontSize="11"
                     Margin="5"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    SelectedIndex="0"
                     IsEditable="True"
                     IsReadOnly="True"
                     ToolTip="Select Adaptiv environment."
@@ -316,182 +320,233 @@
                     <ComboBoxItem>General Settings</ComboBoxItem>
                 </ComboBox>
             </materialDesign:Card>
-            <!--<StackPanel
-                Orientation="Horizontal">
-                <StackPanel
-                DockPanel.Dock="Right">
-                <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="LawnGreen"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Resources>
 
-                <Button 
-                    Margin="5"
-                    FontSize="12"
-                    VerticalAlignment="Center">
-                    Portfolio Analysis
-                </Button>
+            <Button
+                Name="btnEmailBug"
+                DockPanel.Dock="Top"
+                FontSize="11"
+                Margin="5"
+                ToolTip="Cancel the current executing process.">
+                Email Bug/Suggestion
+            </Button>
 
-                <Button 
-                    Name="btnExtract_RiskView"
-                    Click="LoadRiskViewSettings"
-                    Margin="5"
-                    FontSize="12"
-                    VerticalAlignment="Center">
-                    Risk View
-                </Button>
-
-                <Button 
-                    Name="btnExtract_CustomerLimitUtilisation"
-                    Click="LoadCustomerLimitUtilisationSettings"  
-                    Margin="5"
-                    FontSize="12"
-                    VerticalAlignment="Center">
-                    Customer Limit Utilisation
-                </Button>
-
-                <Button 
-                    Name="btnExtract_DealRiskCarriers"
-                    Click="btnExtract_DealRiskCarriers_Click"
-                    Margin="5"
-                    FontSize="12"
-                    VerticalAlignment="Center">
-                    Deal Risk Carriers
-                </Button>
-
-            </StackPanel>
-
-                <StackPanel
-                    DockPanel.Dock="Right">
-                    <StackPanel.Resources>
-                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="LawnGreen"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Resources>
-
-                    <Button 
-                        Margin="5"
-                        FontSize="12"
-                        VerticalAlignment="Center">
-                        General Settings
-                    </Button>
-
-                    <Button 
-                        Margin="5"
-                        FontSize="12"
-                        VerticalAlignment="Center">
-                        Quit Execution
-                    </Button>
-                </StackPanel>
-            </StackPanel>-->
+            <Button
+                Name="btnQuitExecution"
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="11"
+                Margin="5"
+                ToolTip="Cancel the current executing process.">
+                Quit Execution
+            </Button>
 
         </DockPanel>
 
 
-        <dragablz:TabablzControl 
+        <materialDesign:Flipper
             Grid.Row="5"
-            Grid.RowSpan="3"
+            Grid.RowSpan="4"
             Grid.Column="1"
             Grid.ColumnSpan="6"
-            Margin="8">
-            <dragablz:TabablzControl.InterTabController>
-                <dragablz:InterTabController />
-            </dragablz:TabablzControl.InterTabController>
-            <TabItem Header="Tab No. 1" IsSelected="True">
-                <DockPanel>
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            Background="Transparent">
+            <materialDesign:Flipper.FrontContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.6*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="0.6*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                    Foreground="{StaticResource SecondaryAccentBrush}"
+                    Text="Logger"
+                    Margin="10,0,0,5"
+                    VerticalAlignment="Bottom">
+                </TextBlock>
+                <materialDesign:Card
+                    UniformCornerRadius="6"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="5"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+                    <RichTextBox
+                        Name="rtbLogger"
+                        VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        Background="Transparent"
+                        IsReadOnly="True"
+                        BorderThickness="0"
+                        Foreground="LawnGreen"
+                        FontSize="12"
+                        VerticalContentAlignment="Top"
+                        VerticalScrollBarVisibility="Auto">
+                        <RichTextBox.Resources>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </RichTextBox.Resources>
+                    </RichTextBox>
+                </materialDesign:Card>
+                <Button
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    VerticalAlignment="Top"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Command="{x:Static materialDesign:Flipper.FlipCommand}">
+                        <StackPanel
+                            Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="10">
+                            Extracted Files
+                        </TextBlock>
+                        <materialDesign:PackIcon
+                            Kind="ArrowRightBoldOutline"
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Right" />
+                        </StackPanel>
+                </Button>
+            </Grid>
+            </materialDesign:Flipper.FrontContent>
+
+            <materialDesign:Flipper.BackContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.6*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="0.6*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <TextBlock
-                        DockPanel.Dock="Top"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                         Foreground="{StaticResource SecondaryAccentBrush}"
-                        Text="Logger"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        VerticalAlignment="Top"
-                        Margin="11,0,0,0">
+                        Text="Extracted Files"
+                        Margin="10,0,0,5"
+                        VerticalAlignment="Bottom">
                     </TextBlock>
                     <materialDesign:Card
                         UniformCornerRadius="6"
-                        DockPanel.Dock="Right"
+                        Grid.Row="1"
+                        Grid.RowSpan="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="5"
                         VerticalAlignment="Stretch"
-                        VerticalContentAlignment="Stretch"
-                        HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
-                        Margin="5">
-                        <RichTextBox
-                            Name="rtbLogger"
+                        HorizontalAlignment="Stretch">
+                        <DataGrid
+                            Name ="dgExtractedFiles"
                             VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             Background="Transparent"
-                            IsReadOnly="True"
                             BorderThickness="0"
                             Foreground="LawnGreen"
-                            VerticalContentAlignment="Top"
-                            VerticalScrollBarVisibility="Visible">
-                            <RichTextBox.Resources>
-                                <Style TargetType="{x:Type Paragraph}">
-                                    <Setter Property="Margin" Value="0"/>
-                                </Style>
-                            </RichTextBox.Resources>
-                        </RichTextBox>
+                            FontSize="10"
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            VerticalContentAlignment="Top">
+                            <DataGrid.ContextMenu>
+                                <ContextMenu
+                                    FontSize="10">
+                                    <MenuItem Header="Open containing folder" Click="OpenExtractedFileContainingFolder"/>
+                                    <MenuItem Header="Open file" Click="OpenExtractedFile"/>
+                                    <MenuItem Header="Delete file" Click="DeleteExtractedFile"/>
+                                    <MenuItem Header="Email file" Click="EmailExtractedFile"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn 
+                                    Width="2*"
+                                    Binding="{Binding FileType}">
+                                    <DataGridTextColumn.Header>
+                                        File Type
+                                    </DataGridTextColumn.Header>   
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn 
+                                    Width="5*"
+                                    Binding="{Binding FileName}">
+                                    <DataGridTextColumn.Header>
+                                        File Name
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn 
+                                    Width="*"
+                                    Binding="{Binding FileSize}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style>
+                                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                    <DataGridTextColumn.Header>
+                                        File Size
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </materialDesign:Card>
-                </DockPanel>
-            </TabItem>
-            <TabItem Header="Tab No. 2">
-                <TextBlock>We Have Tearable Tabs!</TextBlock>
-            </TabItem>
-        </dragablz:TabablzControl>
-
-        
-
-        
-        <DockPanel
-            Grid.Row="5"
-            Grid.RowSpan="3"
-            Grid.Column="8"
-            Grid.ColumnSpan="8">
-            <TextBlock
-                DockPanel.Dock="Top"
-                Foreground="{StaticResource SecondaryAccentBrush}"
-                Text="Extracted Files"
-                FontSize="16"
-                FontWeight="Bold"
-                VerticalAlignment="Top"
-                Margin="11,0,0,0">
-            </TextBlock>
-            <materialDesign:Card
-                UniformCornerRadius="6"
-                DockPanel.Dock="Right"
-                VerticalAlignment="Stretch"
-                VerticalContentAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                Margin="5">
-                <ListBox
-                    VerticalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Margin="5"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Foreground="LawnGreen"
-                    VerticalContentAlignment="Top">
-                </ListBox>
-            </materialDesign:Card>
-        </DockPanel>
+                    <Button
+                        Grid.Row="4"
+                        Grid.Column="4"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}">
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="ArrowLeftBoldOutline"
+                                Margin="0,0,5,0"
+                                HorizontalAlignment="Right" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="10">
+                                Logger
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </materialDesign:Flipper.BackContent>
+        </materialDesign:Flipper>
 
         <DockPanel 
             Grid.Row="0"
-            Grid.RowSpan="5"
+            Grid.RowSpan="9"
             Grid.Column="8"
             Grid.ColumnSpan="8">
 
@@ -566,37 +621,34 @@
         
         <DockPanel
             Grid.Row="9"
-            Grid.RowSpan="6"
+            Grid.RowSpan="7"
             Grid.Column="1"
             Grid.ColumnSpan="15">
             <TextBlock
                 DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignTitleTextBlock}"
                 Foreground="{StaticResource SecondaryAccentBrush}"
                 Text="Web Browser"
-                FontSize="16"
-                FontWeight="Bold"
-                VerticalAlignment="Top"
-                Margin="11,0,0,0"/>
+                Margin="4,0,0,0"/>
             <Border
                 DockPanel.Dock="Top"
                 BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="2"/>
+                BorderThickness="1"/>
             <Border
                 DockPanel.Dock="Left"
                 BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="2"/>
+                BorderThickness="1"/>
             <Border
                 DockPanel.Dock="Bottom"
                 BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="2"/>
+                BorderThickness="1"/>
             <Border
                 DockPanel.Dock="Right"
                 BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="2"/>
+                BorderThickness="1"/>
             <WindowsFormsHost
                 Name="webBrowserHost"
-
-                Margin="2">
+                Margin="1">
                 <WindowsFormsHost.Child>
                     <wf:WebBrowser/>
                 </WindowsFormsHost.Child>

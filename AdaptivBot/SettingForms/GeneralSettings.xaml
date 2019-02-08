@@ -9,6 +9,9 @@
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Loaded="GeneralSettings_OnLoaded"
       Title="General Settings">
+    <Page.Resources>
+        <XmlDataProvider x:Key="GeneralSettingsXml" XPath="AdaptivBot/GeneralSettings"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -96,7 +99,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+                    VerticalContentAlignment="Stretch"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=ExcelExecutablePath}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -111,7 +115,8 @@
                     Padding="5,0,5,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"/>
+                    VerticalContentAlignment="Center"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewUATFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -126,7 +131,8 @@
                     Padding="5,0,5,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"/>
+                    VerticalContentAlignment="Center"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewProductionFolder}"/>
             </materialDesign:Card>
         </DockPanel>
 

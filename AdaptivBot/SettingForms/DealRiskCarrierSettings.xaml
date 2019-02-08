@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
+      xmlns:adaptivBot="clr-namespace:AdaptivBot"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -58,9 +59,16 @@
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 HorizontalAlignment="Right"
                 Margin="8">
-                Base Folder
+                Base Extraction Folder
             </TextBlock>
 
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                HorizontalAlignment="Right"
+                Margin="8">
+                Risk Carrier File Folder
+            </TextBlock>
         </DockPanel>
 
         <DockPanel
@@ -84,42 +92,28 @@
                     VerticalContentAlignment="Stretch"/>
             </materialDesign:Card>
 
-        </DockPanel>
-
-        <materialDesign:Card
-            Grid.Row="1"
-            Grid.Column="5"
-            Grid.ColumnSpan="2"
-            Margin="5"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center">
-            <DatePicker
-                Name ="datePickerCustomerLimitUtilisation"
-                ToolTip="Only used in 'Delete Files for Date' function."
-                materialDesign:HintAssist.Hint="Date"
-                HorizontalContentAlignment="Center"
-                VerticalAlignment="Center"
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Center"
-                FontSize="10"
-                Margin="0,-4,0,0"
-                materialDesign:HintAssist.FloatingOffset="0,-10"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-        </materialDesign:Card>
-
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    Name="txtBoxRiskCarrierFileFolder"
+                    FontSize="10"
+                    Padding="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"/>
+            </materialDesign:Card>
+        </DockPanel>
 
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="7"
             Grid.ColumnSpan="2">
-            <Button
-                DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                Delete Files for Date
-            </Button>
 
             <Button
                 DockPanel.Dock="Top"
@@ -150,7 +144,7 @@
             VerticalContentAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="True"
-            Margin="5,12,5,5"
+            Margin="5,50,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
                 Margin="0,-3,0,0">
@@ -158,13 +152,15 @@
             </TextBlock> 
         </CheckBox>
         <Button
+            Name="btnRunExtraction"
             Grid.Row="4"
             Grid.Column="7"
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5">
+            Margin="5" 
+            Click="btnRunExtraction_Click">
             Run Extraction
         </Button>
     </Grid>

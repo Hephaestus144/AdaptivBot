@@ -71,6 +71,21 @@ namespace AdaptivBot
             "Equity Buy or Sell Back Leg, Equity Loan or Borrow, " +
             "Equity Financing Loan or Borrow, Equity Collateral";
 
+        public static Dictionary<string, string> InstrumentGuiMapping =
+            new Dictionary<string, string>()
+            {
+                ["Commodities : Agri"] = "Agri",
+                ["Commodities : Base Metals"] = "BM",
+                ["Commodities : Energy"] = "Energy",
+                ["Commodities : Precious Metals"] = "PM",
+                ["Credit"] = "Credit",
+                ["Equities"] = "Equity",
+                ["Foreign Exchange"] = "FX",
+                ["Interest Rates"] = "IR",
+                ["Securities Financing : Bonds"] = "SecFinBond",
+                ["Securities Financing : Equities"] = "SecFinEquity"
+            };
+
 
         public static Dictionary<string, string> instruments
             = new Dictionary<string, string>()

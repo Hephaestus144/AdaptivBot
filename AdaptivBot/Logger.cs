@@ -20,9 +20,9 @@ namespace AdaptivBot
         private string _text = "";
         public readonly RichTextBox RtbLogger;
 
-        public void HorizontalLine(Brush color)
+        public void HorizontalLine(Brush color, char lineCharacter = '-', int lineLength = 80)
         {
-            var horizontalLine = new Run(new string('-', 80))
+            var horizontalLine = new Run(new string(lineCharacter, lineLength))
             {
                 FontWeight = FontWeights.Bold,
                 Foreground = color
@@ -33,12 +33,52 @@ namespace AdaptivBot
             RtbLogger.Document.Blocks.Add(paragraph);
         }
 
+        public void DashedHorizontalLine(Brush color)
+        {
+            var dashedLine = string.Concat(Enumerable.Repeat("-  ", 40));
+            var horizontalLine = new Run(dashedLine)
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = color
+            };
+
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Add(horizontalLine);
+            RtbLogger.Document.Blocks.Add(paragraph);
+        }
+
+        public void NewProcess(string message)
+        {
+            DashedHorizontalLine(Brushes.LawnGreen);
+
+            var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var messageRun = new Run($"{message}")
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Clear();
+            paragraph.Inlines.Add(timeStamp);
+            paragraph.Inlines.Add(messageRun);
+            RtbLogger.Document.Blocks.Add(paragraph);
+            RtbLogger.ScrollToEnd();
+        }
+
         public void NewExtraction(string message)
         {
             HorizontalLine(Brushes.LawnGreen);
 
             var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
-            {   
+            {
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.LawnGreen,
                 FontFamily = new FontFamily("Courier")
@@ -51,6 +91,7 @@ namespace AdaptivBot
                 Foreground = Brushes.LawnGreen,
                 FontFamily = new FontFamily("Courier")
             };
+
             var paragraph = new Paragraph();
             paragraph.Inlines.Clear();
             paragraph.Inlines.Add(timeStamp);
@@ -59,9 +100,43 @@ namespace AdaptivBot
             RtbLogger.ScrollToEnd();
         }
 
+
+        public void ExtractionComplete(string message)
+        {
+            HorizontalLine(Brushes.LawnGreen, '>', $"Complete : {message}".Length);
+
+            var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var completeRun = new Run($"\nComplete : ")
+            {
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            
+            var messageRun = new Run($" {message}")
+            {
+                Foreground = Brushes.LawnGreen,
+                FontFamily = new FontFamily("Courier")
+            };
+
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Clear();
+            paragraph.Inlines.Add(completeRun);
+            paragraph.Inlines.Add(messageRun);
+            RtbLogger.Document.Blocks.Add(paragraph);
+            RtbLogger.ScrollToEnd();
+        }
+
         public string WarningText
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 var loggerText = new FlowDocument();
@@ -91,7 +166,7 @@ namespace AdaptivBot
 
         public string ErrorText
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 var loggerText = new FlowDocument();

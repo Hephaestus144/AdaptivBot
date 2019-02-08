@@ -1,34 +1,115 @@
-﻿using AdaptivBot.SettingForms;
-using AutoIt;
+﻿using AutoIt;
 using CredentialManagement;
 using mshtml;
+using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media.Animation;
-using System.Windows.Navigation;
 using System.Windows.Threading;
-using MaterialDesignThemes.Wpf.Transitions;
-using WebBrowser = System.Windows.Controls.WebBrowser;
-using NodaTime;
-using Duration = System.Windows.Duration;
-
+using Microsoft.Office.Interop.Outlook;
+using Action = System.Action;
 
 namespace AdaptivBot
 {
+    public sealed class GlobalDataBindingValues : INotifyPropertyChanged
+    {
+        private static readonly object padlock = new object();
+        private static GlobalDataBindingValues instance = null;
+
+        GlobalDataBindingValues()
+        {
+            // Used in the DatePickers. Users must not be able to select date after & including today's date.
+            var displayEndDate = LocalDate.FromDateTime(DateTime.Now.AddDays(-1));
+            switch (displayEndDate.DayOfWeek)
+            {
+                case IsoDayOfWeek.Saturday:
+                    displayEndDate = displayEndDate.PlusDays(-1);
+                    break;
+                case IsoDayOfWeek.Sunday:
+                    displayEndDate = displayEndDate.PlusDays(-2);
+                    break;
+            }
+            this.DisplayDateEnd = displayEndDate.ToDateTimeUnspecified();
+        }
+
+
+        public static GlobalDataBindingValues Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new GlobalDataBindingValues();
+                        }
+                    }
+                }
+
+                return instance;
+            }
+        }
+        
+
+        private DateTime _displayDateEnd;
+
+        public DateTime DisplayDateEnd
+        {
+            get => _displayDateEnd;
+            set
+            {
+                if (_displayDateEnd != value)
+                {
+                    _displayDateEnd = value;
+                    this.OnPropertyChanged(nameof(DisplayDateEnd));
+                }
+            }
+        }
+
+
+        private string _adaptivBotConfigFilePath;
+
+        public string AdaptivBotConfigFilePath
+        {
+            get => _adaptivBotConfigFilePath;
+            set
+            {
+                if (_adaptivBotConfigFilePath != value)
+                {
+                    _adaptivBotConfigFilePath = value;
+                    this.OnPropertyChanged(nameof(AdaptivBotConfigFilePath));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this,
+                new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<ExtractedFile> extractedFiles =
+            new ObservableCollection<ExtractedFile>();
+
         public bool completedLoading = false;
 
         public enum AdaptivEnvironments
@@ -59,35 +140,41 @@ namespace AdaptivBot
 
         public Logger logger;
 
+
         public MainWindow()
         {
             InitializeComponent();
-            webBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
 
+            dgExtractedFiles.ItemsSource = extractedFiles;
+
+            // Deals with new windows created by browser.
+            webBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
             axBrowser = (SHDocVw.WebBrowser_V1)webBrowser.ActiveXInstance;
             // listen for new windows
             axBrowser.NewWindow += axBrowser_NewWindow;
-
             webBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
+
             logger = new Logger(rtbLogger);
 
-            if (GlobalConfigValues.createdConfigFile == YesNoMaybe.Yes)
+            switch (GlobalConfigValues.CreatedConfigFile)
             {
-                logger.OkayText = "Config file created.";
-            }
-            else if (GlobalConfigValues.createdConfigFile == YesNoMaybe.No)
-            {
-                logger.ErrorText = "Config file not created!";
+                case YesNoMaybe.Yes:
+                    logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
+                    break;
+                case YesNoMaybe.No:
+                    logger.ErrorText = "Config file not created!";
+                    break;
             }
 
-            if (GlobalConfigValues.excelPathConfigured == YesNoMaybe.No)
+            switch (GlobalConfigValues.ExcelPathConfigured)
             {
-                logger.OkayText
-                    = "Excel path not configured. You will have to manually configure it in general settings.";
-            }
-            else if (GlobalConfigValues.excelPathConfigured == YesNoMaybe.Yes)
-            {
-                logger.ErrorText = "Excel path configured.";
+                case YesNoMaybe.No:
+                    logger.OkayText
+                        = "Excel path not configured. You will have to manually configure it in General Settings.";
+                    break;
+                case YesNoMaybe.Yes:
+                    logger.ErrorText = "Excel path configured.";
+                    break;
             }
         }
 
@@ -120,6 +207,7 @@ namespace AdaptivBot
                 credentialStore.credential.PersistanceType =
                     PersistanceType.LocalComputer;
                 credentialStore.credential.Save();
+                logger.OkayText = "Saving credentials...";
                 return true;
             }
 
@@ -167,7 +255,7 @@ namespace AdaptivBot
             }
             else
             {
-                Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Adaptiv already open"; }));
+                Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Adaptiv already open."; }));
             }
 
             Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Acknowledging disclaimer..."; }));
@@ -203,17 +291,6 @@ namespace AdaptivBot
                 txtUserName.Text = credentialStore.credential.Username;
                 txtPasswordBox.Password = credentialStore.credential.Password;
             }
-            
-            var localDate = LocalDate.FromDateTime(DateTime.Now.AddDays(-1));
-            if (localDate.DayOfWeek == IsoDayOfWeek.Saturday)
-            {
-                localDate = localDate.PlusDays(-1);
-            }
-            else if (localDate.DayOfWeek == IsoDayOfWeek.Sunday)
-            {
-                localDate = localDate.PlusDays(-2);
-            }
-            
         }
 
         public async void OpenAdaptivAndLogin(
@@ -258,37 +335,135 @@ namespace AdaptivBot
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
-            AutoItX.Send("{TAB}");
-            AutoItX.Send("{TAB}");
-            AutoItX.Send("{TAB}");
+            AutoItX.Send("{TAB 3}");
             AutoItX.Send("{ENTER}");
-            Dispatcher.Invoke((Action)(() =>
+            Dispatcher.Invoke((System.Action) (() =>
             {
-                logger.OkayText = $"Saving CSV file for {instrumentBatch}.";
-            })); 
+                logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
+            }));
 
             AutoItX.WinWait("Save As", timeout: 20);
             AutoItX.WinActivate("Save As");
 
             AutoItX.Send("{DEL}");
             // TODO: Make the output file name a parameter.
-            AutoItX.Send($"STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv");
+            AutoItX.Send(
+                $"STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv");
             AutoItX.Send("!d");
             AutoItX.Send("{DEL}");
 
-            AutoItX.Send($"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
+            AutoItX.Send(
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
             AutoItX.Send("!s");
             AutoItX.Sleep(1000);
+            var fileSaved = true;
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
                 AutoItX.WinActivate("Confirm Save As");
                 if (overrideExistingFile)
                 {
                     AutoItX.Send("!y");
-                    Dispatcher.Invoke((Action) (() =>
+                    Dispatcher.Invoke((System.Action) (() =>
                     {
                         logger.WarningText =
-                            $"Overriding existing file for {instrumentBatch}.";
+                            $"Overriding existing file for {instrumentBatch}...";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((System.Action) (() =>
+                    {
+                        logger.WarningText =
+                            $"File already exists for {instrumentBatch}.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{TAB 10}");
+                    AutoItX.Send("{ENTER}");
+                    fileSaved = false;
+                }
+            }
+
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]")
+                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
+
+            var filePath =
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
+
+            while (!File.Exists(filePath))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
+
+            //TODO: alpha
+            if (fileSaved)
+            {
+                var fileSize = (new FileInfo(filePath).Length >= 1048576)
+                    ? $"{(new FileInfo(filePath).Length / 1048576):n}" + " MB"
+                    : $"{(new FileInfo(filePath).Length / 1024):n}" + " KB";
+                Dispatcher.Invoke((System.Action)(() =>
+                {
+                    extractedFiles.Add(new ExtractedFile()
+                    {
+                        FilePath = filePath, FileName = Path.GetFileName(filePath),
+                        FileType = $"Risk View : {instrumentBatch}", FileSize = fileSize
+                    });
+                }));
+            }
+            // TODO: Checkbox to close window when complete.
+
+        }
+
+
+        public async void SaveDrcFile(bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 20);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("{TAB 3}");
+            AutoItX.Send("{ENTER}");
+            Dispatcher.Invoke((Action)(() =>
+            {
+                logger.OkayText = $"Saving CSV file for DRCs...";
+            }));
+
+            AutoItX.WinWait("Save As", timeout: 20);
+            AutoItX.WinActivate("Save As");
+
+            AutoItX.Send("{DEL}");
+            // TODO: Make the output file name a parameter.
+            AutoItX.Send(
+                $"DRCs {DateTime.Now:yyyy-MM-dd}.csv");
+            AutoItX.Send("!d");
+            AutoItX.Send("{DEL}");
+
+            var drcFolder =
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\DRC\\{DateTime.Now:MMMMyyyy}";
+            if (!Directory.Exists(drcFolder))
+            {
+                Directory.CreateDirectory(drcFolder);
+            }
+
+            AutoItX.Send(drcFolder);
+
+            AutoItX.Send("!s");
+            AutoItX.Sleep(1000);
+            var fileSaved = true;
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        logger.WarningText =
+                            $"Overriding existing file for DRCs...";
                     }));
                 }
                 else
@@ -297,32 +472,31 @@ namespace AdaptivBot
                     Dispatcher.Invoke((Action)(() =>
                     {
                         logger.WarningText =
-                            $"File already exists for {instrumentBatch}.";
+                            $"File already exists for DRCs.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);
                     AutoItX.WinActivate("Save As");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
-                    AutoItX.Send("{TAB}");
+                    AutoItX.Send("{TAB 10}");
                     AutoItX.Send("{ENTER}");
+                    fileSaved = false;
                 }
             }
 
             await Task.Run(() => Thread.Sleep(100));
 
-            while (AutoItX.WinGetTitle("[ACTIVE]").Contains(".csv from adaptiv.standardbank.co.za Completed"))
-            { 
+            while (AutoItX.WinGetTitle("[ACTIVE]")
+                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            {
                 await Task.Run(() => Thread.Sleep(500));
             }
-            // TODO: Checkbox to close window when complete.
 
+            var filePath =
+                $"{drcFolder}\\DRCs {DateTime.Now:yyyy-MM-dd}.csv";
+
+            while (!File.Exists(filePath))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
         }
 
 
@@ -341,167 +515,6 @@ namespace AdaptivBot
                     injectedScripts.Add(scriptName, script);
                 }
             }
-        }
-
-        public async void btnExtract_RiskView_Click(object sender, RoutedEventArgs e)
-        {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
-            
-            logger.NewExtraction("Risk View Reports Extraction Started");
-
-            if (!StoreUserCredentials())
-            {
-                return;
-            }
-            
-            // Wrap this in a function called login to Adaptiv or which checks if Adaptiv
-            // has already been  logged into.
-
-            // TODO: Use binding here.
-            var username = txtUserName.Text;
-            var password = txtPasswordBox.Password;
-
-             
-            var currentAdaptivEnvironment = cmbBxAdaptivEnvironments.SelectedValue.ToString();
-            int numberOfFailedExtractions = 0;
-            int numberOfSuccessfulExtractions = 0;
-            foreach (var instrumentBatch in InstrumentLists.instruments.Keys)
-            {
-                for (var errorCount = 0; errorCount < 3; errorCount++)
-                {
-                    try
-                    {
-                        await Task.Run(() =>
-                            OpenAdaptivAndLogin(username, password,
-                                currentAdaptivEnvironment));
-
-                        #region wait for browser
-
-                        while (!completedLoading)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        await Task.Run(() => Thread.Sleep(2000));
-                        completedLoading = false;
-
-                        #endregion wait for browser
-
-                        #region wait for browser
-
-                        while (!completedLoading)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        await Task.Run(() => Thread.Sleep(2000));
-                        completedLoading = false;
-
-                        #endregion wait for browser
-
-                        InjectJavascript(nameof(JsScripts.OpenRiskView),
-                            JsScripts.OpenRiskView);
-
-                        await Task.Run(() => Thread.Sleep(1000));
-                        webBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
-
-                        #region wait for browser
-
-                        for (int i = 0; i < 3; i++)
-                        {
-                            while (!completedLoading)
-                            {
-                                await Task.Run(() => Thread.Sleep(100));
-                            }
-
-                            completedLoading = false;
-                        }
-
-                        await Task.Run(() => Thread.Sleep(2000));
-
-                        #endregion wait for browser
-
-                        InjectJavascript(
-                            nameof(JsScripts.FilterRiskViewOnInstruments),
-                            JsScripts.FilterRiskViewOnInstruments);
-                        webBrowser.Document.InvokeScript(
-                            nameof(JsScripts.FilterRiskViewOnInstruments),
-                            new object[] {InstrumentLists.instruments[instrumentBatch]});
-
-
-                        #region wait for browser
-
-                        while (!completedLoading)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        await Task.Run(() => Thread.Sleep(1000));
-                        completedLoading = false;
-
-                        #endregion wait for browser
-
-
-                        InjectJavascript(nameof(JsScripts.ExportToCsv),
-                            JsScripts.ExportToCsv);
-                        webBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
-
-                        await Task.Run(() => Thread.Sleep(500));
-
-                        #region wait for browser
-
-                        while (!completedLoading)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        await Task.Run(() => Thread.Sleep(1000));
-                        completedLoading = false;
-
-                        #endregion wait for browser
-
-                        while (webBrowser.Document.GetElementsByTagName("A").Count == 0)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        foreach (HtmlElement link in webBrowser.Document
-                            .GetElementsByTagName("A"))
-                        {
-                            if (link.InnerText.Equals("exported file link"))
-                                link.InvokeMember("Click");
-                        }
-
-                        var overrideExistingFile = true;
-                            //(bool) chkBxOverrideExistingFiles.IsChecked;
-                        await Task.Run(() =>
-                            SaveFile(instrumentBatch, overrideExistingFile));
-                        numberOfSuccessfulExtractions++;
-                        break;
-                    }
-                    catch (Exception)
-                    {
-                        if (errorCount < 2)
-                        {
-                            logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {++errorCount}";
-                        }
-                        else
-                        {
-                            numberOfFailedExtractions++;
-                            logger.ErrorText = $"{instrumentBatch} extraction failed 3 times. Moving on to next instrument set.";
-                        }
-                    }
-                }
-            }
-
-            logger.OkayText = "Completed";
-            logger.OkayText =
-                $"Number of successful extractions: {numberOfSuccessfulExtractions}";
-            logger.ErrorText =
-                $"Number of failed extractions: {numberOfFailedExtractions}";
-            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            logger.OkayText =
-                $"Extraction took: {(GlobalConfigValues.Instance.extractionEndTime - GlobalConfigValues.Instance.extractionStartTime).Minutes} minutes";
         }
 
       
@@ -655,6 +668,7 @@ namespace AdaptivBot
             logger.OkayText = "Complete";
         }
 
+
         public async void SaveCustomerLimitUtilisationReport(DateTime date, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 200);
@@ -726,8 +740,46 @@ namespace AdaptivBot
             }
 
             var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
-            var targetFile = Path.ChangeExtension(csvFile, "." + extTo);
+            var targetFile = Path.ChangeExtension(csvFile, extTo);
             Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
         }
+
+
+        #region functions for manipulating extractefiles (DataGrid : "dgExtractedFiles")
+        private void OpenExtractedFileContainingFolder(object sender, RoutedEventArgs e)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                Arguments = "/select, \"" + ((ExtractedFile)dgExtractedFiles.SelectedItem).FilePath + "\"",
+                FileName = "explorer.exe"
+            };
+            Process.Start(startInfo);
+        }
+
+
+        private void OpenExtractedFile(object sender, RoutedEventArgs e)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                Arguments = "\"" + ((ExtractedFile)dgExtractedFiles.SelectedItem).FilePath + "\"",
+                FileName = "Excel.exe"
+            };
+            Process.Start(startInfo);
+        }
+
+
+        private void DeleteExtractedFile(object sender, RoutedEventArgs e)
+        {
+            extractedFiles.Remove((ExtractedFile) dgExtractedFiles.SelectedItem);
+        }
+
+
+        private void EmailExtractedFile(object sender, RoutedEventArgs e)
+        {
+            var ol = new Microsoft.Office.Interop.Outlook.Application();
+            MailItem mail = ol.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem) as Microsoft.Office.Interop.Outlook.MailItem;
+            
+        }
+        #endregion functions for manipulating extractefiles (DataGrid : "dgExtractedFiles")
     }
 }

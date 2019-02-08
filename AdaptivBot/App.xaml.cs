@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
 using System.Xml.Linq;
-using CredentialManagement;
+
 
 namespace AdaptivBot
 {
@@ -22,47 +16,52 @@ namespace AdaptivBot
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-            GlobalConfigValues.Instance.adaptivBotDirectory
+            GlobalConfigValues.Instance.AdaptivBotDirectory
                 = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder
                         .LocalApplicationData), "AdaptivBot");
 
-            GlobalConfigValues.Instance.adaptivBotConfigFile
-                = Path.Combine(GlobalConfigValues.Instance.adaptivBotDirectory,
+            GlobalConfigValues.Instance.AdaptivBotConfigFilePath
+                = Path.Combine(GlobalConfigValues.Instance.AdaptivBotDirectory,
                     "AdaptivBot.config");
 
-            if (!Directory.Exists(GlobalConfigValues.Instance.adaptivBotDirectory))
+            
+            // TODO: Replace GlobalConfigValues with GlobalDataBindingValues
+            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath =
+                GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
+
+            if (!Directory.Exists(GlobalConfigValues.Instance.AdaptivBotDirectory))
             {
-                Directory.CreateDirectory(GlobalConfigValues.Instance.adaptivBotDirectory);
+                Directory.CreateDirectory(GlobalConfigValues.Instance.AdaptivBotDirectory);
             }
 
-            if (!File.Exists(GlobalConfigValues.Instance.adaptivBotConfigFile))
+            if (!File.Exists(GlobalConfigValues.Instance.AdaptivBotConfigFilePath))
             {
                 File.WriteAllText(
-                    GlobalConfigValues.Instance.adaptivBotConfigFile,
+                    GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
                     GlobalConfigValues.defaultConfigFileContent);
-                GlobalConfigValues.createdConfigFile = YesNoMaybe.Yes;
+                GlobalConfigValues.CreatedConfigFile = YesNoMaybe.Yes;
             }
 
             var document =
-                XDocument.Load(GlobalConfigValues.Instance.adaptivBotConfigFile, LoadOptions.PreserveWhitespace);
+                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath, LoadOptions.PreserveWhitespace);
 
             if (File.Exists(GlobalConfigValues.possibleExcelPath1)
-                && document.Root.Element("ExcelExecutablePath").Value == "")
+                && document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value == "")
             {
-                document.Root.Element("ExcelExecutablePath").Value = GlobalConfigValues.possibleExcelPath1;
-                document.Save(GlobalConfigValues.Instance.adaptivBotConfigFile);
-                GlobalConfigValues.excelPathConfigured = YesNoMaybe.Yes;
+                document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value = GlobalConfigValues.possibleExcelPath1;
+                document.Save(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
+                GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Yes;
             }
-            else if (document.Root.Element("ExcelExecutablePath").Value == "")
+            else if (document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value == "")
             {
-                GlobalConfigValues.excelPathConfigured = YesNoMaybe.No;
+                GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.No;
             }
 
             var configDocument =
-                XDocument.Load(GlobalConfigValues.Instance.adaptivBotConfigFile);
+                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
             GlobalConfigValues.excelPath =
-                configDocument.Root.Element("ExcelExecutablePath").Value;
+                configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
 
         }
     }

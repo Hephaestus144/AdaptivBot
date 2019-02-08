@@ -5,12 +5,19 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:adaptivBot="clr-namespace:AdaptivBot"
       mc:Ignorable="d" 
+      Loaded="RiskViewSettings_OnLoaded"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Title="Risk View Settings">
-
+    <Page.Resources>
+        <XmlDataProvider x:Key="RiskViewSettingsXml" XPath="AdaptivBot/RiskViewSettings"/>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -40,7 +47,7 @@
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
                 FontWeight="Bold"
-                Margin="0,15,5,0"
+                Margin="0,20,5,-5"
                 Text="Risk View Settings"/>
             <Separator
                 DockPanel.Dock="Top"
@@ -49,20 +56,21 @@
 
         <DockPanel
             Grid.Row="1"
-            Grid.Column="0">
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 HorizontalAlignment="Right"
-                Margin="8">
-                Base Folder
+                Margin="9">
+                Base Extraction Folder
             </TextBlock>
 
         </DockPanel>
 
         <DockPanel
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="2"
             Grid.ColumnSpan="4">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
@@ -76,20 +84,22 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+                    VerticalContentAlignment="Stretch"
+                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=BaseFolder}"/>
             </materialDesign:Card>
         </DockPanel>
 
         <materialDesign:Card
-            Grid.Row="1"
-            Grid.Column="5"
+            Grid.Row="2"
+            Grid.Column="3"
             Grid.ColumnSpan="2"
             Margin="5"
             VerticalAlignment="Top"
             VerticalContentAlignment="Center">
             <DatePicker
                 Name ="datePicker"
-                ToolTip="Only used in 'Delete Files for Date' function."
+                DisplayDateEnd="{Binding  Source={x:Static adaptivBot:GlobalDataBindingValues.Instance}, Path=DisplayDateEnd}"
+                ToolTip="Only used in 'Delete Files for Date' function. You cannot select a date after and including today."
                 materialDesign:HintAssist.Hint="Date"
                 HorizontalContentAlignment="Center"
                 VerticalAlignment="Center"
@@ -101,10 +111,11 @@
         </materialDesign:Card>
 
         <DockPanel
-            Grid.Row="2"
-            Grid.RowSpan="3"
-            Grid.Column="3"
-            Grid.ColumnSpan="2">
+            Grid.Row="1"
+            Grid.RowSpan="4"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            Margin="0,-16,0,0">
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
@@ -118,9 +129,10 @@
                 VerticalContentAlignment="Center">
                 <ListBox
                     Name="lstBxInstruments"
-                    ToolTip="To select multiple items hold down shift and left click on them one by one."
+                    ToolTip="You can select multiple items. To run everything don't select anything from this list."
                     SelectionMode="Multiple"
-                    FontSize="10"
+                    SelectedValuePath="Content"
+                    FontSize="11"
                     Margin="5">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -128,7 +140,7 @@
                                 <Trigger Property="IsSelected" Value="True" >
                                     <Setter Property="FontWeight" Value="DemiBold" />
                                     <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="Foreground" Value="DodgerBlue" />
                                 </Trigger>
                             </Style.Triggers>
                             <Style.Resources>
@@ -155,28 +167,40 @@
             Grid.RowSpan="3"
             Grid.Column="7"
             Grid.ColumnSpan="2">
+            <DockPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="LawnGreen"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Resources>
             <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Delete Files for Date
             </Button>
 
             <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to UAT
             </Button>
 
             <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="10"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to Prod
@@ -186,23 +210,24 @@
 
         <CheckBox
             Name="chkBxOverrideExistingFiles"
-            Grid.Row="4"
+            Grid.Row="6"
             Grid.Column="5"
             Grid.ColumnSpan="2"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="True"
-            Margin="5,12,5,5"
+            Margin="5,25,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
-                Margin="0,-3,0,0">
+                Margin="0,0,0,0">
                 Override existing files
             </TextBlock> 
         </CheckBox>
         <Button
             Name="btnRunExtraction"
-            Grid.Row="4"
+            materialDesign:ShadowAssist.ShadowDepth="Depth5"
+            Grid.Row="6"
             Grid.Column="7"
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom"
