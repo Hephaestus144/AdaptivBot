@@ -9,7 +9,7 @@ namespace AdaptivBot
 {
     public static class FileUtils
     {
-        public static object[,] Read(string filePath, string readAfterThisLine = "")
+        public static List<string> Read(string filePath, string readAfterThisLine = "")
         {
             var readLines = new List<string>();
             var retainCurrentLine = readAfterThisLine == "";
@@ -29,6 +29,8 @@ namespace AdaptivBot
                 }
             }
 
+            return readLines;
+
             if (readLines.Count == 0)
             {
                 return null;
@@ -36,21 +38,9 @@ namespace AdaptivBot
 
             if (Path.GetExtension(filePath) == ".csv")
             {
-                var outputLists = readLines.Select(x => x.Split(',')).ToList();
-                var maxListLength = outputLists.Select(x => x.Length).Max();
-                var output = new object[outputLists.Count, maxListLength];
+  
 
-                for (var i = 0; i < outputLists.Count; i++)
-                {
-                    for (var j = 0; j < maxListLength; j++)
-                    {
-                        output[i, j] = j < outputLists[i].Length
-                            ? outputLists[i][j]
-                            : "";
-                    }
-                }
-
-                return output;
+                
             }
             else
             {
@@ -60,7 +50,7 @@ namespace AdaptivBot
                     output[i, 0] = readLines[i];
                 }
 
-                return output;
+        
             }
         }
 
