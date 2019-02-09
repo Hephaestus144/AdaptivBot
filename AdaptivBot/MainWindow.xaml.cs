@@ -15,10 +15,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using System.Xml.Linq;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Office.Interop.Outlook;
+using Outlook = NetOffice.OutlookApi;
 using Action = System.Action;
 using Brushes = System.Windows.Media.Brushes;
+
 
 namespace AdaptivBot
 {
@@ -255,24 +257,24 @@ namespace AdaptivBot
         }
 
 
-        #region Credential functions
+        #region Credentials functions
         public bool StoreUserCredentials()
         {
             var credentialStore = new CredentialStore($"AdaptivBot{cmbBxAdaptivEnvironments.SelectedValue}");
             if (!credentialStore.credentialsFound && (bool)chkBxRememberMe.IsChecked)
             {
-                credentialStore.credential.Username = txtUserName.Text;
-                credentialStore.credential.Password = txtPasswordBox.Password;
-                credentialStore.credential.PersistanceType =
+                credentialStore.Credentials.Username = txtUserName.Text;
+                credentialStore.Credentials.Password = TxtPasswordBox.Password;
+                credentialStore.Credentials.PersistanceType =
                     PersistanceType.LocalComputer;
-                credentialStore.credential.Save();
+                credentialStore.Credentials.Save();
                 logger.OkayText = "Saving credentials...";
                 return true;
             }
 
             if (credentialStore.credentialsFound
-                && (credentialStore.credential.Username != txtUserName.Text
-                || credentialStore.credential.Password != txtPasswordBox.Password))
+                && (credentialStore.Credentials.Username != txtUserName.Text
+                || credentialStore.Credentials.Password != TxtPasswordBox.Password))
             {
                 var window = new AlertUpdateUserCredentials();
                 window.Show();
@@ -287,7 +289,7 @@ namespace AdaptivBot
                 return false;
             }
 
-            if (txtPasswordBox.Password == "")
+            if (TxtPasswordBox.Password == "")
             {
                 logger.ErrorText = "Password blank.";
                 return false;
@@ -329,17 +331,17 @@ namespace AdaptivBot
                 new CredentialStore("AdaptivBot" + cmbBxAdaptivEnvironments.SelectedValue);
             if (credentialStore.credentialsFound)
             {
-                txtUserName.Text = credentialStore.credential.Username;
-                txtPasswordBox.Password = credentialStore.credential.Password;
+                txtUserName.Text = credentialStore.Credentials.Username;
+                TxtPasswordBox.Password = credentialStore.Credentials.Password;
             }
             else
             {
                 txtUserName.Text = "";
-                txtPasswordBox.Password = "";
+                TxtPasswordBox.Password = "";
             }
         }
 
-        #endregion Credential functions
+        #endregion Credentials functions
         
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -347,8 +349,8 @@ namespace AdaptivBot
             var credentialStore = new CredentialStore("AdaptivBotProduction");
             if (credentialStore.credentialsFound)
             {
-                txtUserName.Text = credentialStore.credential.Username;
-                txtPasswordBox.Password = credentialStore.credential.Password;
+                txtUserName.Text = credentialStore.Credentials.Username;
+                TxtPasswordBox.Password = credentialStore.Credentials.Password;
             }
 
             if (IsUsingEthernet(this.logger))
@@ -359,6 +361,69 @@ namespace AdaptivBot
             {
                 iconNetworkType.Kind = PackIconKind.Wifi;
             }
+
+
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            GlobalConfigValues.Instance.AdaptivBotDirectory
+                = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder
+                        .LocalApplicationData), "AdaptivBot");
+
+            GlobalConfigValues.Instance.AdaptivBotConfigFilePath
+                = Path.Combine(GlobalConfigValues.Instance.AdaptivBotDirectory,
+                    "AdaptivBot.config");
+
+
+            // TODO: Replace GlobalConfigValues with GlobalDataBindingValues
+            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath =
+                GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
+
+            if (!Directory.Exists(GlobalConfigValues.Instance.AdaptivBotDirectory))
+            {
+                Directory.CreateDirectory(GlobalConfigValues.Instance.AdaptivBotDirectory);
+            }
+
+            if (!File.Exists(GlobalConfigValues.Instance.AdaptivBotConfigFilePath))
+            {
+                File.WriteAllText(
+                    GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
+                    GlobalConfigValues.defaultConfigFileContent);
+                GlobalConfigValues.CreatedConfigFile = YesNoMaybe.Yes;
+            }
+
+            var document =
+                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath, LoadOptions.PreserveWhitespace);
+
+            var configDocument =
+                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
+
+            if (document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
+            {
+                if (File.Exists(GlobalConfigValues.possibleExcelPath1)
+                    && document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
+                {
+                    document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value =
+                        GlobalConfigValues.possibleExcelPath1;
+                    document.Save(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
+                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Yes;
+
+
+                    GlobalConfigValues.excelPath
+                        = configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
+                }
+                else if (document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
+                {
+                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.No;
+                    GlobalConfigValues.excelPath
+                        = configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
+                }
+                else
+                {
+                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Maybe;
+                }
+            }
+
         }
 
         public async void OpenAdaptivAndLogin(
@@ -391,84 +456,6 @@ namespace AdaptivBot
 
 
 
-        public async void SaveDrcFile(bool overrideExistingFile)
-        {
-            AutoItX.WinWait("File Download", timeout: 20);
-            AutoItX.WinActivate("File Download");
-            AutoItX.Send("{TAB 3}");
-            AutoItX.Send("{ENTER}");
-            Dispatcher.Invoke((Action)(() =>
-            {
-                logger.OkayText = $"Saving CSV file for DRCs...";
-            }));
-
-            AutoItX.WinWait("Save As", timeout: 20);
-            AutoItX.WinActivate("Save As");
-
-            AutoItX.Send("{DEL}");
-            // TODO: Make the output file name a parameter.
-            AutoItX.Send(
-                $"DRCs {DateTime.Now:yyyy-MM-dd}.csv");
-            AutoItX.Send("!d");
-            AutoItX.Send("{DEL}");
-
-            var drcFolder =
-                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\DRC\\{DateTime.Now:MMMMyyyy}";
-            if (!Directory.Exists(drcFolder))
-            {
-                Directory.CreateDirectory(drcFolder);
-            }
-
-            AutoItX.Send(drcFolder);
-
-            AutoItX.Send("!s");
-            AutoItX.Sleep(1000);
-            var fileSaved = true;
-            if (AutoItX.WinExists("Confirm Save As") != 0)
-            {
-                AutoItX.WinActivate("Confirm Save As");
-                if (overrideExistingFile)
-                {
-                    AutoItX.Send("!y");
-                    Dispatcher.Invoke((Action)(() =>
-                    {
-                        logger.WarningText =
-                            $"Overriding existing file for DRCs...";
-                    }));
-                }
-                else
-                {
-                    AutoItX.Send("!n");
-                    Dispatcher.Invoke((Action)(() =>
-                    {
-                        logger.WarningText =
-                            $"File already exists for DRCs.";
-                    }));
-                    AutoItX.WinWait("Save As", timeout: 20);
-                    AutoItX.WinActivate("Save As");
-                    AutoItX.Send("{TAB 10}");
-                    AutoItX.Send("{ENTER}");
-                    fileSaved = false;
-                }
-            }
-
-            await Task.Run(() => Thread.Sleep(100));
-
-            while (AutoItX.WinGetTitle("[ACTIVE]")
-                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
-            {
-                await Task.Run(() => Thread.Sleep(500));
-            }
-
-            var filePath =
-                $"{drcFolder}\\DRCs {DateTime.Now:yyyy-MM-dd}.csv";
-
-            while (!File.Exists(filePath))
-            {
-                await Task.Run(() => Thread.Sleep(500));
-            }
-        }
-
 
         public void InjectJavascript(string scriptName, string script)
         {
@@ -487,10 +474,6 @@ namespace AdaptivBot
             }
         }
 
-      
-
-
-
 
         public static async void ConvertWorkbookFormats(string csvFile, string extFrom, string extTo)
         {
@@ -505,7 +488,7 @@ namespace AdaptivBot
         }
 
 
-        #region functions for manipulating extractefiles (DataGrid : "dgExtractedFiles")
+        #region functions for manipulating extractedfiles (DataGrid : "dgExtractedFiles")
         private void OpenExtractedFileContainingFolder(object sender, RoutedEventArgs e)
         {
             var startInfo = new ProcessStartInfo
@@ -534,12 +517,11 @@ namespace AdaptivBot
         }
 
 
+        //TODO: Complete this.
         private void EmailExtractedFile(object sender, RoutedEventArgs e)
         {
-            var ol = new Microsoft.Office.Interop.Outlook.Application();
-            MailItem mail = ol.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem) as Microsoft.Office.Interop.Outlook.MailItem;
             
         }
-        #endregion functions for manipulating extractefiles (DataGrid : "dgExtractedFiles")
+        #endregion functions for manipulating extractedfiles (DataGrid : "dgExtractedFiles")
     }
 }

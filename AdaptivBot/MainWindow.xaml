@@ -10,7 +10,6 @@
         Width="1200"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
-        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -134,7 +133,7 @@
                 DockPanel.Dock="Top"
                 Margin="5"
                 UniformCornerRadius="4">
-                <PasswordBox Name="txtPasswordBox" 
+                <PasswordBox Name="TxtPasswordBox" 
                              Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                              Padding="0,-5,0,0" 
                              Margin="5"

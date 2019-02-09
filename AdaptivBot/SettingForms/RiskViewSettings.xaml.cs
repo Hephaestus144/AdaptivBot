@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoIt;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
-using AutoIt;
 using Application = System.Windows.Application;
 
 
@@ -43,7 +43,7 @@ namespace AdaptivBot.SettingForms
 
             // TODO: Use binding here.
             var username = window.txtUserName.Text;
-            var password = window.txtPasswordBox.Password;
+            var password = window.TxtPasswordBox.Password;
 
             var selectedInstruments = new List<string>();
 

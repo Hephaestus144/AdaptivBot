@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using AutoIt;
 
 
@@ -51,7 +52,7 @@ namespace AdaptivBot.SettingForms
 
             // TODO: Use binding here.
             var username = window.txtUserName.Text;
-            var password = window.txtPasswordBox.Password;
+            var password = window.TxtPasswordBox.Password;
 
             var currentAdaptivEnvironment =
                 window.cmbBxAdaptivEnvironments.SelectedValue.ToString();
@@ -321,8 +322,28 @@ namespace AdaptivBot.SettingForms
                 cmbBxFilterOperation3.Visibility = Visibility.Visible;
 
                 cardFilterCriteria3.Visibility = Visibility.Visible;
-                txtBxFilterCriteria2.Visibility = Visibility.Visible;
+                txtBxFilterCriteria3.Visibility = Visibility.Visible;
             }
+
+            if (cmbBxFilterCategory1.SelectedValue == cmbBxFilterCategory2.SelectedValue)
+            {
+                cmbBxFilterCategory1.Foreground = Brushes.Red;
+                cmbBxFilterCategory2.Foreground = Brushes.Red;
+            }
+
+            if (cmbBxFilterCategory1.SelectedValue == cmbBxFilterCategory3.SelectedValue)
+            {
+                cmbBxFilterCategory1.Foreground = Brushes.Red;
+                cmbBxFilterCategory3.Foreground = Brushes.Red;
+            }
+
+            if (cmbBxFilterCategory2.SelectedValue == cmbBxFilterCategory3.SelectedValue)
+            {
+                cmbBxFilterCategory2.Foreground = Brushes.Red;
+                cmbBxFilterCategory3.Foreground = Brushes.Red;
+            }
+
+            window.logger.ErrorText = "At least two of your filtering categories are the same.";
         }
         #endregion filtering
     }

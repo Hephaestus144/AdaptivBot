@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoIt;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace AdaptivBot.SettingForms
     /// </summary>
     public partial class DealRiskCarrierSettings : Page
     {
-        readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
+        private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
+
 
         public DealRiskCarrierSettings()
         {
@@ -38,7 +40,7 @@ namespace AdaptivBot.SettingForms
 
             // TODO: Use binding here.
             var username = _window.txtUserName.Text;
-            var password = _window.txtPasswordBox.Password;
+            var password = _window.TxtPasswordBox.Password;
             // TODO: Bind this textbox
             var drcFolder =
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\DRC\\{DateTime.Now:MMMMyyyy}";
@@ -162,7 +164,7 @@ namespace AdaptivBot.SettingForms
                     var overrideExistingFile =
                         (bool)chkBxOverrideExistingFiles.IsChecked;
                     await Task.Run(() =>
-                        _window.SaveDrcFile(overrideExistingFile));
+                        SaveDrcFile(overrideExistingFile));
 
                     await Task.Run(() =>
                         MainWindow.ConvertWorkbookFormats(csvDrcFilePath, ".csv", ".xlsx"));
@@ -258,6 +260,85 @@ namespace AdaptivBot.SettingForms
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             _window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
 
+        }
+
+
+        public async void SaveDrcFile(bool overrideExistingFile)
+        {
+            AutoItX.WinWait("File Download", timeout: 20);
+            AutoItX.WinActivate("File Download");
+            AutoItX.Send("{TAB 3}");
+            AutoItX.Send("{ENTER}");
+            Dispatcher.Invoke((Action)(() =>
+            {
+                _window.logger.OkayText = $"Saving CSV file for DRCs...";
+            }));
+
+            AutoItX.WinWait("Save As", timeout: 20);
+            AutoItX.WinActivate("Save As");
+
+            AutoItX.Send("{DEL}");
+            // TODO: Make the output file name a parameter.
+            AutoItX.Send(
+                $"DRCs {DateTime.Now:yyyy-MM-dd}.csv");
+            AutoItX.Send("!d");
+            AutoItX.Send("{DEL}");
+
+            var drcFolder =
+                $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\DRC\\{DateTime.Now:MMMMyyyy}";
+            if (!Directory.Exists(drcFolder))
+            {
+                Directory.CreateDirectory(drcFolder);
+            }
+
+            AutoItX.Send(drcFolder);
+
+            AutoItX.Send("!s");
+            AutoItX.Sleep(1000);
+            var fileSaved = true;
+            if (AutoItX.WinExists("Confirm Save As") != 0)
+            {
+                AutoItX.WinActivate("Confirm Save As");
+                if (overrideExistingFile)
+                {
+                    AutoItX.Send("!y");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        _window.logger.WarningText =
+                            $"Overriding existing file for DRCs...";
+                    }));
+                }
+                else
+                {
+                    AutoItX.Send("!n");
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        _window.logger.WarningText =
+                            $"File already exists for DRCs.";
+                    }));
+                    AutoItX.WinWait("Save As", timeout: 20);
+                    AutoItX.WinActivate("Save As");
+                    AutoItX.Send("{TAB 10}");
+                    AutoItX.Send("{ENTER}");
+                    fileSaved = false;
+                }
+            }
+
+            await Task.Run(() => Thread.Sleep(100));
+
+            while (AutoItX.WinGetTitle("[ACTIVE]")
+                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
+
+            var filePath =
+                $"{drcFolder}\\DRCs {DateTime.Now:yyyy-MM-dd}.csv";
+
+            while (!File.Exists(filePath))
+            {
+                await Task.Run(() => Thread.Sleep(500));
+            }
         }
     }
 }
