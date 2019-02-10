@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\App.xaml
-71274316874
+8168788732
 
-2092747040
+21-1286313161
 351265646085
-AlertForms\AlertUpdateUserCredentials.xaml;MainWindow.xaml;SettingForms\GeneralSettings.xaml;SettingForms\PortfolioAnalysisSettings.xaml;SettingForms\DealRiskCarrierSettings.xaml;SettingForms\RiskViewSettings.xaml;SettingForms\CustomerLimitUtilisationSettings.xaml;
+AlertForms\AlertUpdateUserCredentials.xaml;FunctionForms\EmailBugSuggestion.xaml;MainWindow.xaml;FunctionForms\GeneralSettings.xaml;FunctionForms\PortfolioAnalysisSettings.xaml;FunctionForms\DealRiskCarrierSettings.xaml;FunctionForms\RiskViewSettings.xaml;FunctionForms\CustomerLimitUtilisationSettings.xaml;
 
 False
 

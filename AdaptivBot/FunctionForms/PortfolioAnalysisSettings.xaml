@@ -36,6 +36,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        
         <DockPanel
             Grid.Row="0"
             Grid.Column="0"
@@ -45,13 +46,14 @@
                 Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
-                FontWeight="DemiBold"
-                Margin="0,20,5,-5"
-                Text="Portfolio Analysis Settings"/>
-            <Separator
-                DockPanel.Dock="Top"
-                Margin="0,0,0,10"/>
+                FontWeight="Regular"
+                Margin="5,20,5,-5">
+                Portfolio Analysis Settings
+            </TextBlock>
+
+            <Separator DockPanel.Dock="Top"/>
         </DockPanel>
+
 
         <materialDesign:Card
             Grid.Row="1"
@@ -84,7 +86,7 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="12"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to UAT
@@ -93,17 +95,19 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="12"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy Files to Prod
             </Button>
         </DockPanel>
 
+
         <Button
             Grid.Row="7"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignFlatButton}"
@@ -122,26 +126,32 @@
                 </StackPanel>
             </Button.Content>
         </Button>
+
+
         <CheckBox
             Name="chkBxOverrideExistingFiles"
             Grid.Row="7"
-            Grid.Column="7"
-            Grid.ColumnSpan="2"
+            Grid.Column="6"
+            Grid.ColumnSpan="3"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Right"
             IsChecked="True"
-            Margin="5,10,5,5"
+            Margin="5,7,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
+                FontSize="11"
                 Margin="0,-3,0,0">
                 Override existing files
             </TextBlock>
         </CheckBox>
+
+
         <Button
             Grid.Row="7"
             Grid.Column="9"
             Grid.ColumnSpan="2"
+            VerticalContentAlignment="Center"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignRaisedAccentButton}"

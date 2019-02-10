@@ -23,6 +23,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -39,6 +40,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+
         <DockPanel
             Grid.Row="0"
             Grid.Column="0"
@@ -48,40 +50,37 @@
                 Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
-                FontWeight="DemiBold"
-                Margin="0,20,5,-5"
-                Text="General Settings"/>
-            <Separator
-                DockPanel.Dock="Top"
-                Margin="0,0,0,10"/>
+                FontWeight="Regular"
+                Margin="5,20,5,-5">
+                General Settings
+            </TextBlock>
+
+            <Separator DockPanel.Dock="Top"/>
         </DockPanel>
+
 
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2">
-            <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9">
+            <DockPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="Margin" Value="0,10,5,10"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+            </DockPanel.Resources>
+            
+            <TextBlock DockPanel.Dock="Top">
                 Excel.exe Path 
             </TextBlock>
 
-            <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9">
+            <TextBlock DockPanel.Dock="Top">
                 Qlikview UAT Folder
             </TextBlock>
 
-            <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9">
+            <TextBlock DockPanel.Dock="Top">
                 Qlikview Prod Folder
             </TextBlock>
         </DockPanel>
@@ -91,6 +90,15 @@
             Grid.RowSpan="3"
             Grid.Column="2"
             Grid.ColumnSpan="5">
+            <DockPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Padding" Value="5,0,5,0"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                </Style>
+            </DockPanel.Resources>
+
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -99,12 +107,6 @@
                 Margin="5">
                 <TextBox
                     Name="txtBxExcelPath"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
                     Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=ExcelExecutablePath}"/>
             </materialDesign:Card>
 
@@ -145,46 +147,51 @@
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
-            Grid.Column="9"
-            Grid.ColumnSpan="2">
+            Grid.Column="8"
+            Grid.ColumnSpan="3">
+            
+            <DockPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                    <Setter Property="Margin" Value="0,5,0,5"/>
+                </Style>
+            </DockPanel.Resources>
+            
             <Button
                 Name="BtnUpdateAdaptivCredentials"
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="0,5,0,5"
                 ToolTip="Updates the credentials for the selected Adaptiv environment."
                 Click="BtnUpdateAdaptivCredentials_OnClick">
                 Update Adaptiv Credentials
             </Button>
+
             <Button
+                Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="0,5,0,5"
                 ToolTip="Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
-                Purge Adaptiv Credentialss
+                Purge Adaptiv Credentials
             </Button>
 
             <Button
+                Name="BtnConfigureTaskScheduler"
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="0,5,0,5">
+                ToolTip="[Not Implemented]">
                 Configure Task Scheduler
             </Button>
 
         </DockPanel>
 
+
         <Button
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
-            FontSize="12"
+            FontSize="11"
             Style="{StaticResource MaterialDesignFlatButton}"
             Margin="5,5,5,10">
             <Button.Content>
@@ -201,5 +208,6 @@
                 </StackPanel>
             </Button.Content>
         </Button>
+
     </Grid>
 </Page>

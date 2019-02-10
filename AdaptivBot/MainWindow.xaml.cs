@@ -1,5 +1,4 @@
-﻿using AutoIt;
-using CredentialManagement;
+﻿using MaterialDesignThemes.Wpf;
 using mshtml;
 using NodaTime;
 using System;
@@ -16,8 +15,6 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using System.Xml.Linq;
-using MaterialDesignThemes.Wpf;
-using Outlook = NetOffice.OutlookApi;
 using Action = System.Action;
 using Brushes = System.Windows.Media.Brushes;
 
@@ -184,7 +181,8 @@ namespace AdaptivBot
             }
         }
 
-        public bool IsUsingEthernet(Logger logger)
+
+        public bool IsUsingEthernet(Logger logger, bool windowJustLoaded = false)
         {
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -192,10 +190,10 @@ namespace AdaptivBot
                     && ni.NetworkInterfaceType.ToString()
                         .IndexOf("Ethernet", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    if (!windowJustLoaded)
                     {
-                        logger.OkayText = "Ethernet connection restored.";
-                    }));
+                        Dispatcher.BeginInvoke((Action) (() => { logger.OkayText = "Ethernet connection restored."; }));
+                    }
                     return true;
                 }
             }
@@ -227,15 +225,16 @@ namespace AdaptivBot
             {
                 Dispatcher.BeginInvoke((Action) (() =>
                 {
-                    iconNetworkType.Kind = PackIconKind.EthernetCable;
+                    IconNetworkType.Kind = PackIconKind.Network;
                 }));
             }
             else
             {
                 Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    iconNetworkType.Kind = PackIconKind.Wifi;
-                    btnNetworkType.Background = Brushes.Orange;
+                    IconNetworkType.Kind = PackIconKind.Wifi;
+                    BtnNetworkType.Background = Brushes.Orange;
+                    BtnNetworkType.BorderBrush = Brushes.Orange;
                 }));
             }
         }
@@ -266,19 +265,13 @@ namespace AdaptivBot
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             CredentialStore.Instance.Target = "AdaptivBotProduction";
-            //if (CredentialStore.Instance.credentialsFound)
-            //{
-            //    txtUserName.Text = CredentialStore.Instance.Credentials.Username;
-            //    TxtPasswordBox.Password = CredentialStore.Instance.Credentials.Password;
-            //}
-
             if (IsUsingEthernet(this.Logger))
             {
-                iconNetworkType.Kind = PackIconKind.EthernetCable;
+                IconNetworkType.Kind = PackIconKind.Network;
             }
             else
             {
-                iconNetworkType.Kind = PackIconKind.Wifi;
+                IconNetworkType.Kind = PackIconKind.Wifi;
             }
 
 
@@ -443,6 +436,12 @@ namespace AdaptivBot
         {
             CredentialStore.Instance.Target = CmbBxAdaptivEnvironments.SelectedValue.ToString();
             TxtPasswordBox.Password = CredentialStore.Instance.Password;
+        }
+
+        private void BtnEmailBug_OnClick(object sender, RoutedEventArgs e)
+        {
+            FrameFunctions.SelectedIndex = 5;
+            FrmEmailBugSuggestion.Visibility = Visibility.Visible;
         }
     }
 }

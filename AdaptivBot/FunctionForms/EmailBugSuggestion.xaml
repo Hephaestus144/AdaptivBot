@@ -1,0 +1,127 @@
+﻿<Page x:Class="AdaptivBot.SettingForms.EmailBugSuggestion"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AdaptivBot.SettingForms"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:adaptivBot="clr-namespace:AdaptivBot"
+      mc:Ignorable="d" 
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Title="Email Bug/Suggestion">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="11">
+            <TextBlock
+                    DockPanel.Dock="Top"
+                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                    Foreground="{DynamicResource SecondaryAccentBrush}"
+                    VerticalAlignment="Bottom"
+                    FontWeight="Regular"
+                    Margin="5,20,5,-5">
+                Email Bug/Suggestion
+            </TextBlock>
+                    
+            <Separator DockPanel.Dock="Top"/>
+        </DockPanel>
+
+
+        <DockPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <materialDesign:Card
+                UniformCornerRadius="4"
+                Margin="5"
+                Padding="5,0,5,5">
+                <ComboBox
+                    FontSize="11"
+                    DockPanel.Dock="Top"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    materialDesign:HintAssist.Hint="Type"
+                    materialDesign:HintAssist.FloatingScale="0.1">
+                    <ComboBoxItem>Bug</ComboBoxItem>
+                    <ComboBoxItem>Suggestion</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+        </DockPanel>
+
+
+        <DockPanel
+            Grid.Row="2"
+            Grid.RowSpan="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="7">
+
+            <TextBlock 
+                DockPanel.Dock="Top"
+                FontSize="14"
+                FontWeight="DemiBold"
+                Margin="11,0,0,0">
+                Description
+            </TextBlock>
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Margin="5">
+                <TextBox
+                    Name="txtBoxBaseFolder"
+                    FontSize="12"
+                    Padding="5,0,5,0"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    ToolTip="The folder to which the file will be saved."/>
+            </materialDesign:Card>
+
+        </DockPanel>
+
+
+        <Button
+            Name="BtnSendEmail"
+            Grid.Row="7"
+            Grid.Column="9"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            FontSize="12"
+            Style="{StaticResource MaterialDesignRaisedAccentButton}"
+            Margin="5,5,5,10">
+            Send Email
+        </Button>
+    </Grid>
+</Page>

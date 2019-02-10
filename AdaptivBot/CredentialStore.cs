@@ -130,7 +130,7 @@ namespace AdaptivBot
             //this.Credentials.Target = $"AdaptivBot{_window.CmbBxAdaptivEnvironments.SelectedValue}";
             if (!this.credentialsFound && (bool)_window.chkBxRememberMe.IsChecked)
             {
-                this.Credentials.Username = _window.txtUserName.Text;
+                this.Credentials.Username = _window.TxtUserName.Text;
                 this.Credentials.Password = _window.TxtPasswordBox.Password;
                 this.Credentials.PersistanceType =
                     PersistanceType.LocalComputer;
@@ -140,7 +140,7 @@ namespace AdaptivBot
             }
 
             if (this.credentialsFound
-                && (this.Credentials.Username != _window.txtUserName.Text
+                && (this.Credentials.Username != _window.TxtUserName.Text
                 || this.Credentials.Password != _window.TxtPasswordBox.Password))
             {
                 var window = new AlertUpdateUserCredentials();
@@ -150,7 +150,7 @@ namespace AdaptivBot
                 // to the saved credentials & would they like to save them?
             }
 
-            if (_window.txtUserName.Text == "")
+            if (_window.TxtUserName.Text == "")
             {
                 _window.Logger.ErrorText = "User name blank.";
                 return false;

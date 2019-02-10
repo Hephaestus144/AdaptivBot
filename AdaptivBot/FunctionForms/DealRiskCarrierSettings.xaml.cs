@@ -39,7 +39,7 @@ namespace AdaptivBot.SettingForms
             }
 
             // TODO: Use binding here.
-            var username = _window.txtUserName.Text;
+            var username = _window.TxtUserName.Text;
             var password = _window.TxtPasswordBox.Password;
             // TODO: Bind this textbox
             var drcFolder =

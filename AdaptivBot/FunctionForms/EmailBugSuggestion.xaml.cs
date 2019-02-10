@@ -51,7 +51,7 @@ namespace AdaptivBot.SettingForms
             window.Logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
 
             // TODO: Use binding here.
-            var username = window.txtUserName.Text;
+            var username = window.TxtUserName.Text;
             var password = window.TxtPasswordBox.Password;
 
             var currentAdaptivEnvironment =

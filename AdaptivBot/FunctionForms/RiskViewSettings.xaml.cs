@@ -42,7 +42,7 @@ namespace AdaptivBot.SettingForms
 
 
             // TODO: Use binding here.
-            var username = window.txtUserName.Text;
+            var username = window.TxtUserName.Text;
             var password = window.TxtPasswordBox.Password;
 
             var selectedInstruments = new List<string>();

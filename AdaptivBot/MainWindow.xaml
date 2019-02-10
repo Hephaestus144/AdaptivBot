@@ -37,7 +37,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.15*" />
+            <ColumnDefinition Width="0.2*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -53,7 +53,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="0.15*" />
+            <ColumnDefinition Width="0.25*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -66,14 +66,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.3*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.25*" />
         </Grid.RowDefinitions>
 
         <Image HorizontalAlignment="Left"
@@ -81,18 +81,20 @@
                Grid.RowSpan="3"
                Grid.Column="2"
                Grid.ColumnSpan="2"
-               Margin="8,0,0,45">
+               Margin="24,0,0,50">
             <Image.Source>
-                <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot-9.png" />
+                <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot.png" />
             </Image.Source>
         </Image>
 
 
         <DockPanel  
             Grid.Row="1"
-            Grid.RowSpan="4"
+            Grid.RowSpan="5"
             Grid.Column="1"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Margin="0,0,10,0">
+
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
@@ -105,17 +107,18 @@
                 Margin="5"
                 UniformCornerRadius="4">
                 <TextBox 
-                    Name="txtUserName"
+                    Name="TxtUserName"
                     Text="{Binding Source={x:Static local:CredentialStore.Instance}, Path=Username}"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                    Padding="0,-5,0,0"
+                    Padding="0,-6,0,0"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    FontSize="12"
+                    FontSize="11"
                     Margin="5"
                     materialDesign:HintAssist.Hint="User Name"
-                    materialDesign:HintAssist.FloatingScale="0.6"
-                    materialDesign:HintAssist.FloatingOffset="-70,-8"/>
+                    materialDesign:HintAssist.FloatingScale="0.7"
+                    materialDesign:HintAssist.HintOpacity="0.2"
+                    materialDesign:HintAssist.FloatingOffset="-50,-8"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -125,15 +128,16 @@
                 <PasswordBox 
                     Name="TxtPasswordBox" 
                     Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                    Padding="0,-5,0,0" 
+                    Padding="0,-6,0,0" 
                     Margin="5"
                     PasswordChar="•"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    FontSize="12"
+                    FontSize="11"
                     materialDesign:HintAssist.Hint="Password"
-                    materialDesign:HintAssist.FloatingScale="0.6"
-                    materialDesign:HintAssist.FloatingOffset="-70,-8" >
+                    materialDesign:HintAssist.FloatingScale="0.7"
+                    materialDesign:HintAssist.HintOpacity="0.2"
+                    materialDesign:HintAssist.FloatingOffset="-50,-8" >
                 </PasswordBox>
             </materialDesign:Card>
 
@@ -145,6 +149,7 @@
                     Name="CmbBxAdaptivEnvironments"
                     Margin="5"
                     FontSize="10"
+                    Padding="4" 
                     HorizontalContentAlignment="Center"
                     SelectedIndex="0"
                     IsEditable="False"
@@ -178,29 +183,32 @@
                 FlowDirection="RightToLeft"
                 VerticalAlignment="Top"
                 Margin="5"
-                FontSize="10"
+                FontSize="9"
                 HorizontalAlignment="Center">
                 <TextBlock
                     Margin="0,-2,0,0">
                     Remember Me
                 </TextBlock>
             </CheckBox>
+
         </DockPanel>
+
 
         <DockPanel 
             Grid.Row="1"
             Grid.RowSpan="4"
             Grid.Column="3"
             Grid.ColumnSpan="2"
-            Margin="20,0,0,0">
+            Margin="10,0,0,0">
+
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                 Foreground="{DynamicResource SecondaryAccentBrush}"
                 VerticalAlignment="Bottom"
-                FontWeight="Bold"
                 Text="Select Function"
-                Margin="5,15,5,0"/>
+                Margin="9,15,5,0"/>
+
             <Separator
                 DockPanel.Dock="Top"
                 Margin="4,0,4,10"/>
@@ -210,9 +218,9 @@
                 UniformCornerRadius="4"
                 Margin="5,2,5,5">
                 <ComboBox
-                    Name="cmbBxSelectFunction"
-                    FontSize="11"
-                    Margin="5"
+                    Name="CmbBxSelectFunction"
+                    FontSize="10"
+                    Margin="5,3,5,4"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     IsEditable="False"
@@ -235,15 +243,17 @@
                     <ComboBoxItem>Customer Limit Utilisation</ComboBoxItem>
                     <ComboBoxItem>Deal Risk Carriers</ComboBoxItem>
                     <ComboBoxItem>General Settings</ComboBoxItem>
+                    <ComboBoxItem>Email Bug/Suggestion</ComboBoxItem>
                 </ComboBox>
             </materialDesign:Card>
 
             <Button
-                Name="btnEmailBug"
+                Name="BtnEmailBug"
                 DockPanel.Dock="Top"
                 FontSize="11"
-                Margin="5,7,5,5"
-                ToolTip="Email the development team to alert them of a bug or a feature you'd like to add.">
+                Margin="5,6,5,0"
+                ToolTip="Email the development team to alert them of a bug or a feature you'd like to add."
+                Click="BtnEmailBug_OnClick">
                 <Button.Content>
                     <DockPanel>
                         <TextBlock
@@ -254,7 +264,7 @@
                             Kind="Bugfood"
                             Width="16"
                             Height="16"
-                            Margin="5,0,0,0"
+                            Margin="2,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
                         </DockPanel>
@@ -263,23 +273,24 @@
             </Button>
 
             <Button
-                Name="btnQuitExecution"
+                Name="BtnQuitExecution"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 FontSize="11"
-                Margin="5,8,5,5"
-                ToolTip="Cancel the current executing process.">
+                Margin="5,10,5,5"
+                ToolTip="[Not Implement] Cancel the current executing process.">
                 Quit Execution
             </Button>
 
         </DockPanel>
-
     
+
         <materialDesign:Flipper
             Grid.Row="5"
-            Grid.RowSpan="4"
+            Grid.RowSpan="5"
             Grid.Column="1"
             Grid.ColumnSpan="6"
+            Margin="5,10,0,0"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             HorizontalAlignment="Stretch"
@@ -288,12 +299,14 @@
             <materialDesign:Flipper.FrontContent>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.6*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="0.6*"/>
-                </Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -307,34 +320,35 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                    Foreground="{StaticResource SecondaryAccentBrush}"
-                    Text="Logger"
-                    Margin="10,0,0,0"
-                    VerticalAlignment="Top">
+                    Margin="10,0,0,2"
+                    VerticalAlignment="Bottom"
+                    FontSize="14"
+                    FontWeight="Regular"
+                    Foreground="{StaticResource SecondaryAccentBrush}">
+                    Logger
                 </TextBlock>
+
                 <materialDesign:Card
                     Grid.Row="1"
-                    Grid.RowSpan="3"
+                    Grid.RowSpan="5"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
                     HorizontalContentAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Margin="5,-8,0,0"
+                    Margin="5,0,0,0"
                     UniformCornerRadius="6">
                     <RichTextBox
                         Name="rtbLogger"
                         VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
                         HorizontalAlignment="Stretch"
-                        Margin="5"
                         Background="Transparent"
                         IsReadOnly="True"
+                        Margin="5,0,0,0"
                         BorderThickness="0"
                         Foreground="LawnGreen"
-                        FontSize="12"
+                        FontSize="11"
                         VerticalContentAlignment="Top"
                         VerticalScrollBarVisibility="Auto">
                         <RichTextBox.Resources>
@@ -344,13 +358,17 @@
                         </RichTextBox.Resources>
                     </RichTextBox>
                 </materialDesign:Card>
-                <Button
-                    Grid.Row="4"
-                    Grid.Column="4"
-                    VerticalAlignment="Top"
-                    Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="View the files extracted by the processes you just ran."
-                    Command="{x:Static materialDesign:Flipper.FlipCommand}">
+                <DockPanel
+                    Grid.Row="6"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2">
+                    <Button
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        VerticalContentAlignment="Center"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        ToolTip="View the files extracted by the processes you just ran."
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}">
                         <StackPanel
                             Orientation="Horizontal">
                             <TextBlock
@@ -363,19 +381,24 @@
                                 Margin="5,0,0,0"
                                 HorizontalAlignment="Right" />
                         </StackPanel>
-                </Button>
+                    </Button>
+                    </DockPanel>
+
             </Grid>
             </materialDesign:Flipper.FrontContent>
 
             <materialDesign:Flipper.BackContent>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.6*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="0.6*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -383,24 +406,29 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
-                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                        Foreground="{StaticResource SecondaryAccentBrush}"
-                        Text="Extracted Files"
-                        Margin="10,0,0,5"
-                        VerticalAlignment="Bottom">
+                        Grid.ColumnSpan="2"
+                        Margin="10,0,0,2"
+                        VerticalAlignment="Bottom"
+                        FontSize="14"
+                        FontWeight="Regular"
+                        Foreground="{StaticResource SecondaryAccentBrush}">
+                        Extracted Files
                     </TextBlock>
+                    
                     <materialDesign:Card
                         UniformCornerRadius="6"
                         Grid.Row="1"
-                        Grid.RowSpan="3"
+                        Grid.RowSpan="5"
                         Grid.Column="0"
                         Grid.ColumnSpan="5"
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        HorizontalContentAlignment="Stretch"
-                        HorizontalAlignment="Stretch">
+                        HorizontalContentAlignment="Stretch">
                         <DataGrid
                             Name ="dgExtractedFiles"
                             VerticalAlignment="Stretch"
@@ -410,18 +438,20 @@
                             Background="Transparent"
                             BorderThickness="0"
                             Foreground="LawnGreen"
-                            FontSize="10"
+                            FontSize="11"
                             IsReadOnly="True"
                             AutoGenerateColumns="False"
                             VerticalContentAlignment="Top">
+
                             <DataGrid.ColumnHeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="Transparent"/>
                                     <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="Margin" Value="10,5,5,5"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
+
                             <DataGrid.ContextMenu>
                                 <ContextMenu
                                     FontSize="10">
@@ -431,6 +461,7 @@
                                     <MenuItem Header="Email file" Click="EmailExtractedFile"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn 
                                     Width="2*"
@@ -464,10 +495,14 @@
 
                             </DataGrid.Columns>
                         </DataGrid>
+
                     </materialDesign:Card>
+
                     <Button
-                        Grid.Row="4"
-                        Grid.Column="4"
+                        Grid.Row="6"
+                        Grid.Column="3"
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Style="{StaticResource MaterialDesignFlatButton}"
                         Command="{x:Static materialDesign:Flipper.FlipCommand}">
@@ -490,31 +525,14 @@
 
 
         <DockPanel 
-            Grid.Row="1"
-            Grid.RowSpan="2"
-            Grid.Column="5"
-            Margin="20,0,0,0">
-            <Button
-                Name="btnNetworkType"
-                Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                <materialDesign:PackIcon
-                    Name="iconNetworkType"
-                    Kind="EthernetCable"
-                    Width="40"
-                    Height="40"/>
-            </Button>
-        </DockPanel>
-
-
-        <DockPanel 
             Grid.Row="0"
-            Grid.RowSpan="9"
+            Grid.RowSpan="10"
             Grid.Column="8"
             Grid.ColumnSpan="8">
 
             <materialDesign:Transitioner
-                SelectedIndex="{Binding ElementName=cmbBxSelectFunction, Path=SelectedIndex}">
+                Name="FrameFunctions"
+                SelectedIndex="{Binding ElementName=CmbBxSelectFunction, Path=SelectedIndex}">
 
                 <materialDesign:TransitioningContent>
                     <materialDesign:TransitioningContent.OpeningEffects>
@@ -523,10 +541,9 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
-                        Name="frmPortfolioAnalysisSettings"
+                        Name="FrmPortfolioAnalysisSettings"
                         NavigationUIVisibility="Hidden"
-                        Source="SettingForms/PortfolioAnalysisSettings.xaml">
-                    </Frame>
+                        Source="FunctionForms/PortfolioAnalysisSettings.xaml"/>
                 </materialDesign:TransitioningContent>
 
                 <materialDesign:TransitioningContent>
@@ -536,10 +553,9 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
-                        Name="frmRiskViewSettings"
+                        Name="FrmRiskViewSettings"
                         NavigationUIVisibility="Hidden"
-                        Source="SettingForms/RiskViewSettings.xaml">
-                    </Frame>
+                        Source="FunctionForms/RiskViewSettings.xaml"/>
                 </materialDesign:TransitioningContent>
 
                 <materialDesign:TransitioningContent>
@@ -549,9 +565,9 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
-                        Name="frmCustomerLimitUtilisationSettings"
+                        Name="FrmCustomerLimitUtilisationSettings"
                         NavigationUIVisibility="Hidden"
-                        Source="SettingForms/CustomerLimitUtilisationSettings.xaml"/>
+                        Source="FunctionForms/CustomerLimitUtilisationSettings.xaml"/>
                 </materialDesign:TransitioningContent>
 
                 <materialDesign:TransitioningContent>
@@ -561,9 +577,9 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
-                        Name="frmDealRiskCarrierSettings"
+                        Name="FrmDealRiskCarrierSettings"
                         NavigationUIVisibility="Hidden"
-                        Source="SettingForms/DealRiskCarrierSettings.xaml"/>
+                        Source="FunctionForms/DealRiskCarrierSettings.xaml"/>
                 </materialDesign:TransitioningContent>
 
                 <materialDesign:TransitioningContent>
@@ -573,9 +589,21 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
-                        Name="frmGeneralSettings"
+                        Name="FrmGeneralSettings"
                         NavigationUIVisibility="Hidden"
-                        Source="SettingForms/GeneralSettings.xaml"/>
+                        Source="FunctionForms/GeneralSettings.xaml"/>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
+                        Name="FrmEmailBugSuggestion"
+                        NavigationUIVisibility="Hidden"
+                        Source="FunctionForms/EmailBugSuggestion.xaml"/>
                 </materialDesign:TransitioningContent>
             </materialDesign:Transitioner>
 
@@ -586,29 +614,52 @@
             Grid.Row="9"
             Grid.RowSpan="7"
             Grid.Column="1"
-            Grid.ColumnSpan="15">
-            <TextBlock
+            Grid.ColumnSpan="15"
+            Margin="5,0,0,0">
+            <DockPanel.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </Style>
+            </DockPanel.Resources>
+
+            <DockPanel 
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Foreground="{StaticResource SecondaryAccentBrush}"
-                Text="Web Browser"
-                Margin="4,-10,0,5"/>
-            <Border
-                DockPanel.Dock="Top"
-                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="1"/>
-            <Border
-                DockPanel.Dock="Left"
-                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="1"/>
-            <Border
-                DockPanel.Dock="Bottom"
-                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="1"/>
-            <Border
-                DockPanel.Dock="Right"
-                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-                BorderThickness="1"/>
+                LastChildFill="False">
+                <Button
+                    Name="BtnNetworkType"
+                    DockPanel.Dock="Left"
+                    VerticalAlignment="Center"
+                    Margin="7,14,7,5"
+                    Height="30"
+                    Width="30"
+                    Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                    materialDesign:ShadowAssist.Darken="True">
+                    <materialDesign:PackIcon
+                        Name="IconNetworkType"
+                        Kind="Network"
+                        Foreground="Black"
+                        Width="20"
+                        Height="20"/>
+                </Button>
+
+                <TextBlock
+                    DockPanel.Dock="Left"
+                    VerticalAlignment="Center"
+                    FontSize="20"
+                    FontWeight="Light"
+                    Foreground="{StaticResource SecondaryAccentBrush}"
+                    Margin="10,12,0,0">
+                    Web Browser
+                </TextBlock>
+            </DockPanel>
+
+            <Border DockPanel.Dock="Left"/>
+            <Border DockPanel.Dock="Top"/>
+            <Border DockPanel.Dock="Right"/>
+            <Border DockPanel.Dock="Bottom"/>
+            
             <WindowsFormsHost
                 Name="webBrowserHost"
                 Margin="1">
@@ -616,6 +667,7 @@
                     <wf:WebBrowser/>
                 </WindowsFormsHost.Child>
             </WindowsFormsHost>
+
         </DockPanel>
     </Grid>
 </Window>

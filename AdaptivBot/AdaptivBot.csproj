@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Images\robot-9.ico</ApplicationIcon>
+    <ApplicationIcon>Images\robot.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoItX3.Assembly, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a646454c8d475470, processorArchitecture=MSIL">
@@ -127,29 +127,36 @@
     <Compile Include="ExcelUtils.cs" />
     <Compile Include="ExtractedFile.cs" />
     <Compile Include="FileUtils.cs" />
+    <Compile Include="FunctionForms\EmailBugSuggestion.xaml.cs">
+      <DependentUpon>EmailBugSuggestion.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GlobalConfigValues.cs" />
     <Compile Include="InstrumentLists.cs" />
     <Compile Include="JsScripts.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="SettingForms\GeneralSettings.xaml.cs">
+    <Compile Include="FunctionForms\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\PortfolioAnalysisSettings.xaml.cs">
+    <Compile Include="FunctionForms\PortfolioAnalysisSettings.xaml.cs">
       <DependentUpon>PortfolioAnalysisSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\DealRiskCarrierSettings.xaml.cs">
+    <Compile Include="FunctionForms\DealRiskCarrierSettings.xaml.cs">
       <DependentUpon>DealRiskCarrierSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\RiskViewSettings.xaml.cs">
+    <Compile Include="FunctionForms\RiskViewSettings.xaml.cs">
       <DependentUpon>RiskViewSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\CustomerLimitUtilisationSettings.xaml.cs">
+    <Compile Include="FunctionForms\CustomerLimitUtilisationSettings.xaml.cs">
       <DependentUpon>CustomerLimitUtilisationSettings.xaml</DependentUpon>
     </Compile>
     <Page Include="AlertForms\AlertUpdateUserCredentials.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FunctionForms\EmailBugSuggestion.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -164,23 +171,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingForms\GeneralSettings.xaml">
+    <Page Include="FunctionForms\GeneralSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingForms\PortfolioAnalysisSettings.xaml">
+    <Page Include="FunctionForms\PortfolioAnalysisSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingForms\DealRiskCarrierSettings.xaml">
+    <Page Include="FunctionForms\DealRiskCarrierSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingForms\RiskViewSettings.xaml">
+    <Page Include="FunctionForms\RiskViewSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingForms\CustomerLimitUtilisationSettings.xaml">
+    <Page Include="FunctionForms\CustomerLimitUtilisationSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -213,7 +220,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\robot-9.png" />
+    <Resource Include="Images\robot.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SHDocVw">
@@ -230,7 +237,7 @@
     <Resource Include="Images\Exclamation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\robot-9.ico" />
+    <Resource Include="Images\robot.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
