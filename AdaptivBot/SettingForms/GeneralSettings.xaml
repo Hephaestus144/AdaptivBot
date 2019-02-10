@@ -148,12 +148,23 @@
             Grid.Column="9"
             Grid.ColumnSpan="2">
             <Button
+                Name="BtnUpdateAdaptivCredentials"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 FontSize="10"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="0,5,0,5"
-                ToolTip="Purges all Adaptiv Credentialss for the Bot from the Windows Credentials manager.">
+                ToolTip="Updates the credentials for the selected Adaptiv environment."
+                Click="BtnUpdateAdaptivCredentials_OnClick">
+                Update Adaptiv Credentials
+            </Button>
+            <Button
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="10"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="0,5,0,5"
+                ToolTip="Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
                 Purge Adaptiv Credentialss
             </Button>
 

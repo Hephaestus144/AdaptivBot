@@ -32,8 +32,8 @@ namespace AdaptivBot.SettingForms
         {
             GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
 
-            _window?.logger.NewExtraction("Deal Risk Carrier Extraction Started");
-            if (!_window.StoreUserCredentials())
+            _window?.Logger.NewExtraction("Deal Risk Carrier Extraction Started");
+            if (!CredentialStore.Instance.StoreUserCredentials())
             {
                 return;
             }
@@ -55,7 +55,7 @@ namespace AdaptivBot.SettingForms
                 {
                     #region adaptiv extraction
                     var currentAdaptivEnvironment =
-                        _window.cmbBxAdaptivEnvironments.SelectedValue.ToString();
+                        _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
                     await Task.Run(() =>
                         _window.OpenAdaptivAndLogin(username, password,
                             currentAdaptivEnvironment));
@@ -88,7 +88,7 @@ namespace AdaptivBot.SettingForms
                         JsScripts.OpenRiskView);
 
                     await Task.Run(() => Thread.Sleep(1000));
-                    _window.webBrowser.Document?.InvokeScript(
+                    _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.OpenRiskView));
 
                     #region wait for browser
@@ -107,12 +107,12 @@ namespace AdaptivBot.SettingForms
 
                     #endregion wait for browser
 
-                    _window.logger.OkayText = $"Filtering for Deal Risk Carriers...";
+                    _window.Logger.OkayText = $"Filtering for Deal Risk Carriers...";
                     _window.InjectJavascript(
                         nameof(JsScripts.FilterRiskViewOnInstruments),
                         JsScripts.FilterRiskViewOnInstruments);
 
-                    _window.webBrowser.Document?.InvokeScript(
+                    _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.FilterRiskViewOnInstruments),
                         new object[] { "Deal Risk Carrier" });
 
@@ -131,7 +131,7 @@ namespace AdaptivBot.SettingForms
 
                     _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                         JsScripts.ExportToCsv);
-                    _window.webBrowser.Document?.InvokeScript(
+                    _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.ExportToCsv));
 
                     await Task.Run(() => Thread.Sleep(500));
@@ -148,13 +148,13 @@ namespace AdaptivBot.SettingForms
 
                     #endregion wait for browser
 
-                    while (_window.webBrowser.Document?.GetElementsByTagName("A").Count ==
+                    while (_window.WebBrowser.Document?.GetElementsByTagName("A").Count ==
                            0)
                     {
                         await Task.Run(() => Thread.Sleep(100));
                     }
 
-                    foreach (HtmlElement link in _window.webBrowser.Document?
+                    foreach (HtmlElement link in _window.WebBrowser.Document?
                         .GetElementsByTagName("A"))
                     {
                         if (link.InnerText.Equals("exported file link"))
@@ -198,7 +198,7 @@ namespace AdaptivBot.SettingForms
                     Excel.Workbook wb = xlApp.Workbooks.Open(xlsxDrcFilePath);
                     var wsName = "All RC Files Combined";
 
-                    _window.logger.OkayText = "Reading contents of Risk Carrier Files on shard drive...";
+                    _window.Logger.OkayText = "Reading contents of Risk Carrier Files on shard drive...";
                     var csvContents = new List<string>();
                     var riskCarrierFilePaths =
                         Directory.GetFiles(@"\\pcibtignass1\capr2\RtB\DRC\Upload\");
@@ -220,7 +220,7 @@ namespace AdaptivBot.SettingForms
                     };
 
                     // convert the contents of the all the appended CSV files to object[,]
-                    _window.logger.OkayText = "Merging contents of Risk Carrier Files...";
+                    _window.Logger.OkayText = "Merging contents of Risk Carrier Files...";
                     var outputLists = csvContents.Select(x => x.Split(',')).ToList();
                     var maxListLength = outputLists.Select(x => x.Length).Max();
                     var output = new object[outputLists.Count, maxListLength];
@@ -235,7 +235,7 @@ namespace AdaptivBot.SettingForms
                         }
                     }
 
-                    _window.logger.OkayText = "Writing merged contents of Risk Carrier Files to DRC...";
+                    _window.Logger.OkayText = "Writing merged contents of Risk Carrier Files to DRC...";
                     ExcelUtils.WriteOutputBlockToExcel(xlApp, wb, wsName, titles, output, 0);
                     #endregion excel merging
                     wb.Save();
@@ -245,20 +245,20 @@ namespace AdaptivBot.SettingForms
                 }
                 catch (Exception)
                 {
-                    _window.logger.ErrorText = errorCount < 2
+                    _window.Logger.ErrorText = errorCount < 2
                         ? $"Something failed for DRC extraction. Trying again. Attempt number: {++errorCount}"
                         : "DRC extraction failed 3 times. Moving on to next instrument set.";
                 }
             }
 
-            _window.logger.ExtractionComplete("DRC Extraction");
+            _window.Logger.ExtractionComplete("DRC Extraction");
 
             GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
             var timeSpan = GlobalConfigValues.Instance.extractionEndTime
                             - GlobalConfigValues.Instance.extractionStartTime;
-            _window.logger.OkayText
+            _window.Logger.OkayText
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
-            _window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+            _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
 
         }
 
@@ -271,7 +271,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("{ENTER}");
             Dispatcher.Invoke((Action)(() =>
             {
-                _window.logger.OkayText = $"Saving CSV file for DRCs...";
+                _window.Logger.OkayText = $"Saving CSV file for DRCs...";
             }));
 
             AutoItX.WinWait("Save As", timeout: 20);
@@ -304,7 +304,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!y");
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        _window.logger.WarningText =
+                        _window.Logger.WarningText =
                             $"Overriding existing file for DRCs...";
                     }));
                 }
@@ -313,7 +313,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!n");
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        _window.logger.WarningText =
+                        _window.Logger.WarningText =
                             $"File already exists for DRCs.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);

@@ -159,7 +159,7 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Margin="8,2,0,-2">
-                Instruments
+                InstrumentFolderNameToInstrumentBatchMapping
             </TextBlock>
             <materialDesign:Card
                 DockPanel.Dock="Top"

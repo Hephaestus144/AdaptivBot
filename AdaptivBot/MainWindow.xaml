@@ -36,18 +36,6 @@
     </Window.Resources>
     
     <Grid>
-        <Grid.Resources>
-            <Style x:Key="BotButtonFramework"
-                   TargetType="{x:Type  FrameworkElement}">
-                <Setter Property="Button.Width" Value="200"/>
-                <Setter Property="Button.Height" Value="30"/>
-                <Setter Property="Button.FontSize" Value="11"/>
-                <Setter Property="Button.VerticalAlignment" Value="Center"/>
-            </Style>
-            <Style x:Key="BotButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-            </Style>
-        </Grid.Resources>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*" />
             <ColumnDefinition Width="*" />
@@ -56,7 +44,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -116,34 +104,36 @@
                 DockPanel.Dock="Top"
                 Margin="5"
                 UniformCornerRadius="4">
-                <TextBox Name="txtUserName"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         Padding="0,-5,0,0"
-                         HorizontalContentAlignment="Center"
-                         VerticalContentAlignment="Center"
-                         FontSize="12"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="User Name"
-                         materialDesign:HintAssist.FloatingScale="0.6"
-                         materialDesign:HintAssist.FloatingOffset="-70,-8"/>
-
+                <TextBox 
+                    Name="txtUserName"
+                    Text="{Binding Source={x:Static local:CredentialStore.Instance}, Path=Username}"
+                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    Padding="0,-5,0,0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontSize="12"
+                    Margin="5"
+                    materialDesign:HintAssist.Hint="User Name"
+                    materialDesign:HintAssist.FloatingScale="0.6"
+                    materialDesign:HintAssist.FloatingOffset="-70,-8"/>
             </materialDesign:Card>
 
             <materialDesign:Card
                 DockPanel.Dock="Top"
                 Margin="5"
                 UniformCornerRadius="4">
-                <PasswordBox Name="TxtPasswordBox" 
-                             Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                             Padding="0,-5,0,0" 
-                             Margin="5"
-                             PasswordChar="•"
-                             HorizontalContentAlignment="Center"
-                             VerticalContentAlignment="Center"
-                             FontSize="12"
-                             materialDesign:HintAssist.Hint="Password"
-                             materialDesign:HintAssist.FloatingScale="0.6"
-                             materialDesign:HintAssist.FloatingOffset="-70,-8" >
+                <PasswordBox 
+                    Name="TxtPasswordBox" 
+                    Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                    Padding="0,-5,0,0" 
+                    Margin="5"
+                    PasswordChar="•"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontSize="12"
+                    materialDesign:HintAssist.Hint="Password"
+                    materialDesign:HintAssist.FloatingScale="0.6"
+                    materialDesign:HintAssist.FloatingOffset="-70,-8" >
                 </PasswordBox>
             </materialDesign:Card>
 
@@ -152,7 +142,7 @@
                 UniformCornerRadius="4"
                 Margin="5">
                 <ComboBox
-                    Name="cmbBxAdaptivEnvironments"
+                    Name="CmbBxAdaptivEnvironments"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
@@ -161,7 +151,8 @@
                     IsReadOnly="True"
                     ToolTip="Select Adaptiv environment."
                     SelectedValuePath="Content"
-                    SelectionChanged="LoadAdaptivCredentials">
+                    SelectedItem="{Binding ElementName=local:CredentialStore.Instance, Path=Target, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionChanged="CmbBxAdaptivEnvironments_OnSelectionChanged">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
                             <Style.Triggers>
@@ -303,13 +294,15 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="0.6*"/>
                 </Grid.RowDefinitions>
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
+
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"

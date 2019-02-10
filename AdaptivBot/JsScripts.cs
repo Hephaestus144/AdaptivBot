@@ -30,6 +30,7 @@ namespace AdaptivBot
               "  element.onchange();"                                                     +
               "}";
 
+
         public static string SelectCustomerLimitUtilisationReportDate
             = "function SelectCustomerLimitUtilisationReportDate(date)" +
               "{"                                                                                      +
@@ -71,6 +72,7 @@ namespace AdaptivBot
               "  frames['cpWork'].ApplyFilter();"                                                          +
               "}";
 
+
         public static string ExportCustomerLimitUtilisationReportToCsv
             = "function ExportCustomerLimitUtilisationReportToCsv()" +
               "{"                                                    +
@@ -96,6 +98,7 @@ namespace AdaptivBot
               "  conditionDropDown.selectedIndex = '9';" +
               "  frameInsideCpWork.ApplyFilter();" +
               "}";
+
 
         public static string ExportToCsv
             = "function ExportToCsv()" +

@@ -33,9 +33,9 @@ namespace AdaptivBot.SettingForms
             GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
 
             
-            window?.logger.NewExtraction("Risk View Reports Extraction Started");
+            window?.Logger.NewExtraction("Risk View Reports Extraction Started");
 
-            if (!window.StoreUserCredentials())
+            if (!CredentialStore.Instance.StoreUserCredentials())
             {
                 return;
             }
@@ -49,16 +49,16 @@ namespace AdaptivBot.SettingForms
 
             foreach (var selectedItem in lstBxInstruments.SelectedItems)
             {
-                selectedInstruments.Add(InstrumentLists.InstrumentGuiMapping[
+                selectedInstruments.Add(InstrumentLists.InstrumentGuiNameToFolderNameMapping[
                     selectedItem.ToString()
                         .Replace("System.Windows.Controls.ListBoxItem: ", "")]);
             }
 
             var instrumentsToLoopOver = (selectedInstruments.Count != 0)
                 ? selectedInstruments
-                : InstrumentLists.instruments.Keys.ToList();
+                : InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping.Keys.ToList();
 
-            var currentAdaptivEnvironment = window.cmbBxAdaptivEnvironments.SelectedValue.ToString();
+            var currentAdaptivEnvironment = window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
             var numberOfFailedExtractions = 0;
             var numberOfSuccessfulExtractions = 0;
             foreach (var instrumentBatch in instrumentsToLoopOver)
@@ -67,7 +67,7 @@ namespace AdaptivBot.SettingForms
                 {
                     try
                     {
-                        window.logger.NewProcess($"{instrumentBatch} risk view extraction started...");
+                        window.Logger.NewProcess($"{instrumentBatch} risk view extraction started...");
                         await Task.Run(() =>
                             window.OpenAdaptivAndLogin(username, password,
                                 currentAdaptivEnvironment));
@@ -100,7 +100,7 @@ namespace AdaptivBot.SettingForms
                             JsScripts.OpenRiskView);
 
                         await Task.Run(() => Thread.Sleep(1000));
-                        window.webBrowser.Document?.InvokeScript(nameof(JsScripts.OpenRiskView));
+                        window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.OpenRiskView));
 
                         #region wait for browser
 
@@ -118,13 +118,13 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        window.logger.OkayText = $"Filtering for {instrumentBatch}...";
+                        window.Logger.OkayText = $"Filtering for {instrumentBatch}...";
                         window.InjectJavascript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             JsScripts.FilterRiskViewOnInstruments);
-                        window.webBrowser.Document.InvokeScript(
+                        window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
-                            new object[] { InstrumentLists.instruments[instrumentBatch] });
+                            new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
 
 
                         #region wait for browser
@@ -142,7 +142,7 @@ namespace AdaptivBot.SettingForms
 
                         window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
-                        window.webBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
+                        window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
 
                         await Task.Run(() => Thread.Sleep(500));
 
@@ -158,12 +158,12 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        while (window.webBrowser.Document.GetElementsByTagName("A").Count == 0)
+                        while (window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
                             await Task.Run(() => Thread.Sleep(100));
                         }
 
-                        foreach (HtmlElement link in window.webBrowser.Document
+                        foreach (HtmlElement link in window.WebBrowser.Document
                             .GetElementsByTagName("A"))
                         {
                             if (link.InnerText.Equals("exported file link"))
@@ -180,37 +180,37 @@ namespace AdaptivBot.SettingForms
                     {
                         if (errorCount < 2)
                         {
-                            window.logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {++errorCount}";
+                            window.Logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {++errorCount}";
                         }
                         else
                         {
                             numberOfFailedExtractions++;
-                            window.logger.ErrorText = $"{instrumentBatch} extraction failed 3 times. Moving on to next instrument set.";
+                            window.Logger.ErrorText = $"{instrumentBatch} extraction failed 3 times. Moving on to next instrument set.";
                         }
                     }
                 }
             }
 
-            window.logger.ExtractionComplete("Risk View Extraction");
-            window.logger.OkayTextWithoutTime =
+            window.Logger.ExtractionComplete("Risk View Extraction");
+            window.Logger.OkayTextWithoutTime =
                 $"Number of successful extractions: {numberOfSuccessfulExtractions}";
             if (numberOfFailedExtractions > 0)
             {
-                window.logger.ErrorTextWithoutTime =
+                window.Logger.ErrorTextWithoutTime =
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
             else
             {
-                window.logger.OkayTextWithoutTime =
+                window.Logger.OkayTextWithoutTime =
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
 
             GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
             var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
                            GlobalConfigValues.Instance.extractionStartTime;
-            window.logger.OkayTextWithoutTime
+            window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
-            window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+            window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
 
 
@@ -222,7 +222,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("{ENTER}");
             Dispatcher.Invoke((System.Action)(() =>
             {
-                window.logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
+                window.Logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
             }));
 
             AutoItX.WinWait("Save As", timeout: 20);
@@ -248,7 +248,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!y");
                     Dispatcher.Invoke((System.Action)(() =>
                     {
-                        window.logger.WarningText =
+                        window.Logger.WarningText =
                             $"Overriding existing file for {instrumentBatch}...";
                     }));
                 }
@@ -257,7 +257,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!n");
                     Dispatcher.Invoke((System.Action)(() =>
                     {
-                        window.logger.WarningText =
+                        window.Logger.WarningText =
                             $"File already exists for {instrumentBatch}.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);

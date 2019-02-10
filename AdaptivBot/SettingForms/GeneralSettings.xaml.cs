@@ -37,5 +37,10 @@ namespace AdaptivBot.SettingForms
             var xdp = (XmlDataProvider) this.Resources["GeneralSettingsXml"];
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
         }
+
+        private void BtnUpdateAdaptivCredentials_OnClick(object sender, RoutedEventArgs e)
+        {
+            CredentialStore.Instance.StoreUserCredentials();
+        }
     }
 }

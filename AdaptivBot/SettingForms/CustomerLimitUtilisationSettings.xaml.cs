@@ -39,25 +39,25 @@ namespace AdaptivBot.SettingForms
             
             if (date is null)
             {
-                window.logger.ErrorText = "Please select a date for extraction.";
+                window.Logger.ErrorText = "Please select a date for extraction.";
                 return;
             }
 
-            if (!window.StoreUserCredentials())
+            if (!CredentialStore.Instance.StoreUserCredentials())
             {
                 return;
             }
 
-            window.logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
+            window.Logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
 
             // TODO: Use binding here.
             var username = window.txtUserName.Text;
             var password = window.TxtPasswordBox.Password;
 
             var currentAdaptivEnvironment =
-                window.cmbBxAdaptivEnvironments.SelectedValue.ToString();
+                window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
 
-            window.StoreUserCredentials();
+            CredentialStore.Instance.StoreUserCredentials();
 
             await Task.Run(() => window.OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
 
@@ -80,7 +80,7 @@ namespace AdaptivBot.SettingForms
                 nameof(JsScripts.OpenCustomerLimitUtilisationReport),
                 JsScripts.OpenCustomerLimitUtilisationReport);
 
-            window.webBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
+            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
 
             #region wait for browser
             while (!window.completedLoading)
@@ -97,11 +97,11 @@ namespace AdaptivBot.SettingForms
             window.completedLoading = false;
             #endregion wait for browser
 
-            window.logger.OkayText = "Filtering customer limit utilisation report...";
+            window.Logger.OkayText = "Filtering customer limit utilisation report...";
             window.InjectJavascript(
                 nameof(JsScripts.FilterCustomerLimitUtilisationReport),
                 JsScripts.FilterCustomerLimitUtilisationReport);
-            window.webBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
+            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
 
             #region wait for browser
             window.completedLoading = false;
@@ -113,15 +113,15 @@ namespace AdaptivBot.SettingForms
             window.completedLoading = false;
             #endregion wait for browser
 
-            window.logger.OkayText =
+            window.Logger.OkayText =
                 $"Opening customer limit utilisation report for {((DateTime)date):dd-MMM-yyyy}...";
             window.InjectJavascript(
                 nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
                 JsScripts.ChooseCustomerLimitUtilisationReport);
             await Task.Run(() => Thread.Sleep(1000));
-            window.webBrowser.Document?.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
+            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
 
-            window.injectedScripts.Clear();
+            window.InjectedScripts.Clear();
 
 
             #region wait for browser
@@ -140,7 +140,7 @@ namespace AdaptivBot.SettingForms
                 nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
                 JsScripts.SelectCustomerLimitUtilisationReportDate);
 
-            window.webBrowser.Document?.InvokeScript(
+            window.WebBrowser.Document?.InvokeScript(
                 nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
                 new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
 
@@ -158,10 +158,10 @@ namespace AdaptivBot.SettingForms
                 nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
                 JsScripts.GenerateCustomerLimitUtilisationReport);
 
-            window.webBrowser.Document?.InvokeScript(
+            window.WebBrowser.Document?.InvokeScript(
                 nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
 
-            while (window.webBrowser.Document?.GetElementsByTagName("img").Count < 5)
+            while (window.WebBrowser.Document?.GetElementsByTagName("img").Count < 5)
             {
                 await Task.Run(() => Thread.Sleep(1000));
             }
@@ -171,7 +171,7 @@ namespace AdaptivBot.SettingForms
                 nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
                 JsScripts.ExportCustomerLimitUtilisationReportToCsv);
 
-            window.webBrowser.Document?.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
+            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
 
             var overrideExistingFile = true;
             //(bool)chkBxOverrideExistingFiles.IsChecked;
@@ -195,15 +195,15 @@ namespace AdaptivBot.SettingForms
                 });
             }));
 
-            window.logger.OkayText = "Converting csv extraction to xlsx...";
+            window.Logger.OkayText = "Converting csv extraction to xlsx...";
             MainWindow.ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
-            window.logger.ExtractionComplete("Customer Limit Utilisation");
+            window.Logger.ExtractionComplete("Customer Limit Utilisation");
             GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
             var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
                            GlobalConfigValues.Instance.extractionStartTime;
-            window.logger.OkayTextWithoutTime
+            window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
-            window.webBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+            window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
 
 
@@ -225,7 +225,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("!s");
             Dispatcher.Invoke((Action)(() =>
             {
-                window.logger.WarningText =
+                window.Logger.WarningText =
                     $"Saving csv file...";
             }));
             AutoItX.Sleep(1000);
@@ -237,7 +237,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!y");
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        window.logger.WarningText =
+                        window.Logger.WarningText =
                             $"Overriding existing file...";
                     }));
                 }
@@ -246,7 +246,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!n");
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        window.logger.WarningText =
+                        window.Logger.WarningText =
                             $"File already exists.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);
@@ -343,7 +343,7 @@ namespace AdaptivBot.SettingForms
                 cmbBxFilterCategory3.Foreground = Brushes.Red;
             }
 
-            window.logger.ErrorText = "At least two of your filtering categories are the same.";
+            window.Logger.ErrorText = "At least two of your filtering categories are the same.";
         }
         #endregion filtering
     }

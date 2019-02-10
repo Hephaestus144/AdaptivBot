@@ -105,7 +105,6 @@ C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\bin\Debug\ro\Xcee
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.ResolveComReference.cache
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AlertForms\AlertUpdateUserCredentials.g.cs
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\MainWindow.g.cs
@@ -132,3 +131,4 @@ C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\Adaptiv
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.CopyComplete
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.exe
 C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.pdb
+C:\Users\colli\OneDrive\Documents\GitHub\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache

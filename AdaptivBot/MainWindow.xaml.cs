@@ -136,14 +136,14 @@ namespace AdaptivBot
             };
 
 
-        public System.Windows.Forms.WebBrowser webBrowser;
+        public System.Windows.Forms.WebBrowser WebBrowser;
 
-        public Dictionary<string, string> injectedScripts
+        public Dictionary<string, string> InjectedScripts
             = new Dictionary<string, string>();
 
         public SHDocVw.WebBrowser_V1 axBrowser = new SHDocVw.WebBrowser_V1();
 
-        public Logger logger;
+        public Logger Logger;
 
 
         public MainWindow()
@@ -154,37 +154,37 @@ namespace AdaptivBot
             NetworkChange.NetworkAddressChanged +=
                 new NetworkAddressChangedEventHandler(AddressCallbackChange);
             // Deals with new windows created by browser.
-            webBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
-            axBrowser = (SHDocVw.WebBrowser_V1)webBrowser.ActiveXInstance;
+            WebBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
+            axBrowser = (SHDocVw.WebBrowser_V1)WebBrowser.ActiveXInstance;
             // listen for new windows
             axBrowser.NewWindow += axBrowser_NewWindow;
-            webBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
+            WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
 
-            logger = new Logger(rtbLogger);
+            Logger = new Logger(rtbLogger);
 
             switch (GlobalConfigValues.CreatedConfigFile)
             {
                 case YesNoMaybe.Yes:
-                    logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
+                    Logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
                     break;
                 case YesNoMaybe.No:
-                    logger.ErrorText = "Config file not created!";
+                    Logger.ErrorText = "Config file not created!";
                     break;
             }
 
             switch (GlobalConfigValues.ExcelPathConfigured)
             {
                 case YesNoMaybe.No:
-                    logger.OkayText
+                    Logger.OkayText
                         = "Excel path not configured. You will have to manually configure it in General Settings.";
                     break;
                 case YesNoMaybe.Yes:
-                    logger.ErrorText = "Excel path configured.";
+                    Logger.ErrorText = "Excel path configured.";
                     break;
             }
         }
 
-        public bool IsUsingEthernet(Logger _logger)
+        public bool IsUsingEthernet(Logger logger)
         {
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -194,7 +194,7 @@ namespace AdaptivBot
                 {
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        _logger.OkayText = "Ethernet connection restored.";
+                        logger.OkayText = "Ethernet connection restored.";
                     }));
                     return true;
                 }
@@ -206,8 +206,8 @@ namespace AdaptivBot
                 {
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        _logger.WarningText = "Connected to WIFI.";
-                        _logger.WarningText = "For stability use Ethernet instead.";
+                        logger.WarningText = "Connected to WIFI.";
+                        logger.WarningText = "For stability use Ethernet instead.";
                     }));
                     return false;
                 }
@@ -215,7 +215,7 @@ namespace AdaptivBot
 
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                _logger.ErrorText = "Network not detected.";
+                logger.ErrorText = "Network not detected.";
             }));
             return false;
         }
@@ -223,7 +223,7 @@ namespace AdaptivBot
 
         void AddressCallbackChange(object sender, EventArgs e)
         {
-            if (IsUsingEthernet(this.logger))
+            if (IsUsingEthernet(this.Logger))
             {
                 Dispatcher.BeginInvoke((Action) (() =>
                 {
@@ -252,108 +252,27 @@ namespace AdaptivBot
             Processed = true;
 
             // send the popup URL to the WebBrowser control
-            webBrowser.Navigate(URL);
-            webBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
+            WebBrowser.Navigate(URL);
+            WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
         }
 
 
         #region Credentials functions
-        public bool StoreUserCredentials()
-        {
-            var credentialStore = new CredentialStore($"AdaptivBot{cmbBxAdaptivEnvironments.SelectedValue}");
-            if (!credentialStore.credentialsFound && (bool)chkBxRememberMe.IsChecked)
-            {
-                credentialStore.Credentials.Username = txtUserName.Text;
-                credentialStore.Credentials.Password = TxtPasswordBox.Password;
-                credentialStore.Credentials.PersistanceType =
-                    PersistanceType.LocalComputer;
-                credentialStore.Credentials.Save();
-                logger.OkayText = "Saving credentials...";
-                return true;
-            }
 
-            if (credentialStore.credentialsFound
-                && (credentialStore.Credentials.Username != txtUserName.Text
-                || credentialStore.Credentials.Password != TxtPasswordBox.Password))
-            {
-                var window = new AlertUpdateUserCredentials();
-                window.Show();
-                return false;
-                // TODO: Add message box to warn user that the credentials that have been entered are different 
-                // to the saved credentials & would they like to save them?
-            }
-
-            if (txtUserName.Text == "")
-            {
-                logger.ErrorText = "User name blank.";
-                return false;
-            }
-
-            if (TxtPasswordBox.Password == "")
-            {
-                logger.ErrorText = "Password blank.";
-                return false;
-            }
-
-            return true;
-        }
-
-        public void EnterAdaptivCredentials(string username, string password)
-        {
-            AutoItX.Sleep(3000);
-            if (AutoItX.WinExists("Windows Security") != 0)
-            {
-                Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    logger.OkayText = "Entering credentials...";
-                }));
-                AutoItX.WinActivate("Windows Security");
-                AutoItX.Send(username);
-                AutoItX.Send("{TAB}");
-                AutoItX.Send(password);
-                AutoItX.Send("{TAB}");
-                AutoItX.Send("{ENTER}");
-            }
-            else
-            {
-                Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Adaptiv already open."; }));
-            }
-
-            Dispatcher.BeginInvoke((Action)(() => { logger.OkayText = "Acknowledging disclaimer..."; }));
-            AutoItX.WinWait("Adaptiv Disclaimer -- Webpage Dialog");
-            AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
-            AutoItX.Send("{ENTER}");
-        }
-
-        public void LoadAdaptivCredentials(object sender, SelectionChangedEventArgs e)
-        {
-            var credentialStore =
-                new CredentialStore("AdaptivBot" + cmbBxAdaptivEnvironments.SelectedValue);
-            if (credentialStore.credentialsFound)
-            {
-                txtUserName.Text = credentialStore.Credentials.Username;
-                TxtPasswordBox.Password = credentialStore.Credentials.Password;
-            }
-            else
-            {
-                txtUserName.Text = "";
-                TxtPasswordBox.Password = "";
-            }
-        }
 
         #endregion Credentials functions
         
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var credentialStore = new CredentialStore("AdaptivBotProduction");
-            if (credentialStore.credentialsFound)
-            {
-                txtUserName.Text = credentialStore.Credentials.Username;
-                TxtPasswordBox.Password = credentialStore.Credentials.Password;
-            }
+            CredentialStore.Instance.Target = "AdaptivBotProduction";
+            //if (CredentialStore.Instance.credentialsFound)
+            //{
+            //    txtUserName.Text = CredentialStore.Instance.Credentials.Username;
+            //    TxtPasswordBox.Password = CredentialStore.Instance.Credentials.Password;
+            //}
 
-            if (IsUsingEthernet(this.logger))
+            if (IsUsingEthernet(this.Logger))
             {
                 iconNetworkType.Kind = PackIconKind.EthernetCable;
             }
@@ -431,19 +350,19 @@ namespace AdaptivBot
             string password,
             string currentAdaptivEnvironment)
         {
-            webBrowser.Navigate(
+            WebBrowser.Navigate(
                 AdaptivEnvironmentUrls[
                     currentAdaptivEnvironment]);
-            injectedScripts.Clear();
+            InjectedScripts.Clear();
 
-            await Task.Run(() => EnterAdaptivCredentials(username, password));
+            await Task.Run(() => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
         }
 
 
         private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             //Check if page is fully loaded or not
-            if (this.webBrowser.IsBusy || this.webBrowser.ReadyState != WebBrowserReadyState.Complete)
+            if (this.WebBrowser.IsBusy || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
                 return;
             else
             {
@@ -451,17 +370,13 @@ namespace AdaptivBot
             }
             //Action to be taken on page loading completion
         }
-
-
-
-
-
+        
 
         public void InjectJavascript(string scriptName, string script)
         {
-            if (!injectedScripts.ContainsKey(scriptName))
+            if (!InjectedScripts.ContainsKey(scriptName))
             {
-                var doc = (HtmlDocument) webBrowser.Document;
+                var doc = (HtmlDocument) WebBrowser.Document;
                 var headElement = doc?.GetElementsByTagName("head")[0];
                 var scriptElement = doc?.CreateElement("script");
                 var element = (IHTMLScriptElement) scriptElement?.DomElement;
@@ -469,7 +384,7 @@ namespace AdaptivBot
                 {
                     element.text = script;
                     headElement.AppendChild(scriptElement);
-                    injectedScripts.Add(scriptName, script);
+                    InjectedScripts.Add(scriptName, script);
                 }
             }
         }
@@ -523,5 +438,12 @@ namespace AdaptivBot
             
         }
         #endregion functions for manipulating extractedfiles (DataGrid : "dgExtractedFiles")
+
+        private void CmbBxAdaptivEnvironments_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CredentialStore.Instance.Target = CmbBxAdaptivEnvironments.SelectedValue.ToString();
+            TxtPasswordBox.Password = CredentialStore.Instance.Password;
+        }
     }
 }
+ 
