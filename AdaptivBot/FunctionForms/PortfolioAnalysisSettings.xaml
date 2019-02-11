@@ -41,15 +41,28 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="11">
-            <TextBlock
+            <StackPanel
                 DockPanel.Dock="Top"
-                Style="{DynamicResource MaterialDesignCaptionTextBlock}"
-                Foreground="{DynamicResource SecondaryAccentBrush}"
-                VerticalAlignment="Bottom"
-                FontWeight="Regular"
-                Margin="5,20,5,-5">
-                Portfolio Analysis Settings
-            </TextBlock>
+                Orientation="Horizontal">
+                <TextBlock
+                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                    Foreground="{DynamicResource SecondaryAccentBrush}"
+                    VerticalAlignment="Bottom"
+                    FontWeight="Regular"
+                    Margin="5,20,5,-5">
+                    Portfolio Analysis Settings
+                </TextBlock>
+
+                <materialDesign:PackIcon
+                    Kind="HelpCircle"
+                    ToolTip="[To do] Description of this function."
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                    Width="16"
+                    Height="16"
+                    Margin="3,20,0,-7"
+                    VerticalAlignment="Center"/>
+            </StackPanel>
+
 
             <Separator DockPanel.Dock="Top"/>
         </DockPanel>
@@ -101,31 +114,6 @@
                 Copy Files to Prod
             </Button>
         </DockPanel>
-
-
-        <Button
-            Grid.Row="7"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            FontSize="12"
-            Style="{StaticResource MaterialDesignFlatButton}"
-            Margin="5,5,5,10">
-            <Button.Content>
-                <StackPanel
-                    Orientation="Horizontal">
-                    <TextBlock>Save Settings</TextBlock>
-                    <materialDesign:PackIcon
-                        Kind="ContentSaveSettingsOutline"
-                        Width="16"
-                        Height="16"
-                        Margin="5,0,0,0"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"/>
-                </StackPanel>
-            </Button.Content>
-        </Button>
 
 
         <CheckBox

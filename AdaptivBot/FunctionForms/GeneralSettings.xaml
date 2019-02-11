@@ -77,13 +77,14 @@
             </TextBlock>
 
             <TextBlock DockPanel.Dock="Top">
-                Qlikview UAT Folder
+                QlikView UAT Folder
             </TextBlock>
 
             <TextBlock DockPanel.Dock="Top">
-                Qlikview Prod Folder
+                QlikView Prod Folder
             </TextBlock>
         </DockPanel>
+
 
         <DockPanel
             Grid.Row="1"
@@ -91,11 +92,12 @@
             Grid.Column="2"
             Grid.ColumnSpan="5">
             <DockPanel.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="Padding" Value="5,0,5,0"/>
+                <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="Padding" Value="3,0,3,0"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                     <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0,1,0,0"/>
                 </Style>
             </DockPanel.Resources>
 
@@ -111,18 +113,10 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
                 Margin="5">
                 <TextBox
                     Name="txtBxQlikviewUATFolder"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"
                     Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewUATFolder}"/>
             </materialDesign:Card>
 
@@ -134,11 +128,6 @@
                 Margin="5">
                 <TextBox
                     Name="txtBxQlikviewProductionFolder"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Center"
                     Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewProductionFolder}"/>
             </materialDesign:Card>
         </DockPanel>
@@ -171,7 +160,7 @@
             <Button
                 Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
-                ToolTip="Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
+                ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
                 Purge Adaptiv Credentials
             </Button>
 
@@ -186,6 +175,7 @@
 
 
         <Button
+            Name="BtnSaveSettings"
             Grid.Row="8"
             Grid.Column="0"
             Grid.ColumnSpan="3"

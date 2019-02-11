@@ -44,51 +44,53 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="11">
-                <TextBlock
-                    DockPanel.Dock="Top"
-                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
-                    Foreground="{DynamicResource SecondaryAccentBrush}"
-                    VerticalAlignment="Bottom"
-                    FontWeight="DemiBold"
-                    Margin="0,20,5,-5"
-                    Text="Customer Limit Utilisation Settings"/>
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                Foreground="{DynamicResource SecondaryAccentBrush}"
+                VerticalAlignment="Bottom"
+                FontWeight="DemiBold"
+                Margin="0,20,5,-5"
+                Text="Customer Limit Utilisation Settings"/>
             <Separator
                     DockPanel.Dock="Top"
                     Margin="0,0,0,10"/>
         </DockPanel>
         
+
+        <!-- Labels for input text boxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2">
+            <DockPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="Margin" Value="0,10,5,10"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+            </DockPanel.Resources>
             <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9">
+                DockPanel.Dock="Top">
                 Base Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9"
                 ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant.">
                 Sub Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9"
                 ToolTip="e.g. CustLimitUtil[yyyy-MM-dd].xlsx">
                 File Name Format
             </TextBlock>
         </DockPanel>
 
+
+        <!-- Input textboxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -108,8 +110,8 @@
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
-                    ToolTip="The folder to which the file will be saved."
-                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
+                    ToolTip="[Not Implemented]The folder to which the file will be saved."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -126,8 +128,8 @@
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
-                    ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
-                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
+                    ToolTip="[Not Implemented]The folder within the base extraction folder to save to. Leave blank if irrelevant."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=SubExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -144,12 +146,14 @@
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
-                    ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
-                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseFolder}"/>
+                    ToolTip="[Not Implemented]The folder within the base extraction folder to save to. Leave blank if irrelevant."
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=FileNameFormat}"/>
             </materialDesign:Card>
 
         </DockPanel>
 
+
+        <!-- DatePicker -->
         <materialDesign:Card
             Grid.Row="1"
             Grid.Column="7"
@@ -171,6 +175,7 @@
         </materialDesign:Card>
 
 
+        <!-- Buttons -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -180,7 +185,7 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="12"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy File to UAT
@@ -189,13 +194,15 @@
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
-                FontSize="12"
+                FontSize="11"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Margin="5">
                 Copy File to Prod
             </Button>
         </DockPanel>
 
+
+        <!-- Filters : Categories combo boxes -->
         <DockPanel
             Grid.Row="3"
             Grid.RowSpan="4"
@@ -203,8 +210,8 @@
             Grid.ColumnSpan="2">
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                Margin="8,2,0,-2">
+                FontWeight="DemiBold"
+                Margin="8,4,0,-2">
                 Filters
             </TextBlock>
 
@@ -309,6 +316,8 @@
 
         </DockPanel>
 
+
+        <!-- Filters : Operation combo boxes -->
         <DockPanel
             Grid.Row="3"
             Grid.RowSpan="4"
@@ -437,6 +446,7 @@
         </DockPanel>
 
 
+        <!-- Filters : Criteria textboxes -->
         <DockPanel
             Grid.Row="3"
             Grid.RowSpan="4"
@@ -452,6 +462,7 @@
                     FontSize="10"
                     HorizontalContentAlignment="Left"/>
             </materialDesign:Card>
+
 
             <materialDesign:Card
                 Name="cardFilterCriteria2"
@@ -484,10 +495,14 @@
         </DockPanel>
 
 
+        <!-- Bottom most controls -->
         <Button
+            Name="BtnSaveSettings"
+            Click="BtnSaveSettings_OnClick"
             Grid.Row="7"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             FontSize="12"
             Style="{StaticResource MaterialDesignFlatButton}"
@@ -507,22 +522,26 @@
             </Button.Content> 
         </Button>
 
+
         <CheckBox
             Name="chkBxOverrideExistingFiles"
+            FontSize="11"
             Grid.Row="7"
-            Grid.Column="7"
-            Grid.ColumnSpan="2"
+            Grid.Column="6"
+            Grid.ColumnSpan="3"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Right"
             IsChecked="True"
-            Margin="5,10,5,5"
+            Margin="5,8,5,5"
             FlowDirection="RightToLeft">
             <TextBlock
                 Margin="0,-3,0,0">
                 Override existing files
             </TextBlock> 
         </CheckBox>
+
+
         <Button
             Name="btnRunExtraction"
             Grid.Row="7"

@@ -76,6 +76,7 @@
             <RowDefinition Height="0.25*" />
         </Grid.RowDefinitions>
 
+
         <Image HorizontalAlignment="Left"
                Grid.Row="1"
                Grid.RowSpan="3"

@@ -165,7 +165,7 @@ namespace AdaptivBot
                     Logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
                     break;
                 case YesNoMaybe.No:
-                    Logger.ErrorText = "Config file not created!";
+                    Logger.ErrorText = "Config file not created! Limited functionality.";
                     break;
             }
 
@@ -219,6 +219,7 @@ namespace AdaptivBot
         }
 
 
+        //TODO: Check if we're on a network not just if it's wifi or ethernet.
         void AddressCallbackChange(object sender, EventArgs e)
         {
             if (IsUsingEthernet(this.Logger))
@@ -239,6 +240,7 @@ namespace AdaptivBot
             }
         }
 
+
         public void axBrowser_NewWindow(
             string URL,
             int Flags,
@@ -255,17 +257,12 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
         }
 
-
-        #region Credentials functions
-
-
-        #endregion Credentials functions
         
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             CredentialStore.Instance.Target = "AdaptivBotProduction";
-            if (IsUsingEthernet(this.Logger))
+            if (IsUsingEthernet(this.Logger, true))
             {
                 IconNetworkType.Kind = PackIconKind.Network;
             }
@@ -288,8 +285,8 @@ namespace AdaptivBot
 
 
             // TODO: Replace GlobalConfigValues with GlobalDataBindingValues
-            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath =
-                GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
+            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath
+                = GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
 
             if (!Directory.Exists(GlobalConfigValues.Instance.AdaptivBotDirectory))
             {
@@ -300,7 +297,7 @@ namespace AdaptivBot
             {
                 File.WriteAllText(
                     GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
-                    GlobalConfigValues.defaultConfigFileContent);
+                    AdaptivBot.Properties.Resources.AdaptivBot);
                 GlobalConfigValues.CreatedConfigFile = YesNoMaybe.Yes;
             }
 
@@ -335,8 +332,8 @@ namespace AdaptivBot
                     GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Maybe;
                 }
             }
-
         }
+
 
         public async void OpenAdaptivAndLogin(
             string username,

@@ -59,5 +59,24 @@ namespace AdaptivBot.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;AdaptivBot&gt;
+        ///
+        ///	&lt;GeneralSettings&gt;
+        ///		&lt;ExcelExecutablePath&gt;C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe&lt;/ExcelExecutablePath&gt;
+        ///		&lt;QlikviewUATFolder&gt;\\10952APPJNB0001\PS.Portfolio_Sensitivities\8.Import\New&lt;/QlikviewUATFolder&gt;
+        ///		&lt;QlikviewProductionFolder&gt;\\10952appprdsdc4\Portfolio Analysis\8.Import\New&lt;/QlikviewProductionFolder&gt;
+        ///	&lt;/GeneralSettings&gt;
+        ///
+        ///	&lt;RiskViewSettings&gt;
+        ///		&lt;BaseExtractionFolder&gt;\\pcibtighnas1\cbsdata\Portfolio Analysis\Data&lt;/Base [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AdaptivBot {
+            get {
+                return ResourceManager.GetString("AdaptivBot", resourceCulture);
+            }
+        }
     }
 }
