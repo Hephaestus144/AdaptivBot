@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Xml.Linq;
 using Action = System.Action;
 using Brushes = System.Windows.Media.Brushes;
@@ -164,8 +163,11 @@ namespace AdaptivBot
                 case YesNoMaybe.Yes:
                     Logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
                     break;
+                case YesNoMaybe.Maybe:
+                    Logger.OkayText = $"Config file found : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
+                    break;
                 case YesNoMaybe.No:
-                    Logger.ErrorText = "Config file not created!";
+                    Logger.ErrorText = "Config file not created! Limited functionality.";
                     break;
             }
 
@@ -219,6 +221,7 @@ namespace AdaptivBot
         }
 
 
+        //TODO: Check if we're on a network not just if it's wifi or ethernet.
         void AddressCallbackChange(object sender, EventArgs e)
         {
             if (IsUsingEthernet(this.Logger))
@@ -239,6 +242,7 @@ namespace AdaptivBot
             }
         }
 
+
         public void axBrowser_NewWindow(
             string URL,
             int Flags,
@@ -255,17 +259,12 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
         }
 
-
-        #region Credentials functions
-
-
-        #endregion Credentials functions
         
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             CredentialStore.Instance.Target = "AdaptivBotProduction";
-            if (IsUsingEthernet(this.Logger))
+            if (IsUsingEthernet(this.Logger, true))
             {
                 IconNetworkType.Kind = PackIconKind.Network;
             }
@@ -274,8 +273,6 @@ namespace AdaptivBot
                 IconNetworkType.Kind = PackIconKind.Wifi;
             }
 
-
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
             GlobalConfigValues.Instance.AdaptivBotDirectory
                 = Path.Combine(
@@ -288,8 +285,8 @@ namespace AdaptivBot
 
 
             // TODO: Replace GlobalConfigValues with GlobalDataBindingValues
-            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath =
-                GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
+            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath
+                = GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
 
             if (!Directory.Exists(GlobalConfigValues.Instance.AdaptivBotDirectory))
             {
@@ -300,20 +297,21 @@ namespace AdaptivBot
             {
                 File.WriteAllText(
                     GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
-                    GlobalConfigValues.defaultConfigFileContent);
+                    Properties.Resources.AdaptivBot);
                 GlobalConfigValues.CreatedConfigFile = YesNoMaybe.Yes;
             }
 
             var document =
-                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath, LoadOptions.PreserveWhitespace);
+                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
+                    LoadOptions.PreserveWhitespace);
 
             var configDocument =
                 XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
 
-            if (document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
+            if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
             {
                 if (File.Exists(GlobalConfigValues.possibleExcelPath1)
-                    && document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
+                    && document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
                 {
                     document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value =
                         GlobalConfigValues.possibleExcelPath1;
@@ -330,13 +328,9 @@ namespace AdaptivBot
                     GlobalConfigValues.excelPath
                         = configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
                 }
-                else
-                {
-                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Maybe;
-                }
             }
-
         }
+
 
         public async void OpenAdaptivAndLogin(
             string username,

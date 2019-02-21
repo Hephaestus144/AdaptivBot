@@ -13,6 +13,7 @@
     <Page.Resources>
         <XmlDataProvider x:Key="RiskViewSettingsXml" XPath="AdaptivBot/RiskViewSettings"/>
     </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -39,24 +40,39 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+
+        <!-- Title -->
         <DockPanel
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="11">
-            <TextBlock
+            <StackPanel
                 DockPanel.Dock="Top"
-                Style="{DynamicResource MaterialDesignCaptionTextBlock}"
-                Foreground="{DynamicResource SecondaryAccentBrush}"
-                VerticalAlignment="Bottom"
-                FontWeight="Regular"
-                Margin="5,20,5,-5">
-                Risk View Settings
-            </TextBlock>
+                Orientation="Horizontal">
+                <TextBlock
+                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                    Foreground="{DynamicResource SecondaryAccentBrush}"
+                    VerticalAlignment="Bottom"
+                    FontWeight="Regular"
+                    Margin="5,20,5,-5">
+                    Risk View Settings
+                </TextBlock>
+
+                <materialDesign:PackIcon
+                    Kind="HelpCircle"
+                    ToolTip="[To do] Description of this function."
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                    Width="16"
+                    Height="16"
+                    Margin="3,20,0,-7"
+                    VerticalAlignment="Center"/>
+            </StackPanel>
 
             <Separator DockPanel.Dock="Top"/>
         </DockPanel>
 
 
+        <!-- Labels for input text boxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -90,6 +106,7 @@
         </DockPanel>
 
 
+        <!-- Input textboxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -110,7 +127,7 @@
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
                     ToolTip="The folder to which the file will be saved."
-                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=BaseFolder}"/>
+                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=BaseExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -128,7 +145,7 @@
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
                     ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
-                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=BaseFolder}"/>
+                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=SubExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -146,11 +163,12 @@
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
                     ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant."
-                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=BaseFolder}"/>
+                    Text="{Binding Source={StaticResource RiskViewSettingsXml}, XPath=FileNameFormat}"/>
             </materialDesign:Card>
         </DockPanel>
 
 
+        <!-- Instrument batch list box -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="4"
@@ -161,7 +179,7 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Margin="8,2,0,-2">
-                InstrumentFolderNameToInstrumentBatchMapping
+                Instrument Batches
             </TextBlock>
             <materialDesign:Card
                 DockPanel.Dock="Top"
@@ -204,6 +222,7 @@
         </DockPanel>
 
 
+        <!-- Buttons -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
@@ -241,13 +260,16 @@
         </DockPanel>
 
 
+        <!-- Bottom most controls -->
         <Button
+            Name="BtnSaveSettings"
             Grid.Row="7"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
-            FontSize="12"
+            Click="BtnSaveSettings_Click"
+            FontSize="11"
             Style="{StaticResource MaterialDesignFlatButton}"
             Margin="5,5,5,10">
             <Button.Content>

@@ -12,8 +12,13 @@ DEBUG;TRACE
 C:\GitLab\AdaptivBot\AdaptivBot\App.xaml
 8168788732
 
+<<<<<<< HEAD
 252086022205
 35978045395
+=======
+251278010458
+351265646085
+>>>>>>> e2e634f99913ee70a0521997db86662876bdbca4
 AlertForms\AlertUpdateUserCredentials.xaml;FunctionForms\EmailBugSuggestion.xaml;MainWindow.xaml;FunctionForms\GeneralSettings.xaml;FunctionForms\PortfolioAnalysisSettings.xaml;FunctionForms\DealRiskCarrierSettings.xaml;FunctionForms\RiskViewSettings.xaml;FunctionForms\CustomerLimitUtilisationSettings.xaml;
 
 True

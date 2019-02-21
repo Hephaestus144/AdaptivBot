@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Application = System.Windows.Application;
 
 
@@ -309,6 +310,24 @@ namespace AdaptivBot.SettingForms
         {
             var xdp = (XmlDataProvider) this.Resources["RiskViewSettingsXml"];
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+        }
+
+        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var document =
+                XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+
+            document.Root.Element("RiskViewSettings").Element("BaseExtractionFolder")
+                .Value = txtBoxBaseFolder.Text;
+
+            document.Root.Element("RiskViewSettings").Element("SubExtractionFolder").Value
+                = txtFileNameFormat.Text;
+
+            document.Root.Element("RiskViewSettings").Element("FileNameFormat").Value =
+                txtBoxBaseFolder.Text;
+
+            document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            window.Logger.OkayText = "Risk view settings saved.";
         }
     }
 }
