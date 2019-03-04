@@ -116,6 +116,7 @@ namespace AdaptivBot.SettingForms
                             }
                         });
 
+
                         #region wait for browser
 
                         for (var i = 0; i < 3; i++)
