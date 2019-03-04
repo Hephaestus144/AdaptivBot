@@ -22,13 +22,38 @@ namespace AdaptivBot.SettingForms
         private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
         CancellationTokenSource tokenSource = new CancellationTokenSource();
-       
+        
 
         public RiskViewSettings()
         {
             InitializeComponent();
         }
-        
+
+
+        private void JavaScriptErrorDialogFound()
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                AutoItX.Sleep(100);
+                if (AutoItX.WinExists("Script Error") != 0)
+                {
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                    }));
+                    AutoItX.WinActivate("Script Error");
+                    AutoItX.Send("!y");
+                    throw new Exception();
+                }
+            }
+        }
+
+
+        private void ExceptionHandler(Task task)
+        {
+            var exception = task.Exception;
+            Console.WriteLine(exception);
+        }
 
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
@@ -45,6 +70,7 @@ namespace AdaptivBot.SettingForms
             var username = _window?.TxtUserName.Text;
             var password = _window?.TxtPasswordBox.Password;
 
+            
             var selectedInstruments = (from object selectedItem in lstBxInstruments.SelectedItems
                 select InstrumentLists.InstrumentGuiNameToFolderNameMapping[selectedItem.ToString()
                     .Replace("System.Windows.Controls.ListBoxItem: ", "")]).ToList();
@@ -56,9 +82,10 @@ namespace AdaptivBot.SettingForms
             var currentAdaptivEnvironment = _window?.CmbBxAdaptivEnvironments.SelectedValue.ToString();
             var numberOfFailedExtractions = 0;
             var numberOfSuccessfulExtractions = 0;
+            var maxErrorCount = 5;
             foreach (var instrumentBatch in instrumentsToLoopOver)
             {
-                for (var errorCount = 0; errorCount < 3; errorCount++)
+                for (var errorCount = 0; errorCount < maxErrorCount; errorCount++)
                 {
                     try
                     {
@@ -94,44 +121,21 @@ namespace AdaptivBot.SettingForms
                         _window.InjectJavascript(nameof(JsScripts.OpenRiskView),
                             JsScripts.OpenRiskView);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
-                        //await Task.Run(() => Thread.Sleep(1000));
-                        //if (AutoItX.WinExists("Script Error") != 0)
-                        //{
-                        //    throw new Exception();
-                        //}
-
-                        //var cancellationToken = tokenSource.Token;
-                        //var checkForJsError =
-                        await Task.Run(() =>
-                        {
-                            for (var i = 0; i < 10; i++)
-                            {
-                                Thread.Sleep(100);
-                                //cancellationToken.ThrowIfCancellationRequested();
-                                if (AutoItX.WinExists("Script Error") != 0)
-                                {
-                                    Console.Write("Fucking found");
-                                    //throw new Exception();
-                                }
-                            }
-                        });
-
 
                         #region wait for browser
 
-                        for (var i = 0; i < 3; i++)
+                        while (!_window.completedLoading)
                         {
-                            while (!_window.completedLoading)
-                            {
-                                await Task.Run(() => Thread.Sleep(100));
-                            }
-                            _window.completedLoading = false;
+                            await Task.Run(() => Thread.Sleep(100));
                         }
 
                         await Task.Run(() => Thread.Sleep(2000));
+                        _window.completedLoading = false;
 
                         #endregion wait for browser
-
+                        
+                        Action methodName = JavaScriptErrorDialogFound;
+                        IAsyncResult result = methodName.BeginInvoke(null, null);
                         _window.Logger.OkayText = $"Filtering for {instrumentBatch}...";
                         _window.InjectJavascript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
@@ -140,20 +144,8 @@ namespace AdaptivBot.SettingForms
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
 
-                        await Task.Run(() =>
-                        {
-                            for (var i = 0; i < 10; i++)
-                            {
-                                Thread.Sleep(100);
-                                //cancellationToken.ThrowIfCancellationRequested();
-                                if (AutoItX.WinExists("Script Error") != 0)
-                                {
-                                    Console.Write("Fucking found");
-                                    //throw new Exception();
-                                }
-                            }
-                        });
 
+                        
 
                         #region wait for browser
 
@@ -167,23 +159,12 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-
+                        methodName.EndInvoke(result);
                         _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
-                        await Task.Run(() =>
-                        {
-                            for (var i = 0; i < 10; i++)
-                            {
-                                Thread.Sleep(100);
-                                //cancellationToken.ThrowIfCancellationRequested();
-                                if (AutoItX.WinExists("Script Error") != 0)
-                                {
-                                    Console.Write("Fucking found");
-                                    //throw new Exception();
-                                }
-                            }
-                        });
+                        
+
 
                         #region wait for browser
 
@@ -196,6 +177,8 @@ namespace AdaptivBot.SettingForms
                         _window.completedLoading = false;
 
                         #endregion wait for browser
+
+                        
 
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
@@ -209,24 +192,25 @@ namespace AdaptivBot.SettingForms
                                 link.InvokeMember("Click");
                         }
 
-                        tokenSource.Cancel();
+                        
                         Thread.Sleep(1000);
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
                         await Task.Run(() =>
                             SaveFile(instrumentBatch, overrideExistingFile));
                         numberOfSuccessfulExtractions++;
+                        
                         break;
                     }
-                    catch (Exception)
+                    catch (Exception exception)
                     {
-                        if (errorCount < 2)
+                        if (errorCount < maxErrorCount)
                         {
-                            _window.Logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {++errorCount}";
+                            _window.Logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {errorCount}";
                         }
                         else
                         {
                             numberOfFailedExtractions++;
-                            _window.Logger.ErrorText = $"{instrumentBatch} extraction failed 3 times. Moving on to next instrument set.";
+                            _window.Logger.ErrorText = $"{instrumentBatch} extraction failed {maxErrorCount} times. Moving on to next instrument set.";
                         }
                     }
                 }

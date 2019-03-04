@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\
+C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\
 AdaptivBot
 none
 false
 DEBUG;TRACE
-C:\GitLab\AdaptivBot\AdaptivBot\App.xaml
+C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\App.xaml
 8168788732
 
 21-862614824
-35978045395
+351942904651
 AlertForms\AlertUpdateUserCredentials.xaml;FunctionForms\EmailBugSuggestion.xaml;MainWindow.xaml;FunctionForms\GeneralSettings.xaml;FunctionForms\PortfolioAnalysisSettings.xaml;FunctionForms\DealRiskCarrierSettings.xaml;FunctionForms\RiskViewSettings.xaml;FunctionForms\CustomerLimitUtilisationSettings.xaml;
 
 False
