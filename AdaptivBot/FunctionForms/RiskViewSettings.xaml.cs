@@ -32,7 +32,7 @@ namespace AdaptivBot.SettingForms
 
         private void JavaScriptErrorDialogFound()
         {
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 15; i++)
             {
                 AutoItX.Sleep(100);
                 if (AutoItX.WinExists("Script Error") != 0)
@@ -243,8 +243,9 @@ namespace AdaptivBot.SettingForms
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
-            AutoItX.Send("{TAB 3}");
-            AutoItX.Send("{ENTER}");
+            //AutoItX.Send("{TAB 3}");
+            //AutoItX.Send("{ENTER}");
+            AutoItX.Send("!s");
             Dispatcher.Invoke((System.Action)(() =>
             {
                 _window.Logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
@@ -293,14 +294,20 @@ namespace AdaptivBot.SettingForms
                 }
             }
 
-            await Task.Run(() => Thread.Sleep(100));
+            await Task.Run(() => Thread.Sleep(1000));
 
-            while (AutoItX.WinGetTitle("[ACTIVE]")
-                .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            //while (AutoItX.WinGetTitle("[ACTIVE]")
+            //    .Contains(".csv from adaptiv.standardbank.co.za Completed"))
+            //{
+            //    await Task.Run(() => Thread.Sleep(500));
+            //}
+
+            if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
             {
-                await Task.Run(() => Thread.Sleep(500));
+                AutoItX.WinActivate("", "Close this dialog box when download completes");
+                AutoItX.Send("{Tab}");
+                AutoItX.Send("+");
             }
-
             var filePath =
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
 

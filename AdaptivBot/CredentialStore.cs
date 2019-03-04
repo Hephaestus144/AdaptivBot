@@ -190,9 +190,15 @@ namespace AdaptivBot
             _window.Dispatcher.BeginInvoke(
                 (Action)(() => { _window.Logger.OkayText = "Acknowledging disclaimer..."; }));
 
-            AutoItX.WinWait("Adaptiv Disclaimer -- Webpage Dialog");
-            AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
-            AutoItX.Send("{ENTER}");
+            for (var i = 0; i < 20; i++)
+            {
+                AutoItX.Sleep(100);
+                if (AutoItX.WinExists("Adaptiv Disclaimer -- Webpage Dialog") != 0)
+                {
+                    AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
+                    AutoItX.Send("{ENTER}");
+                }
+            }            
         }
 
 
