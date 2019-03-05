@@ -29,32 +29,6 @@ namespace AdaptivBot.SettingForms
             InitializeComponent();
         }
 
-
-        private void JavaScriptErrorDialogFound()
-        {
-            for (var i = 0; i < 15; i++)
-            {
-                AutoItX.Sleep(100);
-                if (AutoItX.WinExists("Script Error") != 0)
-                {
-                    Dispatcher.Invoke((System.Action)(() =>
-                    {
-                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
-                    }));
-                    AutoItX.WinActivate("Script Error");
-                    AutoItX.Send("!y");
-                    throw new Exception();
-                }
-            }
-        }
-
-
-        private void ExceptionHandler(Task task)
-        {
-            var exception = task.Exception;
-            Console.WriteLine(exception);
-        }
-
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
             GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
@@ -133,8 +107,9 @@ namespace AdaptivBot.SettingForms
                         _window.completedLoading = false;
 
                         #endregion wait for browser
+
                         
-                        Action methodName = JavaScriptErrorDialogFound;
+                        Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
                         IAsyncResult result = methodName.BeginInvoke(null, null);
                         _window.Logger.OkayText = $"Filtering for {instrumentBatch}...";
                         _window.InjectJavascript(
@@ -143,9 +118,7 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
-
-
-                        
+                       
 
                         #region wait for browser
 
@@ -158,12 +131,12 @@ namespace AdaptivBot.SettingForms
                         _window.completedLoading = false;
 
                         #endregion wait for browser
+
 
                         methodName.EndInvoke(result);
                         _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
-                        
 
 
                         #region wait for browser
@@ -179,7 +152,6 @@ namespace AdaptivBot.SettingForms
                         #endregion wait for browser
 
                         
-
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
                             await Task.Run(() => Thread.Sleep(100));

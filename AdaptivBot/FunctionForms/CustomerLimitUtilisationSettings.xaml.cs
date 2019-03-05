@@ -77,6 +77,8 @@ namespace AdaptivBot.SettingForms
 
             #endregion wait for browser
 
+            Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
+            IAsyncResult result = methodName.BeginInvoke(null, null);
             window.InjectJavascript(
                 nameof(JsScripts.OpenCustomerLimitUtilisationReport),
                 JsScripts.OpenCustomerLimitUtilisationReport);

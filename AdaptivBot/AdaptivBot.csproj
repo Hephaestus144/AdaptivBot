@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="ConfigFunctions\GlobalConfigValues.cs" />
     <Compile Include="InstrumentLists.cs" />
+    <Compile Include="JavaScriptUtils.cs" />
     <Compile Include="JsScripts.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\Annotations.cs" />
