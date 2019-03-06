@@ -193,10 +193,10 @@ namespace AdaptivBot.SettingForms
                         }
 
                         
-                        Thread.Sleep(1000);
+                        await Task.Run(() => Thread.Sleep(1000));
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
-                        await Task.Run(() =>
-                            SaveFile(instrumentBatch, overrideExistingFile));
+                        //var saveFileTask = SaveFile(instrumentBatch, overrideExistingFile);
+                        await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
                         numberOfSuccessfulExtractions++;
                         
                         break;
@@ -239,7 +239,7 @@ namespace AdaptivBot.SettingForms
         }
 
 
-        public async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+        public async Task SaveFile(string instrumentBatch, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
@@ -264,7 +264,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send(
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
             AutoItX.Send("!s");
-            AutoItX.Sleep(1000);
+            await Task.Run(() => Thread.Sleep(1000));
             var fileSaved = true;
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
@@ -296,17 +296,16 @@ namespace AdaptivBot.SettingForms
 
             await Task.Run(() => Thread.Sleep(1000));
 
-            //while (AutoItX.WinGetTitle("[ACTIVE]")
-            //    .Contains(".csv from adaptiv.standardbank.co.za Completed"))
-            //{
-            //    await Task.Run(() => Thread.Sleep(500));
-            //}
-
             if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
             {
                 AutoItX.WinActivate("", "Close this dialog box when download completes");
                 AutoItX.Send("{Tab}");
                 AutoItX.Send("+");
+
+                while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                {
+                    AutoItX.Sleep(100);
+                }
             }
             var filePath =
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
@@ -332,8 +331,6 @@ namespace AdaptivBot.SettingForms
                     });
                 }));
             }
-            // TODO: Checkbox to close window when complete.
-
         }
 
 

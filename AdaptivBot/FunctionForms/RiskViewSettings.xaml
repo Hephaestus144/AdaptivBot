@@ -207,6 +207,7 @@
                             </Style.Resources>
                         </Style>
                     </ListBox.ItemContainerStyle>
+                    <ListBoxItem>Bonds</ListBoxItem>
                     <ListBoxItem>Commodities : Agri</ListBoxItem>
                     <ListBoxItem>Commodities : Base Metals</ListBoxItem>
                     <ListBoxItem>Commodities : Energy</ListBoxItem>

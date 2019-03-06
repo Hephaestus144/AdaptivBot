@@ -19,6 +19,7 @@ namespace AdaptivBot
 
         public string AdaptivBotDirectory;
         public string AdaptivBotConfigFilePath;
+
         public static string possibleExcelPath1
             = @"C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe";
 

@@ -1,10 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using mshtml;
-using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -20,89 +18,6 @@ using Brushes = System.Windows.Media.Brushes;
 
 namespace AdaptivBot
 {
-    public sealed class GlobalDataBindingValues : INotifyPropertyChanged
-    {
-        private static readonly object padlock = new object();
-        private static GlobalDataBindingValues instance = null;
-
-        GlobalDataBindingValues()
-        {
-            // Used in the DatePickers. Users must not be able to select date after & including today's date.
-            var displayEndDate = LocalDate.FromDateTime(DateTime.Now.AddDays(-1));
-            switch (displayEndDate.DayOfWeek)
-            {
-                case IsoDayOfWeek.Saturday:
-                    displayEndDate = displayEndDate.PlusDays(-1);
-                    break;
-                case IsoDayOfWeek.Sunday:
-                    displayEndDate = displayEndDate.PlusDays(-2);
-                    break;
-            }
-            this.DisplayDateEnd = displayEndDate.ToDateTimeUnspecified();
-        }
-
-
-        public static GlobalDataBindingValues Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (padlock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new GlobalDataBindingValues();
-                        }
-                    }
-                }
-
-                return instance;
-            }
-        }
-        
-
-        private DateTime _displayDateEnd;
-
-        public DateTime DisplayDateEnd
-        {
-            get => _displayDateEnd;
-            set
-            {
-                if (_displayDateEnd != value)
-                {
-                    _displayDateEnd = value;
-                    this.OnPropertyChanged(nameof(DisplayDateEnd));
-                }
-            }
-        }
-
-
-        private string _adaptivBotConfigFilePath;
-
-        public string AdaptivBotConfigFilePath
-        {
-            get => _adaptivBotConfigFilePath;
-            set
-            {
-                if (_adaptivBotConfigFilePath != value)
-                {
-                    _adaptivBotConfigFilePath = value;
-                    this.OnPropertyChanged(nameof(AdaptivBotConfigFilePath));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -149,6 +64,7 @@ namespace AdaptivBot
             dgExtractedFiles.ItemsSource = extractedFiles;
             NetworkChange.NetworkAddressChanged +=
                 new NetworkAddressChangedEventHandler(AddressCallbackChange);
+
             // Deals with new windows created by browser.
             WebBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
             axBrowser = (SHDocVw.WebBrowser_V1)WebBrowser.ActiveXInstance;
@@ -342,23 +258,36 @@ namespace AdaptivBot
                     currentAdaptivEnvironment]);
             InjectedScripts.Clear();
 
-            await Task.Run(() => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
+            await Task.Run(()
+                => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
         }
 
 
-        private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        /// <summary>
+        /// Attempts to check if Internet Explorer page has finished loading.
+        /// Unfortunately it's not perfect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void webBrowser_DocumentCompleted(
+            object sender, 
+            WebBrowserDocumentCompletedEventArgs e)
         {
-            //Check if page is fully loaded or not
-            if (this.WebBrowser.IsBusy || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
+            if (this.WebBrowser.IsBusy
+                || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
                 return;
             else
             {
                 completedLoading = true;
             }
-            //Action to be taken on page loading completion
         }
         
 
+        /// <summary>
+        /// Injects JavaScript into the Header of the Adaptiv page.
+        /// </summary>
+        /// <param name="scriptName">JavaScript function name.</param>
+        /// <param name="script">JavaScript function string.</param>
         public void InjectJavascript(string scriptName, string script)
         {
             if (!InjectedScripts.ContainsKey(scriptName))
@@ -377,7 +306,10 @@ namespace AdaptivBot
         }
 
 
-        public static async void ConvertWorkbookFormats(string csvFile, string extFrom, string extTo)
+        public static async void ConvertWorkbookFormats(
+            string csvFile, 
+            string extFrom, 
+            string extTo)
         {
             while (!(File.Exists(csvFile)))
             {
@@ -426,11 +358,14 @@ namespace AdaptivBot
         }
         #endregion functions for manipulating extractedfiles (DataGrid : "dgExtractedFiles")
 
-        private void CmbBxAdaptivEnvironments_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbBxAdaptivEnvironments_OnSelectionChanged(
+            object sender, 
+            SelectionChangedEventArgs e)
         {
             CredentialStore.Instance.Target = CmbBxAdaptivEnvironments.SelectedValue.ToString();
             TxtPasswordBox.Password = CredentialStore.Instance.Password;
         }
+
 
         private void BtnEmailBug_OnClick(object sender, RoutedEventArgs e)
         {
