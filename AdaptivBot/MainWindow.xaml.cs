@@ -60,14 +60,9 @@ namespace AdaptivBot
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             CredentialStore.Instance.Target = "AdaptivBotProduction";
-            if (IsUsingEthernet(this.Logger, true))
-            {
-                IconNetworkType.Kind = PackIconKind.Network;
-            }
-            else
-            {
-                IconNetworkType.Kind = PackIconKind.Wifi;
-            }
+            IconNetworkType.Kind = IsUsingEthernet(this.Logger, true)
+                ? PackIconKind.Network
+                : PackIconKind.Wifi;
 
             #region config file & variables setup
             GlobalDataBindingValues.Instance.AdaptivBotDirectory
@@ -78,7 +73,6 @@ namespace AdaptivBot
             GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath
                 = Path.Combine(GlobalDataBindingValues.Instance.AdaptivBotDirectory,
                     "AdaptivBot.config");
-
 
             if (!Directory.Exists(GlobalDataBindingValues.Instance.AdaptivBotDirectory))
             {
@@ -106,13 +100,14 @@ namespace AdaptivBot
                     $"{GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
             }
 
-            var document 
+            var document
                 = XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
                     LoadOptions.PreserveWhitespace);
 
             if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null
                 && document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
             {
+                var excelPathFound = false;
                 foreach (var path in GlobalDataBindingValues.PossibleExcelPaths)
                 {
                     if (File.Exists(path))
@@ -123,20 +118,16 @@ namespace AdaptivBot
                         document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
                         GlobalDataBindingValues.actualExcelPath = path;
                         Logger.OkayText = $"Excel path found & configured: {path}";
+                        excelPathFound = true;
                         break;
                     }
                 }
 
-                //if (File.Exists(GlobalDataBindingValues.possibleExcelPath1)
-                //    && document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
-                //{
-                //    document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value
-                //        = GlobalDataBindingValues.possibleExcelPath1;
-                //    document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
-
-                //    GlobalDataBindingValues.actualExcelPath
-                //        = document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
-                //}
+                if (!excelPathFound)
+                {
+                    Logger.ErrorText = $"Excel path not found. Limited functionality.";
+                    Logger.ErrorText = $"You will need to manually configure your Excel path in General Settings.";
+                }
             }
 
             #endregion  config file & variables setup
@@ -159,17 +150,6 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
 
             Logger = new Logger(rtbLogger);
-
-            switch (GlobalConfigValues.ExcelPathConfigured)
-            {
-                case YesNoMaybe.No:
-                    Logger.OkayText
-                        = "Excel path not configured. You will have to manually configure it in General Settings.";
-                    break;
-                case YesNoMaybe.Yes:
-                    Logger.ErrorText = "Excel path configured.";
-                    break;
-            }
         }
 
 
