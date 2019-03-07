@@ -30,7 +30,7 @@ namespace AdaptivBot.SettingForms
 
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
 
             _window?.Logger.NewExtraction("Deal Risk Carrier Extraction Started");
             if (!CredentialStore.Instance.StoreUserCredentials())
@@ -167,7 +167,7 @@ namespace AdaptivBot.SettingForms
                         SaveDrcFile(overrideExistingFile));
 
                     await Task.Run(() =>
-                        MainWindow.ConvertWorkbookFormats(csvDrcFilePath, ".csv", ".xlsx"));
+                        MainWindow.ConvertWorkbookFormats(csvDrcFilePath, ".xlsx"));
 
                     await Task.Run(() => Thread.Sleep(2000));
                     File.Delete(csvDrcFilePath);
@@ -253,9 +253,9 @@ namespace AdaptivBot.SettingForms
 
             _window.Logger.ExtractionComplete("DRC Extraction");
 
-            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            var timeSpan = GlobalConfigValues.Instance.extractionEndTime
-                            - GlobalConfigValues.Instance.extractionStartTime;
+            GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
+            var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime
+                            - GlobalDataBindingValues.Instance.extractionStartTime;
             _window.Logger.OkayText
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");

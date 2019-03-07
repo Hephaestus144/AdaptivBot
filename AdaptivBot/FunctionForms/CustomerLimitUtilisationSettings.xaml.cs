@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace AdaptivBot.SettingForms
@@ -51,7 +52,7 @@ namespace AdaptivBot.SettingForms
 
         public async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
             var date = datePicker.SelectedDate;
 
             if (date is null)
@@ -65,7 +66,7 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
-            var maxFailureCount = 5;
+            const int maxFailureCount = 5;
             for (var failureCount = 0; failureCount < maxFailureCount; failureCount++)
             {
                 try
@@ -235,7 +236,7 @@ namespace AdaptivBot.SettingForms
                     _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
 
-                    var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked; ;
+                    var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
 
                     await Task.Run(() => Thread.Sleep(1000));
 
@@ -243,30 +244,56 @@ namespace AdaptivBot.SettingForms
                         SaveCustomerLimitUtilisationReport((DateTime)date,
                             overrideExistingFile));
 
+                    await Task.Run(() => Thread.Sleep(1000));
+
+                    if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                    {
+                        AutoItX.WinActivate("", "Close this dialog box when download completes");
+                        AutoItX.Send("{Tab}");
+                        AutoItX.Send("+");
+
+                        while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                        {
+                            AutoItX.Sleep(100);
+                        }
+                    }
+
                     var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
 
-                    var fileSize = (new FileInfo(csvFile).Length >= 1048576)
-                        ? $"{(new FileInfo(csvFile).Length / 1048576):n}" + " MB"
-                        : $"{(new FileInfo(csvFile).Length / 1024):n}" + " KB";
+                    _window.Logger.OkayText = "Converting csv extraction to xlsx...";
+                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
+                    var xlsxFile = csvFile.Replace(".csv", ".xlsx");
+
+
+                    _window.Logger.OkayText = "Performing minor formatting on xlsx file...";
+                    var xlApp = new Excel.Application();
+                    Excel.Workbook wb = xlApp.Workbooks.Open(xlsxFile);
+                    Excel.Worksheet ws = wb.Worksheets[1];
+                    ws.Name = "Customer Limit Utilisation";
+                    ((Excel.Range) ws.Rows["1:3"]).Delete();
+
+                    _window.Logger.OkayText = "Deleting csv file...";
+                    File.Delete(csvFile);
+                    
+                    var fileSize = (new FileInfo(xlsxFile).Length >= 1048576)
+                        ? $"{new FileInfo(xlsxFile).Length / 1048576:n}" + " MB"
+                        : $"{new FileInfo(xlsxFile).Length / 1024:n}"    + " KB";
 
                     Dispatcher.Invoke(() =>
                     {
                         _window.extractedFiles.Add(new ExtractedFile
                         {
-                            FilePath = csvFile,
-                            FileName = Path.GetFileName(csvFile),
+                            FilePath = xlsxFile,
+                            FileName = Path.GetFileName(xlsxFile),
                             FileType = "Customer Limit Utilisation",
                             FileSize = fileSize
                         });
-
                     });
 
-                    _window.Logger.OkayText = "Converting csv extraction to xlsx...";
-                    MainWindow.ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
                     _window.Logger.ExtractionComplete("Customer Limit Utilisation");
-                    GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-                    var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
-                                   GlobalConfigValues.Instance.extractionStartTime;
+                    GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
+                    var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime
+                                   - GlobalDataBindingValues.Instance.extractionStartTime;
 
                     _window.Logger.OkayTextWithoutTime =
                         $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
@@ -274,11 +301,13 @@ namespace AdaptivBot.SettingForms
                     _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
                     break;
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
                     if (failureCount < maxFailureCount)
                     {
-                        _window.Logger.ErrorText = $"Something failed for Customer Limit Utilisation extraction. Trying again. Attempt number: {failureCount}";
+                        _window.Logger.ErrorText =
+                            $"Something failed for Customer Limit Utilisation extraction. {exception.Message}";
+                        _window.Logger.ErrorText = $"Trying again. Attempt number: {failureCount + 2}";
                     }
                     else
                     {

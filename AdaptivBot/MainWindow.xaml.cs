@@ -104,29 +104,41 @@ namespace AdaptivBot
                 = XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
                     LoadOptions.PreserveWhitespace);
 
-            if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null
-                && document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
+            if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
             {
-                var excelPathFound = false;
-                foreach (var path in GlobalDataBindingValues.PossibleExcelPaths)
+                if (document.Root?.Element("GeneralSettings")
+                        ?.Element("ExcelExecutablePath")?.Value?.Length == 0)
                 {
-                    if (File.Exists(path))
+                    var excelPathFound = false;
+                    foreach (var path in GlobalDataBindingValues.PossibleExcelPaths)
                     {
-                        document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value
-                            = path;
+                        if (File.Exists(path))
+                        {
+                            document.Root.Element("GeneralSettings")
+                                    .Element("ExcelExecutablePath").Value
+                                = path;
 
-                        document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
-                        GlobalDataBindingValues.actualExcelPath = path;
-                        Logger.OkayText = $"Excel path found & configured: {path}";
-                        excelPathFound = true;
-                        break;
+                            document.Save(GlobalDataBindingValues.Instance
+                                .AdaptivBotConfigFilePath);
+                            GlobalDataBindingValues.actualExcelPath = path;
+                            Logger.OkayText = $"Excel path found & configured: {path}";
+                            excelPathFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!excelPathFound)
+                    {
+                        Logger.ErrorText =
+                            $"Excel path not found. Limited functionality.";
+                        Logger.ErrorText =
+                            $"You will need to manually configure your Excel path in General Settings.";
                     }
                 }
-
-                if (!excelPathFound)
+                else
                 {
-                    Logger.ErrorText = $"Excel path not found. Limited functionality.";
-                    Logger.ErrorText = $"You will need to manually configure your Excel path in General Settings.";
+                    GlobalDataBindingValues.actualExcelPath = document.Root
+                        .Element("GeneralSettings").Element("ExcelExecutablePath").Value;
                 }
             }
 
@@ -288,16 +300,15 @@ namespace AdaptivBot
 
 
         public static async void ConvertWorkbookFormats(
-            string csvFile, 
-            string extFrom, 
+            string csvFile,
             string extTo)
         {
-            while (!(File.Exists(csvFile)))
+            while (!File.Exists(csvFile))
             {
-                await Task.Run(() => Thread.Sleep(1000));
+                await Task.Run(() => Thread.Sleep(1000)).ConfigureAwait(false);
             }
 
-            var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
+            var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalDataBindingValues.actualExcelPath), "excelcnv.exe");
             var targetFile = Path.ChangeExtension(csvFile, extTo);
             Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
         }

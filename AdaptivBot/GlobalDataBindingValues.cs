@@ -57,12 +57,6 @@ namespace AdaptivBot
         }
 
         // It's difficult to generically determine the location of Excel
-        public static string possibleExcelPath1
-            = @"C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe";
-
-        public static string possibleExcelPath2
-            = @"C:\Program Files\Microsoft Office\root\Office16\Excel.exe";
-
         public static List<string> PossibleExcelPaths
             = new List<string>()
             {

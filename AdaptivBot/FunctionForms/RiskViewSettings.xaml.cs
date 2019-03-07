@@ -21,9 +21,7 @@ namespace AdaptivBot.SettingForms
     {
         private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
-        CancellationTokenSource tokenSource = new CancellationTokenSource();
         
-
         public RiskViewSettings()
         {
             InitializeComponent();
@@ -49,15 +47,9 @@ namespace AdaptivBot.SettingForms
         }
 
 
-        private void ExceptionHandler(Task task)
-        {
-            var exception = task.Exception;
-            Console.WriteLine(exception);
-        }
-
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
 
             _window?.Logger.NewExtraction("Risk View Reports Extraction Started");
 
@@ -143,8 +135,6 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
-
-
                         
 
                         #region wait for browser
@@ -164,7 +154,6 @@ namespace AdaptivBot.SettingForms
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
                         
-
 
                         #region wait for browser
 
@@ -230,9 +219,9 @@ namespace AdaptivBot.SettingForms
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
 
-            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
-                           GlobalConfigValues.Instance.extractionStartTime;
+            GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
+            var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime -
+                           GlobalDataBindingValues.Instance.extractionStartTime;
             _window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
