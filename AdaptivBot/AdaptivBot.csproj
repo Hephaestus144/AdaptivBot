@@ -131,6 +131,7 @@
       <DependentUpon>EmailBugSuggestion.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigFunctions\GlobalConfigValues.cs" />
+    <Compile Include="GlobalDataBindingValues.cs" />
     <Compile Include="InstrumentLists.cs" />
     <Compile Include="JavaScriptUtils.cs" />
     <Compile Include="JsScripts.cs" />

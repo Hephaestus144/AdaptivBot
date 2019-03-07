@@ -21,17 +21,34 @@ namespace AdaptivBot.SettingForms
     {
         private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
-        CancellationTokenSource tokenSource = new CancellationTokenSource();
         
-
         public RiskViewSettings()
         {
             InitializeComponent();
         }
 
+        private void JavaScriptErrorDialogFound()
+        {
+            for (var i = 0; i < 15; i++)
+            {
+                AutoItX.Sleep(100);
+                if (AutoItX.WinExists("Script Error") != 0)
+                {
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                    }));
+                    AutoItX.WinActivate("Script Error");
+                    AutoItX.Send("!y");
+                    throw new Exception();
+                }
+            }
+        }
+
+
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
 
             _window?.Logger.NewExtraction("Risk View Reports Extraction Started");
 
@@ -118,7 +135,6 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
-                       
 
                         #region wait for browser
 
@@ -137,7 +153,6 @@ namespace AdaptivBot.SettingForms
                         _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
-
 
                         #region wait for browser
 
@@ -165,10 +180,10 @@ namespace AdaptivBot.SettingForms
                         }
 
                         
-                        Thread.Sleep(1000);
+                        await Task.Run(() => Thread.Sleep(1000));
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
-                        await Task.Run(() =>
-                            SaveFile(instrumentBatch, overrideExistingFile));
+                        //var saveFileTask = SaveFile(instrumentBatch, overrideExistingFile);
+                        await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
                         numberOfSuccessfulExtractions++;
                         
                         break;
@@ -202,16 +217,16 @@ namespace AdaptivBot.SettingForms
                     $"Number of failed extractions: {numberOfFailedExtractions}";
             }
 
-            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
-                           GlobalConfigValues.Instance.extractionStartTime;
+            GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
+            var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime -
+                           GlobalDataBindingValues.Instance.extractionStartTime;
             _window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
         }
 
 
-        public async void SaveFile(string instrumentBatch, bool overrideExistingFile)
+        public async Task SaveFile(string instrumentBatch, bool overrideExistingFile)
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
@@ -236,7 +251,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send(
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG");
             AutoItX.Send("!s");
-            AutoItX.Sleep(1000);
+            await Task.Run(() => Thread.Sleep(1000));
             var fileSaved = true;
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
@@ -268,17 +283,16 @@ namespace AdaptivBot.SettingForms
 
             await Task.Run(() => Thread.Sleep(1000));
 
-            //while (AutoItX.WinGetTitle("[ACTIVE]")
-            //    .Contains(".csv from adaptiv.standardbank.co.za Completed"))
-            //{
-            //    await Task.Run(() => Thread.Sleep(500));
-            //}
-
             if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
             {
                 AutoItX.WinActivate("", "Close this dialog box when download completes");
                 AutoItX.Send("{Tab}");
                 AutoItX.Send("+");
+
+                while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                {
+                    AutoItX.Sleep(100);
+                }
             }
             var filePath =
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
@@ -304,8 +318,6 @@ namespace AdaptivBot.SettingForms
                     });
                 }));
             }
-            // TODO: Checkbox to close window when complete.
-
         }
 
 

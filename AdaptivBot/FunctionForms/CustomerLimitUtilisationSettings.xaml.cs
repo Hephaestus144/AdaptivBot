@@ -7,13 +7,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace AdaptivBot.SettingForms
 {
     public partial class CustomerLimitUtilisationSettings : Page
     {
-        private readonly MainWindow window = (MainWindow)Application.Current.MainWindow;
+        private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
         public CustomerLimitUtilisationSettings()
         {
@@ -30,14 +31,33 @@ namespace AdaptivBot.SettingForms
         }
 
 
+        private void JavaScriptErrorDialogFound()
+        {
+            for (var i = 0; i < 15; i++)
+            {
+                AutoItX.Sleep(100);
+                if (AutoItX.WinExists("Script Error") != 0)
+                {
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                    }));
+                    AutoItX.WinActivate("Script Error");
+                    AutoItX.Send("!y");
+                    throw new Exception();
+                }
+            }
+        }
+
+
         public async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
-            GlobalConfigValues.Instance.extractionStartTime = DateTime.Now;
+            GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
             var date = datePicker.SelectedDate;
 
             if (date is null)
             {
-                window.Logger.ErrorText = "Please select a date for extraction.";
+                _window.Logger.ErrorText = "Please select a date for extraction.";
                 return;
             }
 
@@ -46,197 +66,260 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
-            window.Logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
-
-
-            // TODO: Use binding here.
-            var username = window.TxtUserName.Text;
-            var password = window.TxtPasswordBox.Password;
-
-            var currentAdaptivEnvironment
-                = window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
-
-            CredentialStore.Instance.StoreUserCredentials();
-            await Task.Run(() => window.OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
-
-            #region wait for browser
-            while (!window.completedLoading)
+            const int maxFailureCount = 5;
+            for (var failureCount = 0; failureCount < maxFailureCount; failureCount++)
             {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            #endregion wait for browser
-
-            Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
-            IAsyncResult result = methodName.BeginInvoke(null, null);
-            window.InjectJavascript(
-                nameof(JsScripts.OpenCustomerLimitUtilisationReport),
-                JsScripts.OpenCustomerLimitUtilisationReport);
-
-            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
-
-
-
-            #region wait for browser
-
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            #endregion wait for browser
-
-            window.Logger.OkayText = "Filtering customer limit utilisation report...";
-            window.InjectJavascript(
-                nameof(JsScripts.FilterCustomerLimitUtilisationReport),
-                JsScripts.FilterCustomerLimitUtilisationReport);
-
-            window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
-
-            #region wait for browser
-
-            window.completedLoading = false;
-
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            #endregion wait for browser
-
-            window.Logger.OkayText =
-                $"Opening customer limit utilisation report for {(DateTime) date:dd-MMM-yyyy}...";
-
-            window.InjectJavascript(
-                nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
-                JsScripts.ChooseCustomerLimitUtilisationReport);
-
-            await Task.Run(() => Thread.Sleep(1000));
-
-            window.WebBrowser.Document?.InvokeScript(
-                nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
-
-            window.InjectedScripts.Clear();
-            
-            #region wait for browser
-
-            window.completedLoading = false;
-
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            #endregion wait for browser
-
-            await Task.Run(() => Thread.Sleep(1000));
-
-            window.InjectJavascript(
-                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
-                JsScripts.SelectCustomerLimitUtilisationReportDate);
-
-            window.WebBrowser.Document?.InvokeScript(
-                nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
-                new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
-
-            #region wait for browser
-
-            window.completedLoading = false;
-            while (!window.completedLoading)
-            {
-                await Task.Run(() => Thread.Sleep(100));
-            }
-
-            await Task.Run(() => Thread.Sleep(1000));
-            window.completedLoading = false;
-
-            #endregion wait for browser
-
-            window.InjectJavascript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
-                JsScripts.GenerateCustomerLimitUtilisationReport);
-
-            window.WebBrowser.Document?.InvokeScript(
-                nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
-
-            while (window.WebBrowser.Document?.GetElementsByTagName("img").Count < 5)
-            {
-                await Task.Run(() => Thread.Sleep(1000));
-            }
-
-            await Task.Run(() => Thread.Sleep(3000));
-
-            window.InjectJavascript(
-                nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
-                JsScripts.ExportCustomerLimitUtilisationReportToCsv);
-
-            window.WebBrowser.Document?.InvokeScript(
-                nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
-
-            var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked; ;
-
-            await Task.Run(() => Thread.Sleep(1000));
-
-            await Task.Run(() =>
-                SaveCustomerLimitUtilisationReport((DateTime) date,
-                    overrideExistingFile));
-
-            var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
-
-            var fileSize = (new FileInfo(csvFile).Length >= 1048576)
-                ? $"{(new FileInfo(csvFile).Length / 1048576):n}" + " MB"
-                : $"{(new FileInfo(csvFile).Length / 1024):n}" + " KB";
-
-            Dispatcher.Invoke(() =>
-            {
-                window.extractedFiles.Add(new ExtractedFile
+                try
                 {
-                    FilePath = csvFile,
-                    FileName = Path.GetFileName(csvFile),
-                    FileType = "Customer Limit Utilisation",
-                    FileSize = fileSize
-                });
+                    _window.Logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
 
-            });
+                    // TODO: Use binding here.
+                    var username = _window.TxtUserName.Text;
+                    var password = _window.TxtPasswordBox.Password;
 
-            window.Logger.OkayText = "Converting csv extraction to xlsx...";
-            MainWindow.ConvertWorkbookFormats(csvFile, ".csv", ".xlsx");
-            window.Logger.ExtractionComplete("Customer Limit Utilisation");
-            GlobalConfigValues.Instance.extractionEndTime = DateTime.Now;
-            var timeSpan = GlobalConfigValues.Instance.extractionEndTime -
-                           GlobalConfigValues.Instance.extractionStartTime;
+                    var currentAdaptivEnvironment
+                        = _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
 
-            window.Logger.OkayTextWithoutTime =
-                $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
+                    CredentialStore.Instance.StoreUserCredentials();
+                    await Task.Run(() => _window.OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
 
-            window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+                    #region wait for browser
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+
+                    Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
+                    IAsyncResult result = methodName.BeginInvoke(null, null);
+                    _window.InjectJavascript(
+                        nameof(JsScripts.OpenCustomerLimitUtilisationReport),
+                        JsScripts.OpenCustomerLimitUtilisationReport);
+
+
+                    #endregion wait for browser
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.OpenCustomerLimitUtilisationReport),
+                        JsScripts.OpenCustomerLimitUtilisationReport);
+
+                    _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.OpenCustomerLimitUtilisationReport));
+
+                    #region wait for browser
+
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+
+                    #endregion wait for browser
+
+                    methodName = JavaScriptErrorDialogFound;
+                    result = methodName.BeginInvoke(null, null);
+                    _window.Logger.OkayText = "Filtering customer limit utilisation report...";
+                    _window.InjectJavascript(
+                        nameof(JsScripts.FilterCustomerLimitUtilisationReport),
+                        JsScripts.FilterCustomerLimitUtilisationReport);
+
+                    _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
+
+                    #region wait for browser
+
+                    _window.completedLoading = false;
+
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+
+                    #endregion wait for browser
+
+                    methodName.EndInvoke(result);
+
+                    methodName = JavaScriptErrorDialogFound;
+                    result = methodName.BeginInvoke(null, null);
+                    _window.Logger.OkayText =
+                        $"Opening customer limit utilisation report for {(DateTime)date:dd-MMM-yyyy}...";
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.ChooseCustomerLimitUtilisationReport),
+                        JsScripts.ChooseCustomerLimitUtilisationReport);
+
+                    await Task.Run(() => Thread.Sleep(1000));
+
+                    _window.WebBrowser.Document?.InvokeScript(
+                        nameof(JsScripts.ChooseCustomerLimitUtilisationReport));
+
+                    _window.InjectedScripts.Clear();
+
+                    #region wait for browser
+
+                    _window.completedLoading = false;
+
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+
+                    #endregion wait for browser
+
+                    methodName.EndInvoke(result);
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    methodName = JavaScriptErrorDialogFound;
+                    result = methodName.BeginInvoke(null, null);
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
+                        JsScripts.SelectCustomerLimitUtilisationReportDate);
+
+                    _window.WebBrowser.Document?.InvokeScript(
+                        nameof(JsScripts.SelectCustomerLimitUtilisationReportDate),
+                        new object[] { ((DateTime)date).ToString("dd/MM/yyyy") });
+
+                    #region wait for browser
+
+                    _window.completedLoading = false;
+                    while (!_window.completedLoading)
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+
+                    #endregion wait for browser
+
+                    methodName.EndInvoke(result);
+
+                    methodName = JavaScriptErrorDialogFound;
+                    result = methodName.BeginInvoke(null, null);
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.GenerateCustomerLimitUtilisationReport),
+                        JsScripts.GenerateCustomerLimitUtilisationReport);
+
+                    _window.WebBrowser.Document?.InvokeScript(
+                        nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
+
+                    methodName.EndInvoke(result);
+                    while (_window.WebBrowser.Document?.GetElementsByTagName("img").Count < 5)
+                    {
+                        await Task.Run(() => Thread.Sleep(1000));
+                    }
+
+                    await Task.Run(() => Thread.Sleep(3000));
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
+                        JsScripts.ExportCustomerLimitUtilisationReportToCsv);
+
+                    _window.WebBrowser.Document?.InvokeScript(
+                        nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
+
+                    var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
+
+                    await Task.Run(() => Thread.Sleep(1000));
+
+                    await Task.Run(() =>
+                        SaveCustomerLimitUtilisationReport((DateTime)date,
+                            overrideExistingFile));
+
+                    await Task.Run(() => Thread.Sleep(1000));
+
+                    if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                    {
+                        AutoItX.WinActivate("", "Close this dialog box when download completes");
+                        AutoItX.Send("{Tab}");
+                        AutoItX.Send("+");
+
+                        while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                        {
+                            AutoItX.Sleep(100);
+                        }
+                    }
+
+                    var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
+
+                    _window.Logger.OkayText = "Converting csv extraction to xlsx...";
+                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
+                    var xlsxFile = csvFile.Replace(".csv", ".xlsx");
+
+
+                    _window.Logger.OkayText = "Performing minor formatting on xlsx file...";
+                    var xlApp = new Excel.Application();
+                    Excel.Workbook wb = xlApp.Workbooks.Open(xlsxFile);
+                    Excel.Worksheet ws = wb.Worksheets[1];
+                    ws.Name = "Customer Limit Utilisation";
+                    ((Excel.Range) ws.Rows["1:3"]).Delete();
+
+                    _window.Logger.OkayText = "Deleting csv file...";
+                    File.Delete(csvFile);
+                    
+                    var fileSize = (new FileInfo(xlsxFile).Length >= 1048576)
+                        ? $"{new FileInfo(xlsxFile).Length / 1048576:n}" + " MB"
+                        : $"{new FileInfo(xlsxFile).Length / 1024:n}"    + " KB";
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        _window.extractedFiles.Add(new ExtractedFile
+                        {
+                            FilePath = xlsxFile,
+                            FileName = Path.GetFileName(xlsxFile),
+                            FileType = "Customer Limit Utilisation",
+                            FileSize = fileSize
+                        });
+                    });
+
+                    _window.Logger.ExtractionComplete("Customer Limit Utilisation");
+                    GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
+                    var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime
+                                   - GlobalDataBindingValues.Instance.extractionStartTime;
+
+                    _window.Logger.OkayTextWithoutTime =
+                        $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
+
+                    _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+                    break;
+                }
+                catch (Exception exception)
+                {
+                    if (failureCount < maxFailureCount)
+                    {
+                        _window.Logger.ErrorText =
+                            $"Something failed for Customer Limit Utilisation extraction. {exception.Message}";
+                        _window.Logger.ErrorText = $"Trying again. Attempt number: {failureCount + 2}";
+                    }
+                    else
+                    {
+                        _window.Logger.ErrorText = $"Customer Limit Utilisation extraction extraction failed {maxFailureCount} times. This may be due to an Adaptiv error. Please try again later.";
+                    }
+                }
+            }
         }
 
 
@@ -260,7 +343,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("!s");
             Dispatcher.Invoke((Action) (() =>
             {
-                window.Logger.WarningText = $"Saving csv file...";
+                _window.Logger.WarningText = $"Saving csv file...";
             }));
 
             AutoItX.Sleep(1000);
@@ -272,7 +355,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!y");
                     Dispatcher.Invoke((Action) (() =>
                     {
-                        window.Logger.WarningText = $"Overriding existing file...";
+                        _window.Logger.WarningText = $"Overriding existing file...";
                     }));
                 }
                 else
@@ -280,7 +363,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Send("!n");
                     Dispatcher.Invoke((Action) (() =>
                     {
-                        window.Logger.WarningText = $"File already exists.";
+                        _window.Logger.WarningText = $"File already exists.";
                     }));
                     AutoItX.WinWait("Save As", timeout: 20);
                     AutoItX.WinActivate("Save As");
@@ -372,7 +455,7 @@ namespace AdaptivBot.SettingForms
                 cmbBxFilterCategory3.Foreground = Brushes.Red;
             }
 
-            window.Logger.ErrorText =
+            _window.Logger.ErrorText =
                 "At least two of your filtering categories are the same.";
         }
 

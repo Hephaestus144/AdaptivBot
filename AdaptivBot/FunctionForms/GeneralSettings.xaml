@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:adaptivBot="clr-namespace:AdaptivBot"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Loaded="GeneralSettings_OnLoaded"
@@ -71,7 +72,11 @@
                     <Setter Property="HorizontalAlignment" Value="Right"/>
                 </Style>
             </DockPanel.Resources>
-            
+
+            <TextBlock DockPanel.Dock="Top">
+                Config File Path
+            </TextBlock>
+
             <TextBlock DockPanel.Dock="Top">
                 Excel.exe Path 
             </TextBlock>
@@ -100,6 +105,18 @@
                     <Setter Property="Margin" Value="0,1,0,0"/>
                 </Style>
             </DockPanel.Resources>
+
+
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    Name="txtBxAdaptivBotConfigFilePath"
+                    Text="{Binding Source={x:Static adaptivBot:GlobalDataBindingValues.Instance}, Path=AdaptivBotConfigFilePath}"/>
+            </materialDesign:Card>
 
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
@@ -169,6 +186,21 @@
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
                 Configure Task Scheduler
+            </Button>
+
+
+            <Button
+                Name="BtnDeleteAdaptivBotConfigFile"
+                DockPanel.Dock="Top"
+                ToolTip="[Not Implemented]">
+                Delete Config File
+            </Button>
+
+            <Button
+                Name="BtnOpenAdaptivBotConfigFileFolder"
+                DockPanel.Dock="Top"
+                ToolTip="[Not Implemented]">
+                Open Config File Folder
             </Button>
 
         </DockPanel>

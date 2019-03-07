@@ -1,10 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using mshtml;
-using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -20,89 +18,6 @@ using Brushes = System.Windows.Media.Brushes;
 
 namespace AdaptivBot
 {
-    public sealed class GlobalDataBindingValues : INotifyPropertyChanged
-    {
-        private static readonly object padlock = new object();
-        private static GlobalDataBindingValues instance = null;
-
-        GlobalDataBindingValues()
-        {
-            // Used in the DatePickers. Users must not be able to select date after & including today's date.
-            var displayEndDate = LocalDate.FromDateTime(DateTime.Now.AddDays(-1));
-            switch (displayEndDate.DayOfWeek)
-            {
-                case IsoDayOfWeek.Saturday:
-                    displayEndDate = displayEndDate.PlusDays(-1);
-                    break;
-                case IsoDayOfWeek.Sunday:
-                    displayEndDate = displayEndDate.PlusDays(-2);
-                    break;
-            }
-            this.DisplayDateEnd = displayEndDate.ToDateTimeUnspecified();
-        }
-
-
-        public static GlobalDataBindingValues Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (padlock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new GlobalDataBindingValues();
-                        }
-                    }
-                }
-
-                return instance;
-            }
-        }
-        
-
-        private DateTime _displayDateEnd;
-
-        public DateTime DisplayDateEnd
-        {
-            get => _displayDateEnd;
-            set
-            {
-                if (_displayDateEnd != value)
-                {
-                    _displayDateEnd = value;
-                    this.OnPropertyChanged(nameof(DisplayDateEnd));
-                }
-            }
-        }
-
-
-        private string _adaptivBotConfigFilePath;
-
-        public string AdaptivBotConfigFilePath
-        {
-            get => _adaptivBotConfigFilePath;
-            set
-            {
-                if (_adaptivBotConfigFilePath != value)
-                {
-                    _adaptivBotConfigFilePath = value;
-                    this.OnPropertyChanged(nameof(AdaptivBotConfigFilePath));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -142,6 +57,95 @@ namespace AdaptivBot
         public Logger Logger;
 
 
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            CredentialStore.Instance.Target = "AdaptivBotProduction";
+            IconNetworkType.Kind = IsUsingEthernet(this.Logger, true)
+                ? PackIconKind.Network
+                : PackIconKind.Wifi;
+
+            #region config file & variables setup
+            GlobalDataBindingValues.Instance.AdaptivBotDirectory
+                = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder
+                        .LocalApplicationData), "AdaptivBot");
+
+            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath
+                = Path.Combine(GlobalDataBindingValues.Instance.AdaptivBotDirectory,
+                    "AdaptivBot.config");
+
+            if (!Directory.Exists(GlobalDataBindingValues.Instance.AdaptivBotDirectory))
+            {
+                Directory.CreateDirectory(GlobalDataBindingValues.Instance.AdaptivBotDirectory);
+            }
+
+            if (!File.Exists(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath))
+            {
+                try
+                {
+                    File.WriteAllText(
+                        GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
+                        Properties.Resources.AdaptivBot);
+                    Logger.OkayText = $"Config file created : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
+                }
+                catch (Exception configFileCreationException)
+                {
+                    Logger.ErrorText = $"Exception caught: {configFileCreationException.Message}";
+                    Logger.ErrorText = "Config file not created! Limited functionality.";
+                }
+            }
+            else
+            {
+                Logger.OkayText= $"Config file found : " +
+                    $"{GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
+            }
+
+            var document
+                = XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
+                    LoadOptions.PreserveWhitespace);
+
+            if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
+            {
+                if (document.Root?.Element("GeneralSettings")
+                        ?.Element("ExcelExecutablePath")?.Value?.Length == 0)
+                {
+                    var excelPathFound = false;
+                    foreach (var path in GlobalDataBindingValues.PossibleExcelPaths)
+                    {
+                        if (File.Exists(path))
+                        {
+                            document.Root.Element("GeneralSettings")
+                                    .Element("ExcelExecutablePath").Value
+                                = path;
+
+                            document.Save(GlobalDataBindingValues.Instance
+                                .AdaptivBotConfigFilePath);
+                            GlobalDataBindingValues.actualExcelPath = path;
+                            Logger.OkayText = $"Excel path found & configured: {path}";
+                            excelPathFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!excelPathFound)
+                    {
+                        Logger.ErrorText =
+                            $"Excel path not found. Limited functionality.";
+                        Logger.ErrorText =
+                            $"You will need to manually configure your Excel path in General Settings.";
+                    }
+                }
+                else
+                {
+                    GlobalDataBindingValues.actualExcelPath = document.Root
+                        .Element("GeneralSettings").Element("ExcelExecutablePath").Value;
+                }
+            }
+
+            #endregion  config file & variables setup
+        }
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -149,6 +153,7 @@ namespace AdaptivBot
             dgExtractedFiles.ItemsSource = extractedFiles;
             NetworkChange.NetworkAddressChanged +=
                 new NetworkAddressChangedEventHandler(AddressCallbackChange);
+
             // Deals with new windows created by browser.
             WebBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
             axBrowser = (SHDocVw.WebBrowser_V1)WebBrowser.ActiveXInstance;
@@ -157,30 +162,6 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
 
             Logger = new Logger(rtbLogger);
-
-            switch (GlobalConfigValues.CreatedConfigFile)
-            {
-                case YesNoMaybe.Yes:
-                    Logger.OkayText = $"Config file created : {GlobalConfigValues.Instance.AdaptivBotConfigFilePath}";
-                    break;
-                case YesNoMaybe.Maybe:
-                    Logger.OkayText = $"Config file found : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
-                    break;
-                case YesNoMaybe.No:
-                    Logger.ErrorText = "Config file not created! Limited functionality.";
-                    break;
-            }
-
-            switch (GlobalConfigValues.ExcelPathConfigured)
-            {
-                case YesNoMaybe.No:
-                    Logger.OkayText
-                        = "Excel path not configured. You will have to manually configure it in General Settings.";
-                    break;
-                case YesNoMaybe.Yes:
-                    Logger.ErrorText = "Excel path configured.";
-                    break;
-            }
         }
 
 
@@ -259,78 +240,6 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
         }
 
-        
-
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            CredentialStore.Instance.Target = "AdaptivBotProduction";
-            if (IsUsingEthernet(this.Logger, true))
-            {
-                IconNetworkType.Kind = PackIconKind.Network;
-            }
-            else
-            {
-                IconNetworkType.Kind = PackIconKind.Wifi;
-            }
-
-
-            GlobalConfigValues.Instance.AdaptivBotDirectory
-                = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder
-                        .LocalApplicationData), "AdaptivBot");
-
-            GlobalConfigValues.Instance.AdaptivBotConfigFilePath
-                = Path.Combine(GlobalConfigValues.Instance.AdaptivBotDirectory,
-                    "AdaptivBot.config");
-
-
-            // TODO: Replace GlobalConfigValues with GlobalDataBindingValues
-            GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath
-                = GlobalConfigValues.Instance.AdaptivBotConfigFilePath;
-
-            if (!Directory.Exists(GlobalConfigValues.Instance.AdaptivBotDirectory))
-            {
-                Directory.CreateDirectory(GlobalConfigValues.Instance.AdaptivBotDirectory);
-            }
-
-            if (!File.Exists(GlobalConfigValues.Instance.AdaptivBotConfigFilePath))
-            {
-                File.WriteAllText(
-                    GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
-                    Properties.Resources.AdaptivBot);
-                GlobalConfigValues.CreatedConfigFile = YesNoMaybe.Yes;
-            }
-
-            var document =
-                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath,
-                    LoadOptions.PreserveWhitespace);
-
-            var configDocument =
-                XDocument.Load(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
-
-            if (document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value != null)
-            {
-                if (File.Exists(GlobalConfigValues.possibleExcelPath1)
-                    && document.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
-                {
-                    document.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value =
-                        GlobalConfigValues.possibleExcelPath1;
-                    document.Save(GlobalConfigValues.Instance.AdaptivBotConfigFilePath);
-                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.Yes;
-
-
-                    GlobalConfigValues.excelPath
-                        = configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
-                }
-                else if (document?.Root?.Element("GeneralSettings")?.Element("ExcelExecutablePath")?.Value == "")
-                {
-                    GlobalConfigValues.ExcelPathConfigured = YesNoMaybe.No;
-                    GlobalConfigValues.excelPath
-                        = configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value;
-                }
-            }
-        }
-
 
         public async void OpenAdaptivAndLogin(
             string username,
@@ -342,23 +251,36 @@ namespace AdaptivBot
                     currentAdaptivEnvironment]);
             InjectedScripts.Clear();
 
-            await Task.Run(() => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
+            await Task.Run(()
+                => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
         }
 
 
-        private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        /// <summary>
+        /// Attempts to check if Internet Explorer page has finished loading.
+        /// Unfortunately it's not perfect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void webBrowser_DocumentCompleted(
+            object sender, 
+            WebBrowserDocumentCompletedEventArgs e)
         {
-            //Check if page is fully loaded or not
-            if (this.WebBrowser.IsBusy || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
+            if (this.WebBrowser.IsBusy
+                || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
                 return;
             else
             {
                 completedLoading = true;
             }
-            //Action to be taken on page loading completion
         }
         
 
+        /// <summary>
+        /// Injects JavaScript into the Header of the Adaptiv page.
+        /// </summary>
+        /// <param name="scriptName">JavaScript function name.</param>
+        /// <param name="script">JavaScript function string.</param>
         public void InjectJavascript(string scriptName, string script)
         {
             if (!InjectedScripts.ContainsKey(scriptName))
@@ -377,14 +299,16 @@ namespace AdaptivBot
         }
 
 
-        public static async void ConvertWorkbookFormats(string csvFile, string extFrom, string extTo)
+        public static async void ConvertWorkbookFormats(
+            string csvFile,
+            string extTo)
         {
-            while (!(File.Exists(csvFile)))
+            while (!File.Exists(csvFile))
             {
-                await Task.Run(() => Thread.Sleep(1000));
+                await Task.Run(() => Thread.Sleep(1000)).ConfigureAwait(false);
             }
 
-            var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalConfigValues.excelPath), "excelcnv.exe");
+            var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalDataBindingValues.actualExcelPath), "excelcnv.exe");
             var targetFile = Path.ChangeExtension(csvFile, extTo);
             Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
         }
@@ -426,11 +350,14 @@ namespace AdaptivBot
         }
         #endregion functions for manipulating extractedfiles (DataGrid : "dgExtractedFiles")
 
-        private void CmbBxAdaptivEnvironments_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbBxAdaptivEnvironments_OnSelectionChanged(
+            object sender, 
+            SelectionChangedEventArgs e)
         {
             CredentialStore.Instance.Target = CmbBxAdaptivEnvironments.SelectedValue.ToString();
             TxtPasswordBox.Password = CredentialStore.Instance.Password;
         }
+
 
         private void BtnEmailBug_OnClick(object sender, RoutedEventArgs e)
         {
