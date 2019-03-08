@@ -250,27 +250,14 @@ namespace AdaptivBot.SettingForms
                     _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv));
 
-
                     var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
 
                     await Task.Run(() => Thread.Sleep(1000));
                     methodName.EndInvoke(result);
 
-                    var saveCustUtilReport =
-                        new Action<DateTime, bool>(SaveCustomerLimitUtilisationReport);
-
                     await Task.Run(() =>
                         SaveCustomerLimitUtilisationReport((DateTime)date,
                             overrideExistingFile));
-
-                    //IAsyncResult saveCustUtilReportResult =
-                    //    saveCustUtilReport.BeginInvoke((DateTime) date,
-                    //        overrideExistingFile, null, null);
-                    
-
-
-
-                    //saveCustUtilReport.EndInvoke(saveCustUtilReportResult);
 
                     var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
                     Dispatcher.Invoke((System.Action)(() =>
@@ -278,6 +265,7 @@ namespace AdaptivBot.SettingForms
                         _window.Logger.OkayText =
                             "Converting csv extraction to xlsx...";
                     }));
+
                     var xlsxFile = csvFile.Replace(".csv", ".xlsx");
 
                     if (overrideExistingFile && File.Exists(xlsxFile))

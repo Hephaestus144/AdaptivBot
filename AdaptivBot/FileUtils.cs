@@ -18,7 +18,7 @@ namespace AdaptivBot
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    if (retainCurrentLine)
+                    if (retainCurrentLine && !line.StartsWith(",,,,,,,"))
                     {
                         readLines.Add(line);
                     }

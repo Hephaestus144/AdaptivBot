@@ -28,6 +28,24 @@ namespace AdaptivBot.SettingForms
         }
 
 
+        private void JavaScriptErrorDialogFound()
+        {
+            for (var i = 0; i < 15; i++)
+            {
+                AutoItX.Sleep(100);
+                if (AutoItX.WinExists("Script Error") != 0)
+                {
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                    }));
+                    AutoItX.WinActivate("Script Error");
+                    AutoItX.Send("!y");
+                    throw new Exception();
+                }
+            }
+        }
+
         private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
             GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
@@ -49,19 +67,20 @@ namespace AdaptivBot.SettingForms
             var xlsxDrcFilePath =
                 $"{drcFolder}\\DRCs {DateTime.Now:yyyy-MM-dd}.xlsx";
 
-            for (var errorCount = 0; errorCount < 3; errorCount++)
+            const int maxFailureCount = 3;
+            for (var failureCount = 0; failureCount < maxFailureCount; failureCount++)
             {
                 try
                 {
-                    #region adaptiv extraction
                     var currentAdaptivEnvironment =
                         _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
+
                     await Task.Run(() =>
                         _window.OpenAdaptivAndLogin(username, password,
                             currentAdaptivEnvironment));
 
                     #region wait for browser
-
+                    _window.completedLoading = false;
                     while (!_window.completedLoading)
                     {
                         await Task.Run(() => Thread.Sleep(100));
@@ -92,14 +111,13 @@ namespace AdaptivBot.SettingForms
                         nameof(JsScripts.OpenRiskView));
 
                     #region wait for browser
-
-                    for (int i = 0; i < 3; i++)
+                    _window.completedLoading = false;
+                    for (var i = 0; i < 3; i++)
                     {
                         while (!_window.completedLoading)
                         {
                             await Task.Run(() => Thread.Sleep(100));
                         }
-
                         _window.completedLoading = false;
                     }
 
@@ -108,6 +126,7 @@ namespace AdaptivBot.SettingForms
                     #endregion wait for browser
 
                     _window.Logger.OkayText = $"Filtering for Deal Risk Carriers...";
+
                     _window.InjectJavascript(
                         nameof(JsScripts.FilterRiskViewOnInstruments),
                         JsScripts.FilterRiskViewOnInstruments);
@@ -117,7 +136,7 @@ namespace AdaptivBot.SettingForms
                         new object[] { "Deal Risk Carrier" });
 
                     #region wait for browser
-
+                    _window.completedLoading = false;
                     while (!_window.completedLoading)
                     {
                         await Task.Run(() => Thread.Sleep(100));
@@ -125,16 +144,15 @@ namespace AdaptivBot.SettingForms
 
                     await Task.Run(() => Thread.Sleep(1000));
                     _window.completedLoading = false;
-
                     #endregion wait for browser
 
+                    Action methodName = JavaScriptErrorDialogFound;
+                    IAsyncResult result = methodName.BeginInvoke(null, null);
 
                     _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                         JsScripts.ExportToCsv);
                     _window.WebBrowser.Document?.InvokeScript(
                         nameof(JsScripts.ExportToCsv));
-
-                    await Task.Run(() => Thread.Sleep(500));
 
                     #region wait for browser
 
@@ -148,8 +166,9 @@ namespace AdaptivBot.SettingForms
 
                     #endregion wait for browser
 
-                    while (_window.WebBrowser.Document?.GetElementsByTagName("A").Count ==
-                           0)
+                    methodName.EndInvoke(result);
+
+                    while (_window.WebBrowser.Document?.GetElementsByTagName("A").Count == 0)
                     {
                         await Task.Run(() => Thread.Sleep(100));
                     }
@@ -161,49 +180,46 @@ namespace AdaptivBot.SettingForms
                             link.InvokeMember("Click");
                     }
 
-                    var overrideExistingFile =
-                        (bool)chkBxOverrideExistingFiles.IsChecked;
-                    await Task.Run(() =>
-                        SaveDrcFile(overrideExistingFile));
+                    var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
+                    await Task.Run(() => SaveDrcFile(overrideExistingFile));
 
-                    await Task.Run(() =>
-                        MainWindow.ConvertWorkbookFormats(csvDrcFilePath, ".xlsx"));
+                    if (overrideExistingFile && File.Exists(xlsxDrcFilePath))
+                    {
+                        File.Delete(xlsxDrcFilePath);
+                        Thread.Sleep(1000);
+                    }
+
+                    MainWindow.ConvertWorkbookFormats(csvDrcFilePath, ".xlsx");
+
+                    while (!File.Exists(xlsxDrcFilePath))
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
 
                     await Task.Run(() => Thread.Sleep(2000));
                     File.Delete(csvDrcFilePath);
-                    csvDrcFilePath = csvDrcFilePath.Replace(".csv", ".xlsx");
 
-                    var fileSize = new FileInfo(csvDrcFilePath).Length >= 1048576
-                        ? $"{new FileInfo(csvDrcFilePath).Length / 1048576:n}" + " MB"
-                        : $"{new FileInfo(csvDrcFilePath).Length / 1024:n}" + " KB";
-
-                    var path = csvDrcFilePath;
-                    Dispatcher.Invoke((Action)(() =>
-                    {
-                        _window.extractedFiles.Add(new ExtractedFile()
-                        {
-                            FilePath = path,
-                            FileName = Path.GetFileName(path),
-                            FileType = $"Risk View : DRCs",
-                            FileSize = fileSize
-                        });
-                    }));
-
-                    #endregion adaptiv extraction
-
+                    // TODO: Extract this to a function in FileUtils
+                    var fileSize = new FileInfo(xlsxDrcFilePath).Length >= 1048576
+                        ? $"{new FileInfo(xlsxDrcFilePath).Length / 1048576:n}" + " MB"
+                        : $"{new FileInfo(xlsxDrcFilePath).Length / 1024:n}" + " KB";
 
                     #region excel merging
 
                     Excel.Application xlApp = new Excel.Application();
                     Excel.Workbook wb = xlApp.Workbooks.Open(xlsxDrcFilePath);
-                    var wsName = "All RC Files Combined";
+                    const string wsName = "All RC Files Combined";
 
-                    _window.Logger.OkayText = "Reading contents of Risk Carrier Files on shard drive...";
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.OkayText =
+                            "Reading contents of Risk Carrier Files on shared drive..."; 
+                    }));
+
                     var csvContents = new List<string>();
-                    var riskCarrierFilePaths =
-                        Directory.GetFiles(@"\\pcibtignass1\capr2\RtB\DRC\Upload\");
 
-                    foreach (var rcf in riskCarrierFilePaths)
+
+                    foreach (var rcf in Directory.GetFiles(@"\\pcibtignass1\capr2\RtB\DRC\Upload\"))
                     {
                         csvContents.AddRange(FileUtils.Read(rcf, "Reference"));
                     }
@@ -219,8 +235,14 @@ namespace AdaptivBot.SettingForms
                         "Netting Agreement Reference", "Portfolio Type", "Cut Off Date"
                     };
 
-                    // convert the contents of the all the appended CSV files to object[,]
-                    _window.Logger.OkayText = "Merging contents of Risk Carrier Files...";
+                    // convert the contents of all the appended CSV files to object[,]
+
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.OkayText =
+                            "Merging contents of Risk Carrier Files...";
+                    }));
+                    
                     var outputLists = csvContents.Select(x => x.Split(',')).ToList();
                     var maxListLength = outputLists.Select(x => x.Length).Max();
                     var output = new object[outputLists.Count, maxListLength];
@@ -235,19 +257,47 @@ namespace AdaptivBot.SettingForms
                         }
                     }
 
-                    _window.Logger.OkayText = "Writing merged contents of Risk Carrier Files to DRC...";
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.OkayText =
+                            "Writing merged contents of Risk Carrier Files to DRC...";
+                    }));
+                    
                     ExcelUtils.WriteOutputBlockToExcel(xlApp, wb, wsName, titles, output, 0);
                     #endregion excel merging
                     wb.Save();
                     wb.Close();
                     xlApp.Quit();
+
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        if (_window.extractedFiles.Any(x => x.FilePath == xlsxDrcFilePath))
+                        {
+                            _window.extractedFiles.Remove(_window.extractedFiles.First(x => x.FilePath == xlsxDrcFilePath));
+                        }
+
+                        _window.extractedFiles.Add(new ExtractedFile()
+                        {
+                            FilePath = xlsxDrcFilePath,
+                            FileName = Path.GetFileName(xlsxDrcFilePath),
+                            FileType = $"Risk View : DRCs",
+                            FileSize = fileSize
+                        });
+                    }));
                     break;
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
-                    _window.Logger.ErrorText = errorCount < 2
-                        ? $"Something failed for DRC extraction. Trying again. Attempt number: {++errorCount}"
-                        : "DRC extraction failed 3 times. Moving on to next instrument set.";
+                    if (failureCount < 2)
+                    {
+                        _window.Logger.ErrorText =
+                            $"Something failed for DRC extraction. {exception.Message}\nTrying again. Attempt number: {failureCount + 2}";
+                    }
+                    else
+                    {
+                        _window.Logger.ErrorText = "DRC extraction failed 3 times. Moving on to next instrument set.";
+                    }
+
                 }
             }
 

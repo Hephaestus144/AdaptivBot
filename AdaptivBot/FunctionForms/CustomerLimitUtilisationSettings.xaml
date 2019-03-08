@@ -343,6 +343,7 @@
                 UniformCornerRadius="4"
                 Margin="5,22,5,5">
                 <ComboBox
+                    Name="cmbBxFilterOperation1"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
@@ -472,6 +473,7 @@
                 UniformCornerRadius="4"
                 Margin="5,22,5,5">
                 <TextBox
+                    Name="txtBxFilterCriteria1"
                     Margin="7"
                     FontSize="10"
                     HorizontalContentAlignment="Left"/>
