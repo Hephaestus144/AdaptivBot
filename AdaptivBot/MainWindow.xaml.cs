@@ -263,13 +263,11 @@ namespace AdaptivBot
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void webBrowser_DocumentCompleted(
-            object sender, 
+            object sender,
             WebBrowserDocumentCompletedEventArgs e)
         {
-            if (this.WebBrowser.IsBusy
-                || this.WebBrowser.ReadyState != WebBrowserReadyState.Complete)
-                return;
-            else
+            if (!this.WebBrowser.IsBusy &&
+                this.WebBrowser.ReadyState == WebBrowserReadyState.Complete)
             {
                 completedLoading = true;
             }

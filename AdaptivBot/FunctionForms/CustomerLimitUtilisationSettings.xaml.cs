@@ -1,6 +1,7 @@
 ﻿using AutoIt;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -327,6 +328,11 @@ namespace AdaptivBot.SettingForms
 
                     Dispatcher.Invoke((System.Action)(() =>
                     {
+                        if (_window.extractedFiles.Any(x => x.FilePath == xlsxFile))
+                        {
+                            _window.extractedFiles.Remove(_window.extractedFiles.First(x => x.FilePath == xlsxFile));
+                        }
+
                         _window.extractedFiles.Add(new ExtractedFile
                         {
                             FilePath = xlsxFile,
