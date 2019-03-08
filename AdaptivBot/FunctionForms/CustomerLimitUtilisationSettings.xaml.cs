@@ -277,16 +277,15 @@ namespace AdaptivBot.SettingForms
                         _window.Logger.OkayText =
                             "Converting csv extraction to xlsx...";
                     }));
-
-                    
-                    
-                    //var methodName2 = new Action<string, string>(MainWindow.ConvertWorkbookFormats);
-                    //result = methodName2.BeginInvoke(csvFile, ".xlsx", null, null);
-
-                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
                     var xlsxFile = csvFile.Replace(".csv", ".xlsx");
 
-                    //methodName2.EndInvoke(result);
+                    if (overrideExistingFile && File.Exists(xlsxFile))
+                    {
+                        File.Delete(xlsxFile);
+                        Thread.Sleep(1000);
+                    }
+
+                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
 
                     while (!File.Exists(xlsxFile))
                     {
@@ -314,7 +313,6 @@ namespace AdaptivBot.SettingForms
                     Excel.Range bottomRightCell = ws.Cells[3, 1000];
                     Excel.Range rangeToDelete = ws.Range[topLeftCell, bottomRightCell];
                     rangeToDelete.Delete(Excel.XlDeleteShiftDirection.xlShiftUp);
-                    //((Excel.Range)ws.Rows["1:3"]).Delete();
                     wb.Save();
                     xlApp.DisplayAlerts = true;
                     wb.Close();
@@ -426,7 +424,7 @@ namespace AdaptivBot.SettingForms
 
                 while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
                 {
-                    AutoItX.Sleep(100);
+                    await Task.Run(() => Thread.Sleep(100));
                 }
             }
         }
@@ -438,8 +436,7 @@ namespace AdaptivBot.SettingForms
             SelectionChangedEventArgs e)
         {
             if (cmbBxFilterCategory2 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory1.SelectedItem).Tag.ToString() ==
-                "Hide")
+            if (((ComboBoxItem) cmbBxFilterCategory1.SelectedItem).Tag.ToString() == "Hide")
             {
                 cardFilterCategory2.Visibility = Visibility.Hidden;
                 cmbBxFilterCategory2.Visibility = Visibility.Hidden;
@@ -467,8 +464,7 @@ namespace AdaptivBot.SettingForms
             SelectionChangedEventArgs e)
         {
             if (cmbBxFilterCategory3 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory2.SelectedItem).Tag.ToString() ==
-                "Hide")
+            if (((ComboBoxItem) cmbBxFilterCategory2.SelectedItem).Tag.ToString() == "Hide")
             {
                 cardFilterCategory3.Visibility = Visibility.Hidden;
                 cmbBxFilterCategory3.Visibility = Visibility.Hidden;

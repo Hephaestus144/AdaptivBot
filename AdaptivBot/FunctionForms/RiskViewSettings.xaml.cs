@@ -27,6 +27,7 @@ namespace AdaptivBot.SettingForms
             InitializeComponent();
         }
 
+
         private void JavaScriptErrorDialogFound()
         {
             for (var i = 0; i < 15; i++)
@@ -114,7 +115,7 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
 
                         #region wait for browser
-                        _window.completedLoading = false;
+
                         while (!_window.completedLoading)
                         {
                             await Task.Run(() => Thread.Sleep(100));
@@ -124,9 +125,8 @@ namespace AdaptivBot.SettingForms
                         _window.completedLoading = false;
 
                         #endregion wait for browser
-
                         
-                        Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
+                        Action methodName = JavaScriptErrorDialogFound;
                         IAsyncResult result = methodName.BeginInvoke(null, null);
                         _window.Logger.OkayText = $"Filtering for {instrumentBatch}...";
                         _window.InjectJavascript(
@@ -135,26 +135,7 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
-
-                        #region wait for browser
-                        _window.completedLoading = false;
-                        while (!_window.completedLoading)
-                        {
-                            await Task.Run(() => Thread.Sleep(100));
-                        }
-
-                        await Task.Run(() => Thread.Sleep(5000));
-                        _window.completedLoading = false;
-
-                        #endregion wait for browser
-
-                        methodName.EndInvoke(result);
-
-                        methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
-                        result = methodName.BeginInvoke(null, null);
-                        _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
-                            JsScripts.ExportToCsv);
-                        _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
+                        
 
                         #region wait for browser
 
@@ -169,6 +150,24 @@ namespace AdaptivBot.SettingForms
                         #endregion wait for browser
 
                         methodName.EndInvoke(result);
+                        _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
+                            JsScripts.ExportToCsv);
+                        _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
+                        
+
+                        #region wait for browser
+
+                        while (!_window.completedLoading)
+                        {
+                            await Task.Run(() => Thread.Sleep(100));
+                        }
+
+                        await Task.Run(() => Thread.Sleep(1000));
+                        _window.completedLoading = false;
+
+                        #endregion wait for browser
+
+                        
 
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
@@ -182,11 +181,13 @@ namespace AdaptivBot.SettingForms
                                 link.InvokeMember("Click");
                         }
 
+                        
                         await Task.Run(() => Thread.Sleep(1000));
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
                         //var saveFileTask = SaveFile(instrumentBatch, overrideExistingFile);
                         await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
-                        numberOfSuccessfulExtractions++;       
+                        numberOfSuccessfulExtractions++;
+                        
                         break;
                     }
                     catch (Exception exception)

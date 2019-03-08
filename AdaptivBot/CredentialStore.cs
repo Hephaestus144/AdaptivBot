@@ -3,6 +3,8 @@ using CredentialManagement;
 using System;
 using System.ComponentModel;
 using System.Security;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -167,7 +169,8 @@ namespace AdaptivBot
 
         public void EnterAdaptivCredentials(string username, string password)
         {
-            AutoItX.Sleep(3000);
+            // There doesn't seem to be a better way other than waiting 5s for the windows security
+            AutoItX.Sleep(4000);
             if (AutoItX.WinExists("Windows Security") != 0)
             {
                 _window.Dispatcher.BeginInvoke((Action)(() =>
@@ -184,21 +187,18 @@ namespace AdaptivBot
             else
             {
                 _window.Dispatcher.BeginInvoke(
-                    (Action)(() => { _window.Logger.OkayText = "Adaptiv already open."; }));
+                    (Action)(() => _window.Logger.OkayText = "Adaptiv already open."));
             }
 
             _window.Dispatcher.BeginInvoke(
-                (Action)(() => { _window.Logger.OkayText = "Acknowledging disclaimer..."; }));
+                (Action)(() => _window.Logger.OkayText = "Acknowledging disclaimer..."));
 
-            for (var i = 0; i < 20; i++)
+            while (AutoItX.WinExists("Adaptiv Disclaimer -- Webpage Dialog") == 0)
             {
-                AutoItX.Sleep(100);
-                if (AutoItX.WinExists("Adaptiv Disclaimer -- Webpage Dialog") != 0)
-                {
-                    AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
-                    AutoItX.Send("{ENTER}");
-                }
-            }            
+                Task.Run(() => Thread.Sleep(100));
+            }
+            AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
+            AutoItX.Send("{ENTER}");
         }
 
 
