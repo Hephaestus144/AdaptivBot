@@ -310,7 +310,11 @@ namespace AdaptivBot
 
             var excelConverterPath = Path.Combine(Path.GetDirectoryName(GlobalDataBindingValues.actualExcelPath), "excelcnv.exe");
             var targetFile = Path.ChangeExtension(csvFile, extTo);
-            Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
+            var process = Process.Start($"\"{excelConverterPath}\"", $"-oice \"{csvFile}\" \"{targetFile}\"");
+            while (!process.HasExited)
+            {
+                await Task.Run(() => Thread.Sleep(100));
+            }
         }
 
 

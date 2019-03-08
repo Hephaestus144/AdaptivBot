@@ -114,7 +114,7 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.OpenRiskView));
 
                         #region wait for browser
-
+                        _window.completedLoading = false;
                         while (!_window.completedLoading)
                         {
                             await Task.Run(() => Thread.Sleep(100));
@@ -137,19 +137,21 @@ namespace AdaptivBot.SettingForms
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
 
                         #region wait for browser
-
+                        _window.completedLoading = false;
                         while (!_window.completedLoading)
                         {
                             await Task.Run(() => Thread.Sleep(100));
                         }
 
-                        await Task.Run(() => Thread.Sleep(1000));
+                        await Task.Run(() => Thread.Sleep(5000));
                         _window.completedLoading = false;
 
                         #endregion wait for browser
 
-
                         methodName.EndInvoke(result);
+
+                        methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
+                        result = methodName.BeginInvoke(null, null);
                         _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
@@ -166,7 +168,8 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        
+                        methodName.EndInvoke(result);
+
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
                             await Task.Run(() => Thread.Sleep(100));
@@ -179,13 +182,11 @@ namespace AdaptivBot.SettingForms
                                 link.InvokeMember("Click");
                         }
 
-                        
                         await Task.Run(() => Thread.Sleep(1000));
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
                         //var saveFileTask = SaveFile(instrumentBatch, overrideExistingFile);
                         await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
-                        numberOfSuccessfulExtractions++;
-                        
+                        numberOfSuccessfulExtractions++;       
                         break;
                     }
                     catch (Exception exception)
