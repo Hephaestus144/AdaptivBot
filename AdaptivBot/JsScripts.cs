@@ -131,7 +131,7 @@ namespace AdaptivBot
               "  var filtersTable = advancedInnerDiv.getElementsByTagName('table')['Filters'];"            +
               "  filtersTable.getElementsByTagName('select')['Ext'].selectedIndex = '1';"                  +
               "  filtersTable.getElementsByTagName('select')['Ext'].onchange();"                           +
-              "  filtersTable.getElementsByTagName('select')['Ext'] [1].selectedIndex='1';"                +
+              "  filtersTable.getElementsByTagName('select')['Ext'] [1].selectedIndex='1';"                + // "AND"
               "  filtersTable.getElementsByTagName('select')['Ext'] [1].onchange();"                       +
               "  filtersTable.getElementsByTagName('select')['Fields'] [0].selectedIndex = '7';"           +
               "  filtersTable.getElementsByTagName('select')['Fields'] [1].selectedIndex = '13';"          +
