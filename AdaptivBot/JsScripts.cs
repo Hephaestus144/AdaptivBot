@@ -76,7 +76,7 @@ namespace AdaptivBot
 
         public static List<string> Conjunctions = new List<string>() { "", "And", "Or" };
         public static List<string> Fields = new List<string>() { "Portfolio", "Risk Measure", "Etc"};
-        public static List<string> Conditions = new List<string>() { "Starts with", "Contains" };
+        public static List<string> Conditions = new List<string>() { "Starts with", "Contains", "Does Not Contain", "Equal To" };
 
         public static string FilterCustomerLimitUtilisationReport(
             List<string> fields, 
@@ -124,7 +124,7 @@ namespace AdaptivBot
                 stringBuilder.Append($"  filtersTable.getElementsByTagName('input')['Criteria'] [{i}].value = '{criteria[i]}';");
             }
 
-            stringBuilder.Append("frames['cpWork'].ApplyFilter(); ");
+            stringBuilder.Append("  frames['cpWork'].ApplyFilter();");
             stringBuilder.Append("}");
 
             return stringBuilder.ToString();

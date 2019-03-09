@@ -114,7 +114,6 @@ C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\bin\Debug\ro\Xceed.Wpf
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csprojResolveAssemblyReference.cache
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\Interop.SHDocVw.dll
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csproj.ResolveComReference.cache
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\AlertForms\AlertUpdateUserCredentials.g.cs
@@ -217,3 +216,4 @@ C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.CoreCompileInputs.ca
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.CopyComplete
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.exe
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.pdb
+C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csprojResolveAssemblyReference.cache
