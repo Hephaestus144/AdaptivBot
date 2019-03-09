@@ -125,7 +125,6 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        
                         Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
                         IAsyncResult result = methodName.BeginInvoke(null, null);
                         _window.Logger.OkayText = $"Filtering for {instrumentBatch}...";

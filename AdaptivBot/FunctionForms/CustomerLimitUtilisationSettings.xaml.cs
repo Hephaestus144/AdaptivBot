@@ -66,16 +66,16 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
+            // TODO: Use binding here.
+            var username = _window.TxtUserName.Text;
+            var password = _window.TxtPasswordBox.Password;
+
             const int maxFailureCount = 5;
             for (var failureCount = 0; failureCount < maxFailureCount; failureCount++)
             {
                 try
                 {
                     _window.Logger.NewExtraction("Customer Limit Utilisation Report Extraction Started");
-
-                    // TODO: Use binding here.
-                    var username = _window.TxtUserName.Text;
-                    var password = _window.TxtPasswordBox.Password;
 
                     var currentAdaptivEnvironment
                         = _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
@@ -136,10 +136,10 @@ namespace AdaptivBot.SettingForms
                     result = methodName.BeginInvoke(null, null);
                     _window.Logger.OkayText = "Filtering customer limit utilisation report...";
                     _window.InjectJavascript(
-                        nameof(JsScripts.FilterCustomerLimitUtilisationReport),
-                        JsScripts.FilterCustomerLimitUtilisationReport);
+                        nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis),
+                        JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis);
 
-                    _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReport));
+                    _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis));
 
                     #region wait for browser
 
