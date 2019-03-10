@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 
@@ -6,9 +7,46 @@ namespace AdaptivBot
 {
     public static class JsScripts
     {
-        public static List<string> FilterFields
-            = new List<string>()
+        public static ObservableCollection<string> CustomerLimitUtilisationFilterFields
+            = new ObservableCollection<string>
             {
+                "-",
+                "Customer Code",
+                "Customer Name",
+                "Group Credit Manager",
+                "Primary Credit Manager",
+                "Secondary Credit Manager",
+                "Relationship Manager",
+                "Portfolio",
+                "Product",
+                "Host",
+                "Customer Branch",
+                "Commodity",
+                "Security Type",
+                "Book Definition",
+                "Measure",
+                "Limit Review Date",
+                "Limit Expiry Date",
+                "Review Date",
+                "Industry Name",
+                "Country of Risk",
+                "Ultimate Parent Code",
+                "Ultimate Parent Name",
+                "Internal Risk Grade Local",
+                "Internal Risk Grade Foreign",
+                "Standard and Poors",
+                "Moodys",
+                "Fitch",
+                "Sub Limit",
+                "Approving Delegated Authority Levels (DA)",
+                "Approving Delegated Authority Names",
+                "Reason for Request"
+            };
+
+        public static ObservableCollection<string> RiskViewFilterFields
+            = new ObservableCollection<string>
+            {
+                "-",
                 "Reference",
                 "Structure",
                 "Facility",
@@ -60,10 +98,27 @@ namespace AdaptivBot
                 "Source System"
             };
 
-
-        public static List<string> FilterConditions
-            = new List<string>()
+        public static ObservableCollection<string> CustomerLimitUtilisationFilterConditions
+            = new ObservableCollection<string>
             {
+                "-",
+                "starts with",
+                "contains",
+                "does not contain",
+                "equal to",
+                "not equal to",
+                "greater than",
+                "greater than or equal to",
+                "less than",
+                "less than or equal to",
+                "in",
+                "not in"
+            };
+
+        public static ObservableCollection<string> RiskViewFilterConditions
+            = new ObservableCollection<string>
+            {
+                "-",
                 "starts with",
                 "contains",
                 "does not contain",
@@ -136,9 +191,7 @@ namespace AdaptivBot
               "  frames['cpWork'].ApplyFilter();"                                                          +
               "}";
 
-        public static List<string> Conjunctions = new List<string>() { "", "And", "Or" };
-        public static List<string> Fields = new List<string>() { "Portfolio", "Risk Measure", "Etc"};
-        public static List<string> Conditions = new List<string>() { "Starts with", "Contains", "Does Not Contain", "Equal To" };
+        public static List<string> FilterConjunctions = new List<string> { "", "And", "Or" };
 
         public static string FilterCustomerLimitUtilisationReport(
             List<string> fields,
@@ -164,7 +217,7 @@ namespace AdaptivBot
                     stringBuilder
                         .Append(
                             "  filtersTable.getElementsByTagName('select')['Ext'].selectedIndex = '")
-                        .Append(Conjunctions.IndexOf(conjunctions[i])).Append("';");
+                        .Append(FilterConjunctions.IndexOf(conjunctions[i])).Append("';");
 
                     stringBuilder.Append("  filtersTable.getElementsByTagName('select')['Ext'].onchange();");
                 }
@@ -172,7 +225,8 @@ namespace AdaptivBot
                 {
                     stringBuilder
                         .Append("  filtersTable.getElementsByTagName('select')['Ext'] [")
-                        .Append(i).Append("].selectedIndex='1';");
+                        .Append(i).Append("].selectedIndex='")
+                        .Append(FilterConjunctions.IndexOf(conjunctions[i])).Append("';");
 
                     stringBuilder
                         .Append("  filtersTable.getElementsByTagName('select')['Ext'] [")
@@ -185,7 +239,7 @@ namespace AdaptivBot
                 stringBuilder
                     .Append("  filtersTable.getElementsByTagName('select')['Fields'] [")
                     .Append(i).Append("].selectedIndex = '")
-                    .Append(Fields.IndexOf(fields[i])).Append("';");
+                    .Append(CustomerLimitUtilisationFilterFields.IndexOf(fields[i]) - 1).Append("';");
             }
 
             for (var i = 0; i < conditions.Count; i++)
@@ -194,7 +248,7 @@ namespace AdaptivBot
                     .Append(
                         "  filtersTable.getElementsByTagName('select')['Condition'] [")
                     .Append(i).Append("].selectedIndex = '")
-                    .Append(Conditions.IndexOf(conditions[i])).Append("';");
+                    .Append(CustomerLimitUtilisationFilterConditions.IndexOf(conditions[i]) - 1).Append("';");
             }
 
             for (var i = 0; i < criteria.Count; i++)
