@@ -141,12 +141,12 @@ namespace AdaptivBot
         public static List<string> Conditions = new List<string>() { "Starts with", "Contains", "Does Not Contain", "Equal To" };
 
         public static string FilterCustomerLimitUtilisationReport(
-            List<string> fields, 
-            List<string> conditions,  
-            List<string> criteria, 
+            List<string> fields,
+            List<string> conditions,
+            List<string> criteria,
             List<string> conjunctions)
         {
-            var script
+            const string scriptPreamble
                 = "function FilterCustomerLimitUtilisationReport()" +
                   "{" +
                   "  frames['cpWork'].ToggleAdvanced();" +
@@ -155,35 +155,53 @@ namespace AdaptivBot
                   "  var advancedInnerDiv = advancedDiv.getElementsByTagName('div')['advancedInner'];" +
                   "  var filtersTable = advancedInnerDiv.getElementsByTagName('table')['Filters'];";
 
-            var stringBuilder = new StringBuilder(script);
+            var stringBuilder = new StringBuilder(scriptPreamble);
             
             for (var i = 0; i < conjunctions.Count; i++)
             {
                 if (i == 0)
                 {
-                    stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Ext'].selectedIndex = '{Conjunctions.IndexOf(conjunctions[i])}';");
-                    stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Ext'].onchange();");
+                    stringBuilder
+                        .Append(
+                            "  filtersTable.getElementsByTagName('select')['Ext'].selectedIndex = '")
+                        .Append(Conjunctions.IndexOf(conjunctions[i])).Append("';");
+
+                    stringBuilder.Append("  filtersTable.getElementsByTagName('select')['Ext'].onchange();");
                 }
                 else
                 {
-                    stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Ext'] [{i}].selectedIndex='1';");
-                    stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Ext'] [{i}].onchange();");
+                    stringBuilder
+                        .Append("  filtersTable.getElementsByTagName('select')['Ext'] [")
+                        .Append(i).Append("].selectedIndex='1';");
+
+                    stringBuilder
+                        .Append("  filtersTable.getElementsByTagName('select')['Ext'] [")
+                        .Append(i).Append("].onchange();");
                 }
             }
 
             for (var i = 0; i < fields.Count; i++)
             {
-                stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Fields'] [{i}].selectedIndex = '{Fields.IndexOf(fields[i])}';");
+                stringBuilder
+                    .Append("  filtersTable.getElementsByTagName('select')['Fields'] [")
+                    .Append(i).Append("].selectedIndex = '")
+                    .Append(Fields.IndexOf(fields[i])).Append("';");
             }
 
             for (var i = 0; i < conditions.Count; i++)
             {
-                stringBuilder.Append($"  filtersTable.getElementsByTagName('select')['Condition'] [{i}].selectedIndex = '{Conditions.IndexOf(conditions[i])}';");
+                stringBuilder
+                    .Append(
+                        "  filtersTable.getElementsByTagName('select')['Condition'] [")
+                    .Append(i).Append("].selectedIndex = '")
+                    .Append(Conditions.IndexOf(conditions[i])).Append("';");
             }
 
             for (var i = 0; i < criteria.Count; i++)
             {
-                stringBuilder.Append($"  filtersTable.getElementsByTagName('input')['Criteria'] [{i}].value = '{criteria[i]}';");
+                stringBuilder
+                    .Append("  filtersTable.getElementsByTagName('input')['Criteria'] [")
+                    .Append(i).Append("].value = '").Append(criteria[i]).Append("';");
             }
 
             stringBuilder.Append("  frames['cpWork'].ApplyFilter();");
