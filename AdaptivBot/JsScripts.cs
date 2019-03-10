@@ -6,6 +6,77 @@ namespace AdaptivBot
 {
     public static class JsScripts
     {
+        public static List<string> FilterFields
+            = new List<string>()
+            {
+                "Reference",
+                "Structure",
+                "Facility",
+                "Product",
+                "Details",
+                "Lead Account",
+                "Booking Branch",
+                "Customer",
+                "Customer Name",
+                "Counterparty",
+                "Counterparty Name",
+                "Cpty Class",
+                "Issuer Code",
+                "Issuer Name",
+                "Trade Date",
+                "End Date",
+                "Entered",
+                "State",
+                "Violations",
+                "Entered By",
+                "Amount",
+                "Currency",
+                "Amount2",
+                "Currency2",
+                "Nominal",
+                "Mark To Market",
+                "Analytic MTM",
+                "Pre Settlement",
+                "Primary",
+                "Settlement",
+                "Issuer",
+                "Gross",
+                "Gross Liquid",
+                "Concentration",
+                "Expected",
+                "Agreement",
+                "Pool",
+                "Payment Agreement",
+                "Payment Pool",
+                "SWWR",
+                "GWWR",
+                "Liquidity Rating",
+                "Underlying Asset",
+                "Currency of Underlying Asset",
+                "Previous Mark To Market",
+                "Risk Carrier",
+                "Portfolio Name",
+                "Rollup",
+                "Source System"
+            };
+
+
+        public static List<string> FilterConditions
+            = new List<string>()
+            {
+                "starts with",
+                "contains",
+                "does not contain",
+                "equal to",
+                "not equal to",
+                "greater than",
+                "greater than or equal to",
+                "less than",
+                "less than or equal to",
+                "in",
+                "not in"
+            };
+
         public static string OpenRiskView
             = "function OpenRiskView() " +
               "{" +
@@ -51,7 +122,7 @@ namespace AdaptivBot
               "  var filtersTable = advancedInnerDiv.getElementsByTagName('table')['Filters'];"            +
               "  filtersTable.getElementsByTagName('select')['Ext'].selectedIndex = '1';"                  +
               "  filtersTable.getElementsByTagName('select')['Ext'].onchange();"                           +
-              "  filtersTable.getElementsByTagName('select')['Ext'] [1].selectedIndex='1';"                +
+              "  filtersTable.getElementsByTagName('select')['Ext'] [1].selectedIndex='1';"                + // "AND"
               "  filtersTable.getElementsByTagName('select')['Ext'] [1].onchange();"                       +
               "  filtersTable.getElementsByTagName('select')['Fields'] [0].selectedIndex = '7';"           +
               "  filtersTable.getElementsByTagName('select')['Fields'] [1].selectedIndex = '13';"          +

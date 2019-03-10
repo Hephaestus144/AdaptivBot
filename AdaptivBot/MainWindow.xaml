@@ -74,7 +74,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.25*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.5*" />
         </Grid.RowDefinitions>
 
 
@@ -198,7 +199,7 @@
 
         <DockPanel 
             Grid.Row="1"
-            Grid.RowSpan="4"
+            Grid.RowSpan="5"
             Grid.Column="3"
             Grid.ColumnSpan="2"
             Margin="10,0,0,0">
@@ -292,7 +293,7 @@
             Grid.RowSpan="5"
             Grid.Column="1"
             Grid.ColumnSpan="6"
-            Margin="5,10,0,0"
+            Margin="5,0,0,0"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             HorizontalAlignment="Stretch"
@@ -347,7 +348,7 @@
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
                         IsReadOnly="True"
-                        Margin="5,0,0,0"
+                        Margin="5"
                         BorderThickness="0"
                         Foreground="LawnGreen"
                         FontSize="11"
@@ -466,7 +467,7 @@
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn 
-                                    Width="2*"
+                                    Width="3*"
                                     Binding="{Binding FileType}">
                                     <DataGridTextColumn.Header>
                                         File Type
@@ -474,7 +475,7 @@
                                 </DataGridTextColumn>
 
                                 <DataGridTextColumn 
-                                    Width="5*"
+                                    Width="6*"
                                     Binding="{Binding FileName}">
                                     <DataGridTextColumn.Header>
                                         File Name
@@ -613,8 +614,8 @@
 
 
         <DockPanel
-            Grid.Row="9"
-            Grid.RowSpan="7"
+            Grid.Row="10"
+            Grid.RowSpan="8"
             Grid.Column="1"
             Grid.ColumnSpan="15"
             Margin="5,0,0,0">

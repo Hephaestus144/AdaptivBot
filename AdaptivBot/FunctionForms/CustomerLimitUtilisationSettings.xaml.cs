@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -85,6 +86,7 @@ namespace AdaptivBot.SettingForms
                     await Task.Run(() => _window.OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
 
                     #region wait for browser
+                    _window.completedLoading = false;
                     while (!_window.completedLoading)
                     {
                         await Task.Run(() => Thread.Sleep(100));
@@ -92,20 +94,22 @@ namespace AdaptivBot.SettingForms
 
                     await Task.Run(() => Thread.Sleep(1000));
                     _window.completedLoading = false;
+                    #endregion wait for browser
+                    
+                    #region wait for browser
                     while (!_window.completedLoading)
                     {
                         await Task.Run(() => Thread.Sleep(100));
                     }
-
+                    await Task.Run(() => Thread.Sleep(1000));
+                    _window.completedLoading = false;
+                    #endregion wait for browser
 
                     Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
                     IAsyncResult result = methodName.BeginInvoke(null, null);
                     _window.InjectJavascript(
                         nameof(JsScripts.OpenCustomerLimitUtilisationReport),
                         JsScripts.OpenCustomerLimitUtilisationReport);
-
-
-                    #endregion wait for browser
 
                     _window.InjectJavascript(
                         nameof(JsScripts.OpenCustomerLimitUtilisationReport),
@@ -122,7 +126,9 @@ namespace AdaptivBot.SettingForms
 
                     await Task.Run(() => Thread.Sleep(1000));
                     _window.completedLoading = false;
+                    #endregion wait for browser
 
+                    #region wait for browser
                     while (!_window.completedLoading)
                     {
                         await Task.Run(() => Thread.Sleep(100));
@@ -270,6 +276,7 @@ namespace AdaptivBot.SettingForms
                         nameof(JsScripts.GenerateCustomerLimitUtilisationReport));
 
                     methodName.EndInvoke(result);
+
                     while (_window.WebBrowser.Document?.GetElementsByTagName("img").Count < 5)
                     {
                         await Task.Run(() => Thread.Sleep(1000));
@@ -277,6 +284,8 @@ namespace AdaptivBot.SettingForms
 
                     await Task.Run(() => Thread.Sleep(3000));
 
+                    methodName = JavaScriptErrorDialogFound;
+                    result = methodName.BeginInvoke(null, null);
                     _window.InjectJavascript(
                         nameof(JsScripts.ExportCustomerLimitUtilisationReportToCsv),
                         JsScripts.ExportCustomerLimitUtilisationReportToCsv);
@@ -287,48 +296,74 @@ namespace AdaptivBot.SettingForms
                     var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
 
                     await Task.Run(() => Thread.Sleep(1000));
+                    methodName.EndInvoke(result);
 
                     await Task.Run(() =>
                         SaveCustomerLimitUtilisationReport((DateTime)date,
                             overrideExistingFile));
 
-                    await Task.Run(() => Thread.Sleep(1000));
-
-                    if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
-                    {
-                        AutoItX.WinActivate("", "Close this dialog box when download completes");
-                        AutoItX.Send("{Tab}");
-                        AutoItX.Send("+");
-
-                        while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
-                        {
-                            AutoItX.Sleep(100);
-                        }
-                    }
-
                     var csvFile = $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\Cust Util\\SBG\\CustomerLimitUtil {date:dd.MM.yyyy}.csv";
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.OkayText =
+                            "Converting csv extraction to xlsx...";
+                    }));
 
-                    _window.Logger.OkayText = "Converting csv extraction to xlsx...";
-                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
                     var xlsxFile = csvFile.Replace(".csv", ".xlsx");
 
+                    if (overrideExistingFile && File.Exists(xlsxFile))
+                    {
+                        File.Delete(xlsxFile);
+                        Thread.Sleep(1000);
+                    }
 
-                    _window.Logger.OkayText = "Performing minor formatting on xlsx file...";
-                    var xlApp = new Excel.Application();
-                    Excel.Workbook wb = xlApp.Workbooks.Open(xlsxFile);
-                    Excel.Worksheet ws = wb.Worksheets[1];
-                    ws.Name = "Customer Limit Utilisation";
-                    ((Excel.Range) ws.Rows["1:3"]).Delete();
+                    MainWindow.ConvertWorkbookFormats(csvFile, ".xlsx");
 
-                    _window.Logger.OkayText = "Deleting csv file...";
-                    File.Delete(csvFile);
-                    
-                    var fileSize = (new FileInfo(xlsxFile).Length >= 1048576)
+                    while (!File.Exists(xlsxFile))
+                    {
+                        await Task.Run(() => Thread.Sleep(100));
+                    }
+
+                    var fileSize
+                        = (new FileInfo(xlsxFile).Length >= 1048576)
                         ? $"{new FileInfo(xlsxFile).Length / 1048576:n}" + " MB"
                         : $"{new FileInfo(xlsxFile).Length / 1024:n}"    + " KB";
 
-                    Dispatcher.Invoke(() =>
+
+                    Dispatcher.Invoke((System.Action)(() =>
                     {
+                        _window.Logger.OkayText =
+                            "Performing minor formatting on xlsx file...";
+                    }));
+
+                    var xlApp = new Excel.Application();
+                    Excel.Workbook wb = xlApp.Workbooks.Open(xlsxFile);
+                    Excel.Worksheet ws = wb.Worksheets[1];
+                    xlApp.DisplayAlerts = false;
+                    ws.Name = "Customer Limit Utilisation";
+                    Excel.Range topLeftCell = ws.Cells[1, 1];
+                    Excel.Range bottomRightCell = ws.Cells[3, 1000];
+                    Excel.Range rangeToDelete = ws.Range[topLeftCell, bottomRightCell];
+                    rangeToDelete.Delete(Excel.XlDeleteShiftDirection.xlShiftUp);
+                    wb.Save();
+                    xlApp.DisplayAlerts = true;
+                    wb.Close();
+                    xlApp.Quit();
+
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        _window.Logger.OkayText = "Deleting csv file...";
+                    }));
+                    File.Delete(csvFile);
+
+
+                    Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        if (_window.extractedFiles.Any(x => x.FilePath == xlsxFile))
+                        {
+                            _window.extractedFiles.Remove(_window.extractedFiles.First(x => x.FilePath == xlsxFile));
+                        }
+
                         _window.extractedFiles.Add(new ExtractedFile
                         {
                             FilePath = xlsxFile,
@@ -336,7 +371,7 @@ namespace AdaptivBot.SettingForms
                             FileType = "Customer Limit Utilisation",
                             FileSize = fileSize
                         });
-                    });
+                    }));
 
                     _window.Logger.ExtractionComplete("Customer Limit Utilisation");
                     GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
@@ -359,7 +394,9 @@ namespace AdaptivBot.SettingForms
                     }
                     else
                     {
-                        _window.Logger.ErrorText = $"Customer Limit Utilisation extraction extraction failed {maxFailureCount} times. This may be due to an Adaptiv error. Please try again later.";
+                        _window.Logger.ErrorText = $"Customer Limit Utilisation " +
+                                                   $"extraction extraction failed {maxFailureCount} times. " +
+                                                   $"This may be due to an Adaptiv error. Please try again later.";
                     }
                 }
             }
@@ -386,10 +423,10 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("!s");
             Dispatcher.Invoke((Action) (() =>
             {
-                _window.Logger.WarningText = $"Saving csv file...";
+                _window.Logger.OkayText = $"Saving csv file...";
             }));
 
-            AutoItX.Sleep(1000);
+            await Task.Run(() => Thread.Sleep(1000));
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
                 AutoItX.WinActivate("Confirm Save As");
@@ -414,10 +451,18 @@ namespace AdaptivBot.SettingForms
                 }
             }
 
-            await Task.Run(() => Thread.Sleep(100));
-            while (AutoItX.WinGetTitle("[ACTIVE]").Contains("Utilisation"))
+            await Task.Run(() => Thread.Sleep(1000));
+
+            if (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
             {
-                await Task.Run(() => Thread.Sleep(500));
+                AutoItX.WinActivate("", "Close this dialog box when download completes");
+                AutoItX.Send("{Tab}");
+                AutoItX.Send("+");
+
+                while (AutoItX.WinExists("", "Close this dialog box when download completes") != 0)
+                {
+                    await Task.Run(() => Thread.Sleep(100));
+                }
             }
         }
 
@@ -428,8 +473,7 @@ namespace AdaptivBot.SettingForms
             SelectionChangedEventArgs e)
         {
             if (cmbBxFilterCategory2 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory1.SelectedItem).Tag.ToString() ==
-                "Hide")
+            if (((ComboBoxItem) cmbBxFilterCategory1.SelectedItem).Tag.ToString() == "Hide")
             {
                 cardFilterCategory2.Visibility = Visibility.Hidden;
                 cmbBxFilterCategory2.Visibility = Visibility.Hidden;
@@ -457,8 +501,7 @@ namespace AdaptivBot.SettingForms
             SelectionChangedEventArgs e)
         {
             if (cmbBxFilterCategory3 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory2.SelectedItem).Tag.ToString() ==
-                "Hide")
+            if (((ComboBoxItem) cmbBxFilterCategory2.SelectedItem).Tag.ToString() == "Hide")
             {
                 cardFilterCategory3.Visibility = Visibility.Hidden;
                 cmbBxFilterCategory3.Visibility = Visibility.Hidden;

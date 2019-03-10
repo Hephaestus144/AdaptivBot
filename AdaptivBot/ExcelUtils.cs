@@ -86,12 +86,23 @@ namespace AdaptivBot
                 }
 
                 c1 = ws.Cells[1 + titleOffset + rowOffset, 1];
-                c2 = ws.Cells[1 + titleOffset + rowOffset + output.GetLength(0) - 1, output.GetLength(1) + 1];
+                c2 = ws.Cells[1 + titleOffset + rowOffset + output.GetLength(0) - 1, output.GetLength(1)];
                 range = ws.get_Range(c1, c2);
                 range.Value = output;
                 range.NumberFormat = "#,##0";
+                ws.Columns["C:C"].NumberFormat = "d-mmm-yy";
+                ws.Columns["M:M"].NumberFormat = "d-mmm-yy";
 
                 range.Columns.AutoFit();
+
+                foreach (Excel.Range column in range.Columns)
+                {
+                    if (column.ColumnWidth == 255)
+                    {
+                        column.ColumnWidth = 30;
+                    }
+                }
+
                 ws.Activate();
                 xlApp.ActiveWindow.DisplayGridlines = false;
             }

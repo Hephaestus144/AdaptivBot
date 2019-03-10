@@ -27,6 +27,7 @@ namespace AdaptivBot.SettingForms
             InitializeComponent();
         }
 
+
         private void JavaScriptErrorDialogFound()
         {
             for (var i = 0; i < 15; i++)
@@ -60,7 +61,6 @@ namespace AdaptivBot.SettingForms
             // TODO: Use binding here.
             var username = _window?.TxtUserName.Text;
             var password = _window?.TxtPasswordBox.Password;
-
             
             var selectedInstruments = (from object selectedItem in lstBxInstruments.SelectedItems
                 select InstrumentLists.InstrumentGuiNameToFolderNameMapping[selectedItem.ToString()
@@ -73,10 +73,10 @@ namespace AdaptivBot.SettingForms
             var currentAdaptivEnvironment = _window?.CmbBxAdaptivEnvironments.SelectedValue.ToString();
             var numberOfFailedExtractions = 0;
             var numberOfSuccessfulExtractions = 0;
-            var maxErrorCount = 5;
+            const int maxFailureCount = 5;
             foreach (var instrumentBatch in instrumentsToLoopOver)
             {
-                for (var errorCount = 0; errorCount < maxErrorCount; errorCount++)
+                for (var failureCount = 0; failureCount < maxFailureCount; failureCount++)
                 {
                     try
                     {
@@ -125,7 +125,8 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
+                        Action methodName = JavaScriptErrorDialogFound;
+
                         IAsyncResult result = methodName.BeginInvoke(null, null);
                         _window.Logger.OkayText = $"Filtering for {instrumentBatch}...";
                         _window.InjectJavascript(
@@ -134,6 +135,7 @@ namespace AdaptivBot.SettingForms
                         _window.WebBrowser.Document.InvokeScript(
                             nameof(JsScripts.FilterRiskViewOnInstruments),
                             new object[] { InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping[instrumentBatch] });
+                        
 
                         #region wait for browser
 
@@ -147,11 +149,11 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-
                         methodName.EndInvoke(result);
                         _window.InjectJavascript(nameof(JsScripts.ExportToCsv),
                             JsScripts.ExportToCsv);
                         _window.WebBrowser.Document.InvokeScript(nameof(JsScripts.ExportToCsv));
+                        
 
                         #region wait for browser
 
@@ -166,6 +168,7 @@ namespace AdaptivBot.SettingForms
                         #endregion wait for browser
 
                         
+
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
                             await Task.Run(() => Thread.Sleep(100));
@@ -181,7 +184,7 @@ namespace AdaptivBot.SettingForms
                         
                         await Task.Run(() => Thread.Sleep(1000));
                         var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
-                        //var saveFileTask = SaveFile(instrumentBatch, overrideExistingFile);
+                        
                         await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
                         numberOfSuccessfulExtractions++;
                         
@@ -189,14 +192,14 @@ namespace AdaptivBot.SettingForms
                     }
                     catch (Exception exception)
                     {
-                        if (errorCount < maxErrorCount)
+                        if (failureCount < maxFailureCount)
                         {
-                            _window.Logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {errorCount}";
+                            _window.Logger.ErrorText = $"Something failed for {instrumentBatch} extraction. Trying again. Attempt number: {failureCount}";
                         }
                         else
                         {
                             numberOfFailedExtractions++;
-                            _window.Logger.ErrorText = $"{instrumentBatch} extraction failed {maxErrorCount} times. Moving on to next instrument set.";
+                            _window.Logger.ErrorText = $"{instrumentBatch} extraction failed {maxFailureCount} times. Moving on to next instrument set.";
                         }
                     }
                 }
@@ -229,8 +232,6 @@ namespace AdaptivBot.SettingForms
         {
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
-            //AutoItX.Send("{TAB 3}");
-            //AutoItX.Send("{ENTER}");
             AutoItX.Send("!s");
             Dispatcher.Invoke((System.Action)(() =>
             {
@@ -306,8 +307,14 @@ namespace AdaptivBot.SettingForms
                 var fileSize = (new FileInfo(filePath).Length >= 1048576)
                     ? $"{(new FileInfo(filePath).Length / 1048576):n}" + " MB"
                     : $"{(new FileInfo(filePath).Length / 1024):n}" + " KB";
+
                 Dispatcher.Invoke((System.Action)(() =>
                 {
+                    if (_window.extractedFiles.Any(x => x.FilePath == filePath))
+                    {
+                        _window.extractedFiles.Remove(_window.extractedFiles.First(x => x.FilePath == filePath));
+                    }
+
                     _window.extractedFiles.Add(new ExtractedFile()
                     {
                         FilePath = filePath,
