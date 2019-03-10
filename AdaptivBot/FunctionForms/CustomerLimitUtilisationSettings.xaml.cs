@@ -1,5 +1,6 @@
 ﻿using AutoIt;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace AdaptivBot.SettingForms
                 AutoItX.Sleep(100);
                 if (AutoItX.WinExists("Script Error") != 0)
                 {
-                    Dispatcher.Invoke((System.Action)(() =>
+                    Dispatcher.Invoke((() =>
                     {
                         _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
                     }));
@@ -134,11 +135,53 @@ namespace AdaptivBot.SettingForms
 
                     methodName = JavaScriptErrorDialogFound;
                     result = methodName.BeginInvoke(null, null);
-                    _window.Logger.OkayText = "Filtering customer limit utilisation report...";
-                    _window.InjectJavascript(
-                        nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis),
-                        JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis);
 
+                    // TODO: Get filter details for customer limit utilisation report.
+                    var fields = new List<string>();
+                    var conditions = new List<string>();
+                    var criteria = new List<string>();
+                    var conjunctions = new List<string>();
+
+                    if (cmbBxFilterCategory1.SelectedIndex != 0)
+                    {
+                        fields.Add(cmbBxFilterCategory1.SelectedValue.ToString());
+                    }
+
+                    if (cmbBxFilterCategory2.SelectedIndex != 0)
+                    {
+                        fields.Add(cmbBxFilterCategory2.SelectedValue.ToString());
+                    }
+
+                    if (cmbBxFilterCategory3.SelectedIndex != 0)
+                    {
+                        fields.Add(cmbBxFilterCategory3.SelectedValue.ToString());
+                    }
+
+                    if (cmbBxFilterOperation1.SelectedIndex != 0)
+                    {
+                        conditions.Add(cmbBxFilterOperation1.SelectedValue.ToString());
+                    }
+
+                    if (cmbBxFilterOperation2.SelectedIndex != 0)
+                    {
+                        conditions.Add(cmbBxFilterOperation2.SelectedValue.ToString());
+                    }
+
+                    if (cmbBxFilterOperation3.SelectedIndex != 0)
+                    {
+                        conditions.Add(cmbBxFilterOperation3.SelectedValue.ToString());
+                    }
+
+                    
+                    _window.Logger.OkayText = "Filtering customer limit utilisation report...";
+                    //_window.InjectJavascript(
+                    //    nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis),
+                    //    JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis);
+
+                    _window.InjectJavascript(
+                        nameof(JsScripts.FilterCustomerLimitUtilisationReport),
+                        JsScripts.FilterCustomerLimitUtilisationReport(fields, conditions, criteria, conjunctions));
+                
                     _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis));
 
                     #region wait for browser

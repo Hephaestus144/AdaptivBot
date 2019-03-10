@@ -343,6 +343,7 @@
                 UniformCornerRadius="4"
                 Margin="5,22,5,5">
                 <ComboBox
+                    Name="cmbBxFilterOperation1"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
@@ -508,7 +509,106 @@
 
         </DockPanel>
 
+        
+        <!-- Filters : Conjunction combo boxes -->
+        <DockPanel
+            Grid.Row="3"
+            Grid.RowSpan="4"
+            Grid.Column="7"
+            Grid.ColumnSpan="2">
 
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,22,5,5">
+                <ComboBox
+                    Name="cmbBxConjunction1"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>And</ComboBoxItem>
+                    <ComboBoxItem>Or</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,22,5,5">
+                <ComboBox
+                    Name="cmbBxConjunction2"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>And</ComboBoxItem>
+                    <ComboBoxItem>Or</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+
+
+            <materialDesign:Card
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5,22,5,5">
+                <ComboBox
+                    Name="cmbBxConjunction3"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    SelectedIndex="0"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>And</ComboBoxItem>
+                    <ComboBoxItem>Or</ComboBoxItem>
+                </ComboBox>
+            </materialDesign:Card>
+        </DockPanel>
+
+        
         <!-- Bottom most controls -->
         <Button
             Name="BtnSaveSettings"

@@ -1,10 +1,6 @@
-﻿using AutoIt;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
+
 
 namespace AdaptivBot
 {
@@ -16,13 +12,11 @@ namespace AdaptivBot
               "  window.open('Deal_Home.aspx?List=CRS.Deals.RiskView','cpWork');" +
               "}";
 
-
         public static string OpenCustomerLimitUtilisationReport
             = "function OpenCustomerLimitUtilisationReport() " +
               "{"                                                                 +
               "  window.open('List_Main.htm?ListID=Reports.RSReports.CustomerLimitUtilisation','cpWork');" +
               "}";
-
 
         public static string ChooseCustomerLimitUtilisationReport
             = "function ChooseCustomerLimitUtilisationReport()" +
@@ -32,14 +26,12 @@ namespace AdaptivBot
               "  element.onchange();"                                                     +
               "}";
 
-
         public static string SelectCustomerLimitUtilisationReportDate
             = "function SelectCustomerLimitUtilisationReportDate(date)" +
               "{"                                                                                      +
               "  document.getElementById('ReportViewerMain_ctl04_ctl03_txtValue').value=(date);"       +
               "  document.getElementById('ReportViewerMain_ctl04_ctl03_txtValue').onchange();"         +
               "}";
-
 
         public static string GenerateCustomerLimitUtilisationReport
             = "function GenerateCustomerLimitUtilisationReport()"                                      +
@@ -48,7 +40,6 @@ namespace AdaptivBot
               "  document.getElementById('ReportViewerMain_ctl04_ctl07_ddValue').selectedIndex = '1';" +
               "  document.getElementById('ReportViewerMain_ctl04_ctl00').click();"                     +
               "}";
-
 
         public static string FilterCustomerLimitUtilisationReportForPortfolioAnalysis
             = "function FilterCustomerLimitUtilisationReport()"                                            +
