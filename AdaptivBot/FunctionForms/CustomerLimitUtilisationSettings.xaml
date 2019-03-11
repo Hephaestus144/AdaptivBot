@@ -12,6 +12,91 @@
       Loaded="CustomerLimitUtilisationSettings_OnLoaded">
     <Page.Resources>
         <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings"/>
+
+        <Style x:Key="ComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
+                    <Setter Property="FontSize" Value="12"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FilterSecondRowMaterialDesignCard"  TargetType="materialDesign:Card">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=iEmpty1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iAnd1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iOr1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="FilterThirdRowMaterialDesignCard"  TargetType="materialDesign:Card">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=iEmpty2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iAnd2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iOr2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FilterSecondRowComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="SelectedIndex" Value="0"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemStyle}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=iEmpty1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="SelectedIndex" Value="0"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iAnd1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iOr1, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FilterThirdRowComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="SelectedIndex" Value="0"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemStyle}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=iEmpty2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="SelectedIndex" Value="0"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iAnd2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ElementName=iOr2, Path=IsSelected}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Page.Resources>
 
     <Grid>
@@ -216,12 +301,13 @@
         </DockPanel>
 
 
-        <!-- Filters : Categories combo boxes -->
+        <!-- Filters : Fields combo boxes -->
         <DockPanel
             Grid.Row="3"
             Grid.RowSpan="4"
             Grid.Column="0"
             Grid.ColumnSpan="2">
+
             <TextBlock
                 DockPanel.Dock="Top"
                 FontWeight="DemiBold"
@@ -234,7 +320,7 @@
                 UniformCornerRadius="4"
                 Margin="5">
                 <ComboBox
-                    Name="cmbBxFilterCategory1"
+                    Name="cmbBxFilterField1"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
@@ -242,96 +328,52 @@
                     IsEditable="False"
                     IsReadOnly="True"
                     SelectedValuePath="Content"
-                    SelectionChanged="CmbBxFilterCategory1_OnSelectionChanged">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
-                </ComboBox>
+                    ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterFields}}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
-                Name="cardFilterCategory2"
+                Name="cardFilterField2"
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5"
-                Visibility="Hidden">
+                Style="{StaticResource FilterSecondRowMaterialDesignCard}">
+
                 <ComboBox
-                    Name="cmbBxFilterCategory2"
+                    Name="cmbBxFilterField2"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
                     IsEditable="False"
                     IsReadOnly="True"
                     SelectedValuePath="Content"
-                    SelectionChanged="CmbBxFilterCategory2_OnSelectionChanged">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
-                </ComboBox>
+                    Style="{StaticResource FilterSecondRowComboBox}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterFields}}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
-                Name="cardFilterCategory3"
+                Name="cardFilterField3"
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5"
-                Visibility="Hidden">
+                Style="{StaticResource FilterThirdRowMaterialDesignCard}">
+
                 <ComboBox
-                    Name="cmbBxFilterCategory3"
+                    Name="cmbBxFilterField3"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
                     IsEditable="False"
                     IsReadOnly="True"
-                    SelectedValuePath="Content">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem Tag="Hide">-</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Product</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Portfolio</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Booking Branch</ComboBoxItem>
-                    <ComboBoxItem Tag="Show">Customer</ComboBoxItem>
-                </ComboBox>
+                    SelectedValuePath="Content"
+                    Style="{StaticResource FilterThirdRowComboBox}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterFields}}"/>
             </materialDesign:Card>
 
         </DockPanel>
 
 
-        <!-- Filters : Operation combo boxes -->
+        <!-- Filters : Condition combo boxes -->
         <DockPanel
             Grid.Row="3"
             Grid.RowSpan="4"
@@ -343,47 +385,7 @@
                 UniformCornerRadius="4"
                 Margin="5,22,5,5">
                 <ComboBox
-                    Name="cmbBxFilterOperation1"
-                    Margin="5"
-                    FontSize="10"
-                    HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
-                    IsEditable="False"
-                    IsReadOnly="True"
-                    SelectedValuePath="Content">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>starts with</ComboBoxItem>
-                    <ComboBoxItem>contains</ComboBoxItem>
-                    <ComboBoxItem>does not contain</ComboBoxItem>
-                    <ComboBoxItem>equal to</ComboBoxItem>
-                    <ComboBoxItem>not equal to</ComboBoxItem>
-                    <ComboBoxItem>greater than</ComboBoxItem>
-                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
-                    <ComboBoxItem>less than</ComboBoxItem>
-                    <ComboBoxItem>less than or equal to</ComboBoxItem>
-                    <ComboBoxItem>in</ComboBoxItem>
-                    <ComboBoxItem>not in</ComboBoxItem>
-                </ComboBox>
-            </materialDesign:Card>
-
-            <materialDesign:Card
-                Name="cardFilterOperation2"
-                DockPanel.Dock="Top"
-                UniformCornerRadius="4"
-                Margin="5"
-                Visibility="Hidden">
-                <ComboBox
-                    Name="cmbBxFilterOperation2"
+                    Name="cmbBxFilterCondition1"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
@@ -391,71 +393,45 @@
                     IsEditable="False"
                     IsReadOnly="True"
                     SelectedValuePath="Content"
-                    Visibility="Hidden">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>starts with</ComboBoxItem>
-                    <ComboBoxItem>contains</ComboBoxItem>
-                    <ComboBoxItem>does not contain</ComboBoxItem>
-                    <ComboBoxItem>equal to</ComboBoxItem>
-                    <ComboBoxItem>not equal to</ComboBoxItem>
-                    <ComboBoxItem>greater than</ComboBoxItem>
-                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
-                    <ComboBoxItem>less than</ComboBoxItem>
-                    <ComboBoxItem>less than or equal to</ComboBoxItem>
-                    <ComboBoxItem>in</ComboBoxItem>
-                    <ComboBoxItem>not in</ComboBoxItem>
-                </ComboBox>
+                    ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterConditions}}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
-                Name="cardFilterOperation3"
+                Name="cardFilterCondition2"
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5"
-                Visibility="Hidden">
+                Style="{StaticResource FilterSecondRowMaterialDesignCard}">
                 <ComboBox
-                    Name="cmbBxFilterOperation3"
+                    Name="cmbBxFilterCondition2"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
                     IsEditable="False"
                     IsReadOnly="True"
                     SelectedValuePath="Content"
-                    Visibility="Hidden">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>starts with</ComboBoxItem>
-                    <ComboBoxItem>contains</ComboBoxItem>
-                    <ComboBoxItem>does not contain</ComboBoxItem>
-                    <ComboBoxItem>equal to</ComboBoxItem>
-                    <ComboBoxItem>not equal to</ComboBoxItem>
-                    <ComboBoxItem>greater than</ComboBoxItem>
-                    <ComboBoxItem>greater than or equal to</ComboBoxItem>
-                    <ComboBoxItem>less than</ComboBoxItem>
-                    <ComboBoxItem>less than or equal to</ComboBoxItem>
-                    <ComboBoxItem>in</ComboBoxItem>
-                    <ComboBoxItem>not in</ComboBoxItem>
-                </ComboBox>
+                    Style="{StaticResource FilterSecondRowComboBox}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterConditions}}"/>
+                
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                Name="cardFilterCondition3"
+                DockPanel.Dock="Top"
+                UniformCornerRadius="4"
+                Margin="5"
+                Style="{StaticResource FilterThirdRowMaterialDesignCard}">
+                <ComboBox
+                    Name="cmbBxFilterCondition3"
+                    Margin="5"
+                    FontSize="10"
+                    HorizontalContentAlignment="Center"
+                    IsEditable="False"
+                    IsReadOnly="True"
+                    SelectedValuePath="Content"
+                    Style="{StaticResource FilterThirdRowComboBox}"
+                    ItemsSource="{Binding Source={x:Static adaptivBot:JsScripts.CustomerLimitUtilisationFilterConditions}}"/>
             </materialDesign:Card>
 
         </DockPanel>
@@ -485,13 +461,33 @@
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5,4,5,5"
-                Visibility="Hidden">
+                Style="{StaticResource FilterSecondRowMaterialDesignCard}">
                 <TextBox
                      Name="txtBxFilterCriteria2"
                      Margin="7"
                      FontSize="10"
-                     HorizontalContentAlignment="Left"
-                     Visibility="Hidden"/>
+                     HorizontalContentAlignment="Left">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=iEmpty1, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Setter Property="Text" Value=""/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ElementName=iAnd1, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ElementName=iOr1, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -499,13 +495,33 @@
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
                 Margin="5,4,5,5"
-                Visibility="Hidden">
+                Style="{StaticResource FilterThirdRowMaterialDesignCard}">
                 <TextBox
                     Name="txtBxFilterCriteria3"
                     Margin="7"
                     FontSize="10"
-                    HorizontalContentAlignment="Left"
-                    Visibility="Hidden"/>
+                    HorizontalContentAlignment="Left">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=iEmpty2, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Setter Property="Text" Value=""/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ElementName=iAnd2, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ElementName=iOr2, Path=IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </materialDesign:Card>
 
         </DockPanel>
@@ -516,8 +532,8 @@
             Grid.Row="3"
             Grid.RowSpan="4"
             Grid.Column="7"
-            Grid.ColumnSpan="2">
-
+            Grid.ColumnSpan="2"
+            LastChildFill="False">
 
             <materialDesign:Card
                 DockPanel.Dock="Top"
@@ -531,20 +547,11 @@
                     SelectedIndex="0"
                     IsEditable="False"
                     IsReadOnly="True"
-                    SelectedValuePath="Content">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>And</ComboBoxItem>
-                    <ComboBoxItem>Or</ComboBoxItem>
+                    SelectedValuePath="Content"
+                    ItemContainerStyle="{StaticResource ComboBoxItemStyle}">
+                    <ComboBoxItem x:Name="iEmpty1">-</ComboBoxItem>
+                    <ComboBoxItem x:Name="iAnd1">And</ComboBoxItem>
+                    <ComboBoxItem x:Name="iOr1">Or</ComboBoxItem>
                 </ComboBox>
             </materialDesign:Card>
 
@@ -552,61 +559,24 @@
             <materialDesign:Card
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
-                Margin="5,22,5,5">
+                Margin="5"
+                Style="{StaticResource FilterSecondRowMaterialDesignCard}">
+
                 <ComboBox
                     Name="cmbBxConjunction2"
                     Margin="5"
                     FontSize="10"
                     HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
                     IsEditable="False"
                     IsReadOnly="True"
-                    SelectedValuePath="Content">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>And</ComboBoxItem>
-                    <ComboBoxItem>Or</ComboBoxItem>
+                    SelectedValuePath="Content"
+                    Style="{StaticResource FilterSecondRowComboBox}">
+                    <ComboBoxItem x:Name="iEmpty2">-</ComboBoxItem>
+                    <ComboBoxItem x:Name="iAnd2">And</ComboBoxItem>
+                    <ComboBoxItem x:Name="iOr2">Or</ComboBoxItem>
                 </ComboBox>
             </materialDesign:Card>
 
-
-            <materialDesign:Card
-                DockPanel.Dock="Top"
-                UniformCornerRadius="4"
-                Margin="5,22,5,5">
-                <ComboBox
-                    Name="cmbBxConjunction3"
-                    Margin="5"
-                    FontSize="10"
-                    HorizontalContentAlignment="Center"
-                    SelectedIndex="0"
-                    IsEditable="False"
-                    IsReadOnly="True"
-                    SelectedValuePath="Content">
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>-</ComboBoxItem>
-                    <ComboBoxItem>And</ComboBoxItem>
-                    <ComboBoxItem>Or</ComboBoxItem>
-                </ComboBox>
-            </materialDesign:Card>
         </DockPanel>
 
         

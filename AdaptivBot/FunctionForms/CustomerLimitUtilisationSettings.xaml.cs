@@ -148,34 +148,34 @@ namespace AdaptivBot.SettingForms
                     var criteria = new List<string>();
                     var conjunctions = new List<string>();
 
-                    if (cmbBxFilterCategory1.SelectedIndex != 0)
+                    if (cmbBxFilterField1.SelectedIndex != 0)
                     {
-                        fields.Add(cmbBxFilterCategory1.SelectedValue.ToString());
+                        fields.Add(cmbBxFilterField1.SelectedValue.ToString());
                     }
 
-                    if (cmbBxFilterCategory2.SelectedIndex != 0)
+                    if (cmbBxFilterField2.SelectedIndex != 0)
                     {
-                        fields.Add(cmbBxFilterCategory2.SelectedValue.ToString());
+                        fields.Add(cmbBxFilterField2.SelectedValue.ToString());
                     }
 
-                    if (cmbBxFilterCategory3.SelectedIndex != 0)
+                    if (cmbBxFilterField3.SelectedIndex != 0)
                     {
-                        fields.Add(cmbBxFilterCategory3.SelectedValue.ToString());
+                        fields.Add(cmbBxFilterField3.SelectedValue.ToString());
                     }
 
-                    if (cmbBxFilterOperation1.SelectedIndex != 0)
+                    if (cmbBxFilterCondition1.SelectedIndex != 0)
                     {
-                        conditions.Add(cmbBxFilterOperation1.SelectedValue.ToString());
+                        conditions.Add(cmbBxFilterCondition1.SelectedValue.ToString());
                     }
 
-                    if (cmbBxFilterOperation2.SelectedIndex != 0)
+                    if (cmbBxFilterCondition2.SelectedIndex != 0)
                     {
-                        conditions.Add(cmbBxFilterOperation2.SelectedValue.ToString());
+                        conditions.Add(cmbBxFilterCondition2.SelectedValue.ToString());
                     }
 
-                    if (cmbBxFilterOperation3.SelectedIndex != 0)
+                    if (cmbBxFilterCondition3.SelectedIndex != 0)
                     {
-                        conditions.Add(cmbBxFilterOperation3.SelectedValue.ToString());
+                        conditions.Add(cmbBxFilterCondition3.SelectedValue.ToString());
                     }
 
                     
@@ -472,25 +472,25 @@ namespace AdaptivBot.SettingForms
         private void CmbBxFilterCategory1_OnSelectionChanged(object sender,
             SelectionChangedEventArgs e)
         {
-            if (cmbBxFilterCategory2 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory1.SelectedItem).Tag.ToString() == "Hide")
+            if (cmbBxFilterField2 == null) return;
+            if (((ComboBoxItem) cmbBxFilterField1.SelectedItem).Tag.ToString() == "Hide")
             {
-                cardFilterCategory2.Visibility = Visibility.Hidden;
-                cmbBxFilterCategory2.Visibility = Visibility.Hidden;
-                cmbBxFilterCategory2.SelectedIndex = 0;
-                cardFilterOperation2.Visibility = Visibility.Hidden;
-                cmbBxFilterOperation2.Visibility = Visibility.Hidden;
-                cmbBxFilterOperation2.SelectedIndex = 0;
+                cardFilterField2.Visibility = Visibility.Hidden;
+                cmbBxFilterField2.Visibility = Visibility.Hidden;
+                cmbBxFilterField2.SelectedIndex = 0;
+                cardFilterCondition2.Visibility = Visibility.Hidden;
+                cmbBxFilterCondition2.Visibility = Visibility.Hidden;
+                cmbBxFilterCondition2.SelectedIndex = 0;
                 cardFilterCriteria2.Visibility = Visibility.Hidden;
                 txtBxFilterCriteria2.Visibility = Visibility.Hidden;
                 txtBxFilterCriteria2.Text = "";
             }
             else
             {
-                cardFilterCategory2.Visibility = Visibility.Visible;
-                cmbBxFilterCategory2.Visibility = Visibility.Visible;
-                cardFilterOperation2.Visibility = Visibility.Visible;
-                cmbBxFilterOperation2.Visibility = Visibility.Visible;
+                cardFilterField2.Visibility = Visibility.Visible;
+                cmbBxFilterField2.Visibility = Visibility.Visible;
+                cardFilterCondition2.Visibility = Visibility.Visible;
+                cmbBxFilterCondition2.Visibility = Visibility.Visible;
                 cardFilterCriteria2.Visibility = Visibility.Visible;
                 txtBxFilterCriteria2.Visibility = Visibility.Visible;
             }
@@ -500,45 +500,45 @@ namespace AdaptivBot.SettingForms
         private void CmbBxFilterCategory2_OnSelectionChanged(object sender,
             SelectionChangedEventArgs e)
         {
-            if (cmbBxFilterCategory3 == null) return;
-            if (((ComboBoxItem) cmbBxFilterCategory2.SelectedItem).Tag.ToString() == "Hide")
+            if (cmbBxFilterField3 == null) return;
+            if (((ComboBoxItem) cmbBxFilterField2.SelectedItem).Tag.ToString() == "Hide")
             {
-                cardFilterCategory3.Visibility = Visibility.Hidden;
-                cmbBxFilterCategory3.Visibility = Visibility.Hidden;
-                cmbBxFilterCategory3.SelectedIndex = 0;
-                cardFilterOperation3.Visibility = Visibility.Hidden;
-                cmbBxFilterOperation3.Visibility = Visibility.Hidden;
-                cmbBxFilterOperation3.SelectedIndex = 0;
+                cardFilterField3.Visibility = Visibility.Hidden;
+                cmbBxFilterField3.Visibility = Visibility.Hidden;
+                cmbBxFilterField3.SelectedIndex = 0;
+                cardFilterCondition3.Visibility = Visibility.Hidden;
+                cmbBxFilterCondition3.Visibility = Visibility.Hidden;
+                cmbBxFilterCondition3.SelectedIndex = 0;
                 cardFilterCriteria3.Visibility = Visibility.Hidden;
                 txtBxFilterCriteria3.Visibility = Visibility.Hidden;
                 txtBxFilterCriteria3.Text = "";
             }
             else
             {
-                cardFilterCategory3.Visibility = Visibility.Visible;
-                cmbBxFilterCategory3.Visibility = Visibility.Visible;
-                cardFilterOperation3.Visibility = Visibility.Visible;
-                cmbBxFilterOperation3.Visibility = Visibility.Visible;
+                cardFilterField3.Visibility = Visibility.Visible;
+                cmbBxFilterField3.Visibility = Visibility.Visible;
+                cardFilterCondition3.Visibility = Visibility.Visible;
+                cmbBxFilterCondition3.Visibility = Visibility.Visible;
                 cardFilterCriteria3.Visibility = Visibility.Visible;
                 txtBxFilterCriteria3.Visibility = Visibility.Visible;
             }
 
-            if (cmbBxFilterCategory1.SelectedValue == cmbBxFilterCategory2.SelectedValue)
+            if (cmbBxFilterField1.SelectedValue == cmbBxFilterField2.SelectedValue)
             {
-                cmbBxFilterCategory1.Foreground = Brushes.Red;
-                cmbBxFilterCategory2.Foreground = Brushes.Red;
+                cmbBxFilterField1.Foreground = Brushes.Red;
+                cmbBxFilterField2.Foreground = Brushes.Red;
             }
 
-            if (cmbBxFilterCategory1.SelectedValue == cmbBxFilterCategory3.SelectedValue)
+            if (cmbBxFilterField1.SelectedValue == cmbBxFilterField3.SelectedValue)
             {
-                cmbBxFilterCategory1.Foreground = Brushes.Red;
-                cmbBxFilterCategory3.Foreground = Brushes.Red;
+                cmbBxFilterField1.Foreground = Brushes.Red;
+                cmbBxFilterField3.Foreground = Brushes.Red;
             }
 
-            if (cmbBxFilterCategory2.SelectedValue == cmbBxFilterCategory3.SelectedValue)
+            if (cmbBxFilterField2.SelectedValue == cmbBxFilterField3.SelectedValue)
             {
-                cmbBxFilterCategory2.Foreground = Brushes.Red;
-                cmbBxFilterCategory3.Foreground = Brushes.Red;
+                cmbBxFilterField2.Foreground = Brushes.Red;
+                cmbBxFilterField3.Foreground = Brushes.Red;
             }
 
             _window.Logger.ErrorText =

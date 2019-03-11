@@ -290,10 +290,10 @@
 
         <materialDesign:Flipper
             Grid.Row="5"
-            Grid.RowSpan="5"
+            Grid.RowSpan="6"
             Grid.Column="1"
             Grid.ColumnSpan="6"
-            Margin="5,0,0,0"
+            Margin="5,20,0,20"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             HorizontalAlignment="Stretch"

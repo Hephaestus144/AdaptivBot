@@ -156,7 +156,6 @@ C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\FunctionForms\CustomerLimitUtilisation
 C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\App.g.cs
 C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot_MarkupCompile.cache
 C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot_MarkupCompile.lref
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\AutoItX3.dll
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\AutoItX3_x64.dll
 C:\GitLab\AdaptivBot\AdaptivBot\bin\Debug\AdaptivBot.exe.config
