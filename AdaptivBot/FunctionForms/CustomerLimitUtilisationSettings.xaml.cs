@@ -180,14 +180,14 @@ namespace AdaptivBot.SettingForms
 
                     
                     _window.Logger.OkayText = "Filtering customer limit utilisation report...";
-                    //_window.InjectJavascript(
-                    //    nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis),
-                    //    JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis);
-
                     _window.InjectJavascript(
-                        nameof(JsScripts.FilterCustomerLimitUtilisationReport),
-                        JsScripts.FilterCustomerLimitUtilisationReport(fields, conditions, criteria, conjunctions));
-                
+                        nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis),
+                        JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis);
+
+                    //_window.InjectJavascript(
+                    //    nameof(JsScripts.FilterCustomerLimitUtilisationReport),
+                    //    JsScripts.FilterCustomerLimitUtilisationReport(fields, conditions, criteria, conjunctions));
+
                     _window.WebBrowser.Document?.InvokeScript(nameof(JsScripts.FilterCustomerLimitUtilisationReportForPortfolioAnalysis));
 
                     #region wait for browser
