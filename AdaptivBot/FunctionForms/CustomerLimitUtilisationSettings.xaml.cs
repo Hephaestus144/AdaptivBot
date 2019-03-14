@@ -42,7 +42,7 @@ namespace AdaptivBot.SettingForms
                 {
                     Dispatcher.Invoke((() =>
                     {
-                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                        _window.Logger.DontPanicErrorText = $"JavaScript error caught, restarting extraction...";
                     }));
                     AutoItX.WinActivate("Script Error");
                     AutoItX.Send("!y");

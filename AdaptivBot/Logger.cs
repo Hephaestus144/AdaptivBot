@@ -189,6 +189,50 @@ namespace AdaptivBot
             }
         }
 
+
+        public string DontPanicErrorText
+        {
+            get => _text;
+            set
+            {
+                var loggerText = new FlowDocument();
+                _text += "\n" + value;
+                var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
+                {
+                    FontWeight = FontWeights.Bold,
+                    Foreground = Brushes.Red,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var dontPanic = new Run($"DON'T PANIC. This error has been 'gracefully' dealt with.")
+                {
+                    FontWeight = FontWeights.ExtraBold,
+                    Foreground = Brushes.Red,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var message = new Run($"{value}")
+                {
+                    Foreground = Brushes.Red,
+                    FontFamily = new FontFamily("Courier")
+                };
+
+                var paragraph = new Paragraph();
+                paragraph.Inlines.Add(timeStamp);
+                paragraph.Inlines.Add(dontPanic);
+                loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
+
+                paragraph = new Paragraph();
+                paragraph.Inlines.Add(timeStamp);
+                paragraph.Inlines.Add(message);
+                loggerText.Blocks.Add(paragraph);
+                RtbLogger.Document.Blocks.Add(paragraph);
+                RtbLogger.ScrollToEnd();
+            }
+        }
+
         public string OkayText
         {
             get => _text;

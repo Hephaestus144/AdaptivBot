@@ -11,7 +11,7 @@ namespace AdaptivBot
 {
     public static class JavaScriptUtils
     {
-        private static MainWindow _window = (MainWindow)Application.Current.MainWindow;
+        private static readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
         public static void JavaScriptErrorDialogFound()
         {
@@ -20,9 +20,9 @@ namespace AdaptivBot
                 AutoItX.Sleep(100);
                 if (AutoItX.WinExists("Script Error") != 0)
                 {
-                    _window.Dispatcher.Invoke((Action)(() =>
+                    _window.Dispatcher.Invoke((() =>
                     {
-                        _window.Logger.ErrorText = $"JavaScript error caught, restarting extraction...";
+                        _window.Logger.DontPanicErrorText = $"JavaScript error caught, restarting extraction...";
                     }));
                     AutoItX.WinActivate("Script Error");
                     AutoItX.Send("!y");
