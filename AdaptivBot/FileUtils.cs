@@ -1,14 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO.Abstractions;
+
 
 namespace AdaptivBot
 {
     public static class FileUtils
     {
+        public static IFileSystem fileSystem { get; set; } = new FileSystem();
+
+
+        public static string FileSize(string filePath)
+        {
+            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            return fileInfo.Length >= 1048576
+                ? $"{fileInfo.Length / 1048576:n}" + " MB"
+                : $"{fileInfo.Length / 1024:n}"    + " KB";
+        }
+
+
         public static List<string> Read(string filePath, string readAfterThisLine = "")
         {
             var readLines = new List<string>();
@@ -30,29 +40,6 @@ namespace AdaptivBot
             }
 
             return readLines;
-
-            if (readLines.Count == 0)
-            {
-                return null;
-            }
-
-            if (Path.GetExtension(filePath) == ".csv")
-            {
-  
-
-                
-            }
-            else
-            {
-                var output = new object[readLines.Count, 1];
-                for (var i = 0; i < readLines.Count; i++)
-                {
-                    output[i, 0] = readLines[i];
-                }
-
-        
-            }
         }
-
     }
 }

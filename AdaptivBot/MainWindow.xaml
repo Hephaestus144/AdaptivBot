@@ -475,7 +475,7 @@
                                 </DataGridTextColumn>
 
                                 <DataGridTextColumn 
-                                    Width="6*"
+                                    Width="5*"
                                     Binding="{Binding FileName}">
                                     <DataGridTextColumn.Header>
                                         File Name

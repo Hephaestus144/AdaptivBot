@@ -324,11 +324,7 @@ namespace AdaptivBot.SettingForms
                         await Task.Run(() => Thread.Sleep(100));
                     }
 
-                    var fileSize
-                        = (new FileInfo(xlsxFile).Length >= 1048576)
-                        ? $"{new FileInfo(xlsxFile).Length / 1048576:n}" + " MB"
-                        : $"{new FileInfo(xlsxFile).Length / 1024:n}"    + " KB";
-
+                    var fileSize = FileUtils.FileSize(xlsxFile);
 
                     Dispatcher.Invoke((System.Action)(() =>
                     {

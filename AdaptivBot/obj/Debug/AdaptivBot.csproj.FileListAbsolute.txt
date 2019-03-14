@@ -216,3 +216,6 @@ C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csproj.CopyComplete
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.exe
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.pdb
 C:\Users\collinss1\Documents\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csprojResolveAssemblyReference.cache
+C:\GitLab\adaptivbot\AdaptivBot\bin\Debug\System.IO.Abstractions.dll
+C:\GitLab\adaptivbot\AdaptivBot\bin\Debug\System.IO.Abstractions.xml
+C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache

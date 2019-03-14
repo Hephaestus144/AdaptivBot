@@ -200,9 +200,10 @@ namespace AdaptivBot.SettingForms
                     File.Delete(csvDrcFilePath);
 
                     // TODO: Extract this to a function in FileUtils
-                    var fileSize = new FileInfo(xlsxDrcFilePath).Length >= 1048576
-                        ? $"{new FileInfo(xlsxDrcFilePath).Length / 1048576:n}" + " MB"
-                        : $"{new FileInfo(xlsxDrcFilePath).Length / 1024:n}" + " KB";
+
+                    //var fileSize = new FileInfo(xlsxDrcFilePath).Length >= 1048576
+                    //    ? $"{new FileInfo(xlsxDrcFilePath).Length / 1048576:n}" + " MB"
+                    //    : $"{new FileInfo(xlsxDrcFilePath).Length / 1024:n}" + " KB";
 
                     #region excel merging
 
@@ -281,7 +282,7 @@ namespace AdaptivBot.SettingForms
                             FilePath = xlsxDrcFilePath,
                             FileName = Path.GetFileName(xlsxDrcFilePath),
                             FileType = $"Risk View : DRCs",
-                            FileSize = fileSize
+                            FileSize = FileUtils.FileSize(xlsxDrcFilePath)
                         });
                     }));
                     break;
