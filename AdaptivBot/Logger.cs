@@ -44,19 +44,19 @@ namespace AdaptivBot
 
         public void NewProcess(string message)
         {
-            DashedHorizontalLine(Brushes.LawnGreen);
+            DashedHorizontalLine((Brush)Application.Current.Resources["SecondaryAccentBrush"]);
 
             var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
             var messageRun = new Run($"{message}")
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
@@ -70,12 +70,12 @@ namespace AdaptivBot
 
         public void NewExtraction(string message)
         {
-            HorizontalLine(Brushes.LawnGreen);
+            HorizontalLine((Brush)Application.Current.Resources["SecondaryAccentBrush"]);
 
             var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
@@ -83,7 +83,7 @@ namespace AdaptivBot
             {
                 FontWeight = FontWeights.Bold,
                 FontStyle = FontStyles.Italic,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
@@ -98,26 +98,26 @@ namespace AdaptivBot
 
         public void ExtractionComplete(string message)
         {
-            DashedHorizontalLine(Brushes.LawnGreen);
+            DashedHorizontalLine((Brush)Application.Current.Resources["SecondaryAccentBrush"]);
 
             var completeRun = new Run($"\n>>>>>>>>  Complete : ")
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
             
             var messageRun = new Run($" {message} ")
             {
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
             var chevrons = new Run("  <<<<<<<<")
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.LawnGreen,
+                Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                 FontFamily = new FontFamily("Courier")
             };
 
@@ -243,13 +243,13 @@ namespace AdaptivBot
                 var timeStamp = new Run($"{DateTime.Now:hh:mm:ss}:  ")
                 {
                     FontWeight = FontWeights.Bold,
-                    Foreground = Brushes.LawnGreen,
+                    Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                     FontFamily = new FontFamily("Courier")
                 };
 
                 var message = new Run($"{value}")
                 {
-                    Foreground = Brushes.LawnGreen,
+                    Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                     FontFamily = new FontFamily("Courier")
                 };
 
@@ -317,7 +317,7 @@ namespace AdaptivBot
 
                 var message = new Run($"{value}")
                 {
-                    Foreground = Brushes.LawnGreen,
+                    Foreground = (Brush)Application.Current.Resources["SecondaryAccentBrush"],
                     FontFamily = new FontFamily("Courier")
                 };
 

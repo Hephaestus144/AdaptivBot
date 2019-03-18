@@ -24,6 +24,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -42,64 +47,63 @@
 
 
         <!-- Title -->
-        <DockPanel
-            Grid.Row="0"
+        <StackPanel
             Grid.Column="0"
-            Grid.ColumnSpan="11">
+            Grid.ColumnSpan="11"
+            Grid.Row="0"
+            VerticalAlignment="Center">
             <StackPanel
                 DockPanel.Dock="Top"
                 Orientation="Horizontal">
                 <TextBlock
                     Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                     Foreground="{DynamicResource SecondaryAccentBrush}"
-                    VerticalAlignment="Bottom"
-                    FontWeight="Regular"
-                    Margin="5,20,5,-5">
+                    FontSize="14"
+                    Margin="5,0,0,0"
+                    FontWeight="DemiBold">
                     Risk View Settings
                 </TextBlock>
 
                 <materialDesign:PackIcon
-                    Kind="HelpCircle"
-                    ToolTip="[To do] Description of this function."
+                    Kind="HelpCircleOutline"
+                    ToolTip="This is used to export deals from 'Risk View' in Adaptiv."
+                    Margin="10,0,0,0"
                     Foreground="{DynamicResource PrimaryHueMidBrush}"
-                    Width="16"
-                    Height="16"
-                    Margin="3,20,0,-7"
-                    VerticalAlignment="Center"/>
+                    Width="20"
+                    Height="20"/>
             </StackPanel>
 
-            <Separator DockPanel.Dock="Top"/>
-        </DockPanel>
+            <Separator DockPanel.Dock="Bottom"/>
+        </StackPanel>
 
 
         <!-- Labels for input text boxes -->
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="4"
             Grid.Column="0"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Margin="0,10,0,0">
+            <DockPanel.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignCaptionTextBlock}">
+                    <Setter Property="Margin" Value="9,9,4,9"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+            </DockPanel.Resources>
+
             <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9">
+                DockPanel.Dock="Top">
                 Base Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9"
                 ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant.">
                 Sub Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="9"
                 ToolTip="e.g. CustLimitUtil[yyyy-MM-dd].xlsx">
                 File Name Format
             </TextBlock>
@@ -109,9 +113,10 @@
         <!-- Input textboxes -->
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="4"
             Grid.Column="2"
-            Grid.ColumnSpan="4">
+            Grid.ColumnSpan="4"
+            Margin="0,10,0,0">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -171,10 +176,10 @@
         <!-- Instrument batch list box -->
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="4"
+            Grid.RowSpan="5"
             Grid.Column="6"
             Grid.ColumnSpan="3"
-            Margin="0,-16,0,0">
+            Margin="0,-6,0,0">
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
@@ -226,14 +231,16 @@
         <!-- Buttons -->
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="5"
             Grid.Column="9"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Margin="0,10,0,0"
+            LastChildFill="False">
             <DockPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Foreground" Value="LawnGreen"/>
+                            <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -258,17 +265,42 @@
                 Margin="5">
                 Copy Files to Prod
             </Button>
+
+            <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                DockPanel.Dock="Top"
+                VerticalAlignment="Top"
+                FontSize="11"
+                Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                Margin="5,5,5,10"
+                Click="btnRunExtraction_Click">
+                Run Extraction
+            </Button>
+
+            <CheckBox
+                Name="chkBxOverrideExistingFiles"
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                IsChecked="True"
+                FlowDirection="RightToLeft">
+                <TextBlock
+                    FontSize="11"
+                    Margin="0,-3,0,0">
+                    Replace Existing Files
+                </TextBlock>
+            </CheckBox>
         </DockPanel>
 
 
         <!-- Bottom most controls -->
         <Button
             Name="BtnSaveSettings"
-            Grid.Row="7"
             Grid.Column="0"
             Grid.ColumnSpan="3"
+            Grid.Row="11"
+            Grid.RowSpan="2"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
             Click="BtnSaveSettings_Click"
             FontSize="11"
             Style="{StaticResource MaterialDesignFlatButton}"
@@ -289,35 +321,5 @@
         </Button>
 
 
-        <CheckBox
-            Name="chkBxOverrideExistingFiles"
-            Grid.Row="7"
-            Grid.Column="6"
-            Grid.ColumnSpan="3"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            HorizontalAlignment="Right"
-            IsChecked="True"
-            Margin="5,7,5,5"
-            FlowDirection="RightToLeft">
-            <TextBlock
-                FontSize="11"
-                Margin="0,-3,0,0">
-                Override existing files
-            </TextBlock>
-        </CheckBox>
-
-
-        <Button
-            Grid.Row="7"
-            Grid.Column="9"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Bottom"
-            FontSize="11"
-            Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5,5,5,10"
-            Click="btnRunExtraction_Click">
-            Run Extraction
-        </Button>
     </Grid>
 </Page>

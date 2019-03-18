@@ -44,7 +44,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.3*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -255,6 +255,7 @@
                 DockPanel.Dock="Top"
                 FontSize="11"
                 Margin="5,6,5,0"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
                 ToolTip="Email the development team to alert them of a bug or a feature you'd like to add."
                 Click="BtnEmailBug_OnClick">
                 <Button.Content>
@@ -277,12 +278,16 @@
 
             <Button
                 Name="BtnQuitExecution"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 FontSize="11"
                 Margin="5,10,5,5"
-                ToolTip="[Not Implement] Cancel the current executing process.">
-                Quit Execution
+                ToolTip="[Not Implemented] Cancel the current executing process.">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Quit Execution</TextBlock>
+                    <materialDesign:PackIcon Kind="StopCircleOutline" Height="16" Width="16" Margin="3,0,0,0"/>
+                </StackPanel>
             </Button>
 
         </DockPanel>
@@ -350,7 +355,7 @@
                         IsReadOnly="True"
                         Margin="5"
                         BorderThickness="0"
-                        Foreground="LawnGreen"
+                        Foreground="{StaticResource SecondaryAccentBrush}"
                         FontSize="11"
                         VerticalContentAlignment="Top"
                         VerticalScrollBarVisibility="Auto">
@@ -440,7 +445,7 @@
                             Margin="5"
                             Background="Transparent"
                             BorderThickness="0"
-                            Foreground="LawnGreen"
+                            Foreground="{StaticResource SecondaryAccentBrush}"
                             FontSize="11"
                             IsReadOnly="True"
                             AutoGenerateColumns="False"
@@ -529,7 +534,7 @@
 
         <DockPanel 
             Grid.Row="0"
-            Grid.RowSpan="10"
+            Grid.RowSpan="11"
             Grid.Column="8"
             Grid.ColumnSpan="8">
 
@@ -613,9 +618,47 @@
         </DockPanel>
 
 
-        <DockPanel
+        <DockPanel 
             Grid.Row="10"
-            Grid.RowSpan="8"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="7"
+            VerticalAlignment="Top"
+            Margin="0,5,0,0"
+            LastChildFill="False">
+            <Button
+                Name="BtnNetworkType"
+                DockPanel.Dock="Left"
+                VerticalAlignment="Center"
+                Margin="7,0,7,5"
+                Height="30"
+                Width="30"
+                Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                materialDesign:ShadowAssist.Darken="True">
+                <materialDesign:PackIcon
+                    Name="IconNetworkType"
+                    Kind="Network"
+                    Foreground="Black"
+                    Width="20"
+                    Height="20"/>
+            </Button>
+
+            <TextBlock
+                DockPanel.Dock="Left"
+                VerticalAlignment="Center"
+                FontSize="20"
+                FontWeight="Light"
+                Foreground="{StaticResource SecondaryAccentBrush}"
+                Margin="10,0,0,0">
+                Web Browser
+            </TextBlock>
+        </DockPanel>
+
+
+        <DockPanel
+            Grid.Row="11"
+            Grid.RowSpan="7"
             Grid.Column="1"
             Grid.ColumnSpan="15"
             Margin="5,0,0,0">
@@ -625,38 +668,6 @@
                     <Setter Property="BorderThickness" Value="1"/>
                 </Style>
             </DockPanel.Resources>
-
-            <DockPanel 
-                DockPanel.Dock="Top"
-                LastChildFill="False">
-                <Button
-                    Name="BtnNetworkType"
-                    DockPanel.Dock="Left"
-                    VerticalAlignment="Center"
-                    Margin="7,14,7,5"
-                    Height="30"
-                    Width="30"
-                    Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                    materialDesign:ShadowAssist.Darken="True">
-                    <materialDesign:PackIcon
-                        Name="IconNetworkType"
-                        Kind="Network"
-                        Foreground="Black"
-                        Width="20"
-                        Height="20"/>
-                </Button>
-
-                <TextBlock
-                    DockPanel.Dock="Left"
-                    VerticalAlignment="Center"
-                    FontSize="20"
-                    FontWeight="Light"
-                    Foreground="{StaticResource SecondaryAccentBrush}"
-                    Margin="10,12,0,0">
-                    Web Browser
-                </TextBlock>
-            </DockPanel>
 
             <Border DockPanel.Dock="Left"/>
             <Border DockPanel.Dock="Top"/>

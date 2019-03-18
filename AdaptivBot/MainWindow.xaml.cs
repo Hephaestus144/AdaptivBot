@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Xml.Linq;
 using Action = System.Action;
+using Application = System.Windows.Application;
 using Brushes = System.Windows.Media.Brushes;
 
 
@@ -149,10 +151,8 @@ namespace AdaptivBot
         public MainWindow()
         {
             InitializeComponent();
-            
             dgExtractedFiles.ItemsSource = extractedFiles;
-            NetworkChange.NetworkAddressChanged +=
-                new NetworkAddressChangedEventHandler(AddressCallbackChange);
+            NetworkChange.NetworkAddressChanged += AddressCallbackChange;
 
             // Deals with new windows created by browser.
             WebBrowser = (webBrowserHost.Child as System.Windows.Forms.WebBrowser);
@@ -167,7 +167,7 @@ namespace AdaptivBot
 
         public bool IsUsingEthernet(Logger logger, bool windowJustLoaded = false)
         {
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (ni.OperationalStatus == OperationalStatus.Up
                     && ni.NetworkInterfaceType.ToString()
@@ -181,7 +181,7 @@ namespace AdaptivBot
                 }
             }
 
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (ni.OperationalStatus == OperationalStatus.Up)
                 {
@@ -210,6 +210,8 @@ namespace AdaptivBot
                 Dispatcher.BeginInvoke((Action) (() =>
                 {
                     IconNetworkType.Kind = PackIconKind.Network;
+                    BtnNetworkType.Background = (Brush)Application.Current.Resources["SecondaryAccentBrush"];
+                    BtnNetworkType.BorderBrush = (Brush)Application.Current.Resources["SecondaryAccentBrush"];
                 }));
             }
             else
@@ -368,4 +370,3 @@ namespace AdaptivBot
         }
     }
 }
- 

@@ -25,6 +25,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -42,27 +46,39 @@
         </Grid.ColumnDefinitions>
 
 
-        <DockPanel
-            Grid.Row="0"
+        <!-- Title -->
+        <StackPanel
             Grid.Column="0"
-            Grid.ColumnSpan="11">
-            <TextBlock
+            Grid.ColumnSpan="11"
+            Grid.Row="0"
+            VerticalAlignment="Center">
+            <StackPanel
                 DockPanel.Dock="Top"
-                Style="{DynamicResource MaterialDesignCaptionTextBlock}"
-                Foreground="{DynamicResource SecondaryAccentBrush}"
-                VerticalAlignment="Bottom"
-                FontWeight="Regular"
-                Margin="5,20,5,-5">
-                General Settings
-            </TextBlock>
+                Orientation="Horizontal">
+                <TextBlock
+                    Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+                    Foreground="{DynamicResource SecondaryAccentBrush}"
+                    FontSize="14"
+                    Margin="5,0,0,0"
+                    FontWeight="DemiBold">
+                    General Settings
+                </TextBlock>
 
-            <Separator DockPanel.Dock="Top"/>
-        </DockPanel>
+                <materialDesign:PackIcon
+                    Kind="HelpCircleOutline"
+                    ToolTip="This is used to export deals from 'Risk View' in Adaptiv."
+                    Margin="10,0,0,0"
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                    Width="20"
+                    Height="20"/>
+            </StackPanel>
 
+            <Separator DockPanel.Dock="Bottom"/>
+        </StackPanel>
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="5"
             Grid.Column="0"
             Grid.ColumnSpan="2">
             <DockPanel.Resources>
@@ -93,7 +109,7 @@
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="5"
             Grid.Column="2"
             Grid.ColumnSpan="5">
             <DockPanel.Resources>
@@ -152,7 +168,7 @@
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="5"
             Grid.Column="8"
             Grid.ColumnSpan="3">
             
@@ -163,6 +179,7 @@
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Top"/>
                     <Setter Property="Margin" Value="0,5,0,5"/>
+                    <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth5"/>
                 </Style>
             </DockPanel.Resources>
             
@@ -178,14 +195,20 @@
                 Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
-                Purge Adaptiv Credentials
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Purge Adaptiv Credentials</TextBlock>
+                    <materialDesign:PackIcon Kind="PasswordReset" Margin="3,0,0,0"/>
+                </StackPanel>
             </Button>
 
             <Button
                 Name="BtnConfigureTaskScheduler"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
-                Configure Task Scheduler
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Configure Task Scheduler</TextBlock>
+                    <materialDesign:PackIcon Kind="ClockOutline" Margin="3,0,0,0"/>
+                </StackPanel>            
             </Button>
 
 
@@ -193,14 +216,20 @@
                 Name="BtnDeleteAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
-                Delete Config File
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Delete Config File</TextBlock>
+                    <materialDesign:PackIcon Kind="RemoveCircleOutline" Margin="3,0,0,0"/>
+                </StackPanel>
             </Button>
 
             <Button
                 Name="BtnOpenAdaptivBotConfigFileFolder"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
-                Open Config File Folder
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Open Config File Folder</TextBlock>
+                    <materialDesign:PackIcon Kind="FolderOpen" Margin="3,0,0,0"/>
+                </StackPanel>
             </Button>
 
         </DockPanel>
@@ -208,11 +237,12 @@
 
         <Button
             Name="BtnSaveSettings"
-            Grid.Row="8"
+            Grid.Row="11"
+            Grid.RowSpan="2"
             Grid.Column="0"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
+            VerticalAlignment="Center"
             FontSize="11"
             Style="{StaticResource MaterialDesignFlatButton}"
             Margin="5,5,5,10">
@@ -224,12 +254,22 @@
                         Kind="ContentSaveSettingsOutline"
                         Width="16"
                         Height="16"
-                        Margin="5,0,0,0"
+                        Margin="3,0,0,0"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"/>
                 </StackPanel>
             </Button.Content>
         </Button>
 
+
+        <Image HorizontalAlignment="Left"
+               Grid.Row="11"
+               Grid.RowSpan="2"
+               Grid.Column="10"
+               Margin="0,0,0,10">
+            <Image.Source>
+                <BitmapImage DecodePixelWidth="300" UriSource="/Images/cpu.png" />
+            </Image.Source>
+        </Image>
     </Grid>
 </Page>

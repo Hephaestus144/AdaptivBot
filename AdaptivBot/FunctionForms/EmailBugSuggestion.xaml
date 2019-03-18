@@ -20,6 +20,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -37,48 +42,80 @@
         </Grid.ColumnDefinitions>
 
 
-        <DockPanel
-            Grid.Row="0"
+        <!-- Title -->
+        <StackPanel
             Grid.Column="0"
-            Grid.ColumnSpan="11">
-            <TextBlock
-                    DockPanel.Dock="Top"
+            Grid.ColumnSpan="11"
+            Grid.Row="0"
+            VerticalAlignment="Center">
+            <StackPanel
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock
                     Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                     Foreground="{DynamicResource SecondaryAccentBrush}"
-                    VerticalAlignment="Bottom"
-                    FontWeight="Regular"
-                    Margin="5,20,5,-5">
-                Email Bug/Suggestion
-            </TextBlock>
-                    
-            <Separator DockPanel.Dock="Top"/>
-        </DockPanel>
+                    FontSize="14"
+                    Margin="5,0,0,0"
+                    FontWeight="DemiBold">
+                    Email Bug/Suggestion
+                </TextBlock>
+
+                <materialDesign:PackIcon
+                    Kind="HelpCircleOutline"
+                    ToolTip="This one seems fairly self explanatory..."
+                    Margin="10,0,0,0"
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                    Width="20"
+                    Height="20"/>
+            </StackPanel>
+
+            <Separator DockPanel.Dock="Bottom"/>
+        </StackPanel>
 
 
-        <DockPanel
-            Grid.Row="1"
+
+        <materialDesign:Card
             Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <materialDesign:Card
-                UniformCornerRadius="4"
-                Margin="5"
-                Padding="5,0,5,5">
-                <ComboBox
-                    FontSize="11"
-                    DockPanel.Dock="Top"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    materialDesign:HintAssist.Hint="Type"
-                    materialDesign:HintAssist.FloatingScale="0.1">
-                    <ComboBoxItem>Bug</ComboBoxItem>
-                    <ComboBoxItem>Suggestion</ComboBoxItem>
-                </ComboBox>
-            </materialDesign:Card>
-        </DockPanel>
+            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            VerticalAlignment="Center"
+            UniformCornerRadius="4"
+            DockPanel.Dock="Left"
+            Margin="5"
+            Padding="5,0,5,5">
+            <ComboBox
+                FontSize="11"
+                DockPanel.Dock="Top"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                materialDesign:HintAssist.Hint="Type"
+                materialDesign:HintAssist.FloatingScale="0.1">
+                <ComboBoxItem>Bug</ComboBoxItem>
+                <ComboBoxItem>Suggestion</ComboBoxItem>
+            </ComboBox>
+        </materialDesign:Card>
 
-
+        <Button
+            Name="BtnSendEmail"
+            Grid.Column="5"
+            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            materialDesign:ShadowAssist.ShadowDepth="Depth5"
+            DockPanel.Dock="Right"
+            Margin="5"
+            FontSize="11"
+            materialDesign:RippleAssist.ClipToBounds="True"
+            Style="{StaticResource MaterialDesignRaisedAccentButton}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Send Email</TextBlock>
+                <materialDesign:PackIcon Kind="EmailOutline" Margin="3,0,0,0"/>
+            </StackPanel> 
+        </Button>
+        
         <DockPanel
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.RowSpan="4"
             Grid.Column="0"
             Grid.ColumnSpan="7">
@@ -88,7 +125,7 @@
                 FontSize="14"
                 FontWeight="DemiBold"
                 Margin="11,0,0,0">
-                Description
+                Bug/Suggestion Description
             </TextBlock>
 
             <materialDesign:Card
@@ -97,31 +134,36 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Margin="5">
-                <TextBox
-                    Name="txtBoxBaseFolder"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    TextWrapping="Wrap"
+                <RichTextBox
+                    Name="rtbEmailContent"
+                    FontSize="11"
+                    materialDesign:RippleAssist.RippleSizeMultiplier="2"
+                    Margin="0"
+                    Foreground="White"
+                    Padding="5"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
-                    ToolTip="The folder to which the file will be saved."/>
+                    BorderThickness="0"
+                    Background="Transparent">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <!--<MaterialDesign-->
+                    <!--Name="rtbEmailContent"
+                    FontSize="11"
+                    Padding="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"/>-->
             </materialDesign:Card>
 
         </DockPanel>
 
-
-        <Button
-            Name="BtnSendEmail"
-            Grid.Row="7"
-            Grid.Column="9"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Bottom"
-            FontSize="12"
-            Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5,5,5,10">
-            Send Email
-        </Button>
     </Grid>
 </Page>
