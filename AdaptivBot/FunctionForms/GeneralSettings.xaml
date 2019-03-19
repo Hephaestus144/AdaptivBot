@@ -168,7 +168,7 @@
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="5"
+            Grid.RowSpan="7"
             Grid.Column="8"
             Grid.ColumnSpan="3">
             
@@ -197,7 +197,7 @@
                 ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Purge Adaptiv Credentials</TextBlock>
-                    <materialDesign:PackIcon Kind="PasswordReset" Margin="3,0,0,0"/>
+                    <materialDesign:PackIcon Kind="PasswordReset" HorizontalAlignment="Right" Margin="3,0,0,0"/>
                 </StackPanel>
             </Button>
 
@@ -207,7 +207,7 @@
                 ToolTip="[Not Implemented]">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Configure Task Scheduler</TextBlock>
-                    <materialDesign:PackIcon Kind="ClockOutline" Margin="3,0,0,0"/>
+                    <materialDesign:PackIcon Kind="ClockOutline" HorizontalAlignment="Right" Margin="3,0,0,0"/>
                 </StackPanel>            
             </Button>
 
@@ -216,10 +216,10 @@
                 Name="BtnDeleteAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Delete Config File</TextBlock>
-                    <materialDesign:PackIcon Kind="RemoveCircleOutline" Margin="3,0,0,0"/>
-                </StackPanel>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Stretch">Delete Config File</TextBlock>
+                    <materialDesign:PackIcon Kind="RemoveCircleOutline" DockPanel.Dock="Left" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="3,0,0,0"/>
+                </DockPanel>
             </Button>
 
             <Button

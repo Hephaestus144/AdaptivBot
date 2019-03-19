@@ -310,7 +310,6 @@ namespace AdaptivBot.SettingForms
             _window.Logger.OkayText
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
-
         }
 
 

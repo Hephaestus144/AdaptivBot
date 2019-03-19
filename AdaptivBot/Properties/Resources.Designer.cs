@@ -79,5 +79,58 @@ namespace AdaptivBot.Properties {
                 return ResourceManager.GetString("AdaptivBot", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;html&gt;
+        ///&lt;header&gt;
+        ///    &lt;title&gt;Extraction Complete with Errors&lt;/title&gt;
+        ///&lt;/header&gt;
+        ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
+        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete with Errors&lt;/h1&gt;
+        ///    &lt;img src=&quot;AdaptivBotRedCross.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///&lt;/body&gt;
+        ///&lt;/html&gt;.
+        /// </summary>
+        internal static string ExtractionCompleteWithErrors {
+            get {
+                return ResourceManager.GetString("ExtractionCompleteWithErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;html&gt;
+        ///&lt;header&gt;
+        ///    &lt;title&gt;Extraction Complete without Errors&lt;/title&gt;
+        ///&lt;/header&gt;
+        ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
+        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete without Errors&lt;/h1&gt;
+        ///    &lt;img src=&quot;AdaptivBotGreenCheckMark.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///&lt;/body&gt;
+        ///&lt;/html&gt;
+        ///.
+        /// </summary>
+        internal static string ExtractionCompleteWithoutErrors {
+            get {
+                return ResourceManager.GetString("ExtractionCompleteWithoutErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;html&gt;
+        ///&lt;header&gt;
+        ///    &lt;title&gt;Extraction Complete with Warnings&lt;/title&gt;
+        ///&lt;/header&gt;
+        ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
+        ///&lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete with Warnings&lt;/h1&gt;
+        ///&lt;img src=&quot;AdaptivBotOrangeCheckMark.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///&lt;/body&gt;
+        ///&lt;/html&gt;
+        ///.
+        /// </summary>
+        internal static string ExtractionCompleteWithWarnings {
+            get {
+                return ResourceManager.GetString("ExtractionCompleteWithWarnings", resourceCulture);
+            }
+        }
     }
 }

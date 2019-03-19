@@ -121,4 +121,13 @@
   <data name="AdaptivBot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ConfigFunctions\AdaptivBot.config;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="ExtractionCompleteWithErrors" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExtractionCompleteWithErrors.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ExtractionCompleteWithoutErrors" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExtractionCompleteWithoutErrors.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ExtractionCompleteWithWarnings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExtractionCompleteWithWarnings.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

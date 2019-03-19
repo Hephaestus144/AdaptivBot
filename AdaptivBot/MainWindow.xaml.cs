@@ -90,9 +90,9 @@ namespace AdaptivBot
                         Properties.Resources.AdaptivBot);
                     Logger.OkayText = $"Config file created : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
                 }
-                catch (Exception configFileCreationException)
+                catch (Exception exception)
                 {
-                    Logger.ErrorText = $"Exception caught: {configFileCreationException.Message}";
+                    Logger.ErrorText = $"Exception caught: {exception.Message}";
                     Logger.ErrorText = "Config file not created! Limited functionality.";
                 }
             }
@@ -101,6 +101,7 @@ namespace AdaptivBot
                 Logger.OkayText= $"Config file found : " +
                     $"{GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
             }
+
 
             var document
                 = XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
@@ -144,7 +145,112 @@ namespace AdaptivBot
                 }
             }
 
+
+            SetupExtractionCompletionWebpages();
+
             #endregion  config file & variables setup
+        }
+
+        
+        /// <summary>
+        /// This creates the Web pages (if they don't exist already) which are displayed at the end of an extraction
+        /// in the web form. 
+        /// </summary>
+        private void SetupExtractionCompletionWebpages()
+        {
+            GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors
+                = Path.Combine(GlobalDataBindingValues.Instance.AdaptivBotDirectory,
+                    "ExtractionCompleteWithoutErrors.html");
+
+            GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors
+                = Path.Combine(GlobalDataBindingValues.Instance.AdaptivBotDirectory,
+                    "ExtractionCompleteWithErrors.html");
+
+            GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings
+                = Path.Combine(GlobalDataBindingValues.Instance.AdaptivBotDirectory,
+                    "ExtractionCompleteWithWarnings.html");
+
+            var pagePathAndHtml
+                = new Dictionary<string, string>()
+                {
+                    [GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors] =
+                        Properties.Resources.ExtractionCompleteWithErrors,
+                    [GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors] =
+                        Properties.Resources.ExtractionCompleteWithoutErrors,
+                    [GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings] =
+                        Properties.Resources.ExtractionCompleteWithWarnings
+                };
+
+            foreach (var pair in pagePathAndHtml)
+            {
+                if (!File.Exists(pair.Key))
+                {
+                    try
+                    {
+                        File.WriteAllText(pair.Key, pair.Value);
+                        Logger.OkayText = $"{nameof(pair.Key)} HTML file created: " +
+                                          $"{pair.Key}";
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.ErrorText = $"Exception caught: {exception.Message}";
+                        Logger.WarningText = $"{nameof(pair.Key)} HTML file NOT created!";
+                        Logger.WarningText = " However not critical bot will still function.";
+                    }
+                }
+            }
+
+            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors))
+            //{
+            //    try
+            //    {
+            //        File.WriteAllText(
+            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors,
+            //            Properties.Resources.ExtractionCompleteWithErrors);
+            //        Logger.OkayText = "\"Extraction Complete with Errors\" HTML file created: " +
+            //                          $"{GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors}";
+            //    }
+            //    catch (Exception exception)
+            //    {
+            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
+            //        Logger.WarningText = "\"Extraction Complete with Errors\" HTML file NOT created! However not critical bot will still function.";
+            //    }
+            //}
+
+
+            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors))
+            //{
+            //    try
+            //    {
+            //        File.WriteAllText(
+            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors,
+            //            Properties.Resources.ExtractionCompleteWithoutErrors);
+            //        Logger.OkayText = $"\"Extraction Complete without Errors\" HTML file created: {GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors}";
+            //    }
+            //    catch (Exception exception)
+            //    {
+            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
+            //        Logger.WarningText = "\"Extraction Complete without Errors\" HTML file NOT created! However not critical bot will still function.";
+            //    }
+            //}
+
+
+
+            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings))
+            //{
+            //    try
+            //    {
+            //        File.WriteAllText(
+            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings,
+            //            Properties.Resources.ExtractionCompleteWithWarnings);
+            //        Logger.OkayText = $"\"Extraction Complete with Warnings\" HTML file created: {GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings}";
+            //    }
+            //    catch (Exception exception)
+            //    {
+            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
+            //        Logger.WarningText = "\"Extraction Complete with Warnings\" HTML file NOT created! However not critical bot will still function.";
+            //    }
+            //}
         }
 
 
@@ -268,8 +374,8 @@ namespace AdaptivBot
             object sender,
             WebBrowserDocumentCompletedEventArgs e)
         {
-            if (!this.WebBrowser.IsBusy &&
-                this.WebBrowser.ReadyState == WebBrowserReadyState.Complete)
+            if (!this.WebBrowser.IsBusy
+                && this.WebBrowser.ReadyState == WebBrowserReadyState.Complete)
             {
                 completedLoading = true;
             }

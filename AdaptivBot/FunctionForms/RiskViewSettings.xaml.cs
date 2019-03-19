@@ -35,10 +35,9 @@ namespace AdaptivBot.SettingForms
                 AutoItX.Sleep(100);
                 if (AutoItX.WinExists("Script Error") != 0)
                 {
-                    Dispatcher.Invoke((System.Action)(() =>
-                    {
-                        _window.Logger.DontPanicErrorText = $"JavaScript error caught, restarting extraction...";
-                    }));
+                    Dispatcher.Invoke((Action) (() =>
+                        _window.Logger.DontPanicErrorText =
+                            $"JavaScript error caught, restarting extraction..."));
                     AutoItX.WinActivate("Script Error");
                     AutoItX.Send("!y");
                     throw new Exception();
@@ -61,7 +60,7 @@ namespace AdaptivBot.SettingForms
             // TODO: Use binding here.
             var username = _window?.TxtUserName.Text;
             var password = _window?.TxtPasswordBox.Password;
-            
+
             var selectedInstruments = (from object selectedItem in lstBxInstruments.SelectedItems
                 select InstrumentLists.InstrumentGuiNameToFolderNameMapping[selectedItem.ToString()
                     .Replace("System.Windows.Controls.ListBoxItem: ", "")]).ToList();
@@ -167,7 +166,6 @@ namespace AdaptivBot.SettingForms
 
                         #endregion wait for browser
 
-                        
 
                         while (_window.WebBrowser.Document.GetElementsByTagName("A").Count == 0)
                         {
@@ -180,14 +178,11 @@ namespace AdaptivBot.SettingForms
                             if (link.InnerText.Equals("exported file link"))
                                 link.InvokeMember("Click");
                         }
-
                         
                         await Task.Run(() => Thread.Sleep(1000));
-                        var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;
-                        
+                        var overrideExistingFile = (bool)chkBxOverrideExistingFiles.IsChecked;                  
                         await Task.Run(() => SaveFile(instrumentBatch, overrideExistingFile).Wait());
                         numberOfSuccessfulExtractions++;
-                        
                         break;
                     }
                     catch (Exception exception)
@@ -224,7 +219,9 @@ namespace AdaptivBot.SettingForms
                            GlobalDataBindingValues.Instance.extractionStartTime;
             _window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
-            _window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+            //_window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
+            _window.WebBrowser.Url =
+                new Uri(GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors);
         }
 
 
@@ -233,10 +230,8 @@ namespace AdaptivBot.SettingForms
             AutoItX.WinWait("File Download", timeout: 20);
             AutoItX.WinActivate("File Download");
             AutoItX.Send("!s");
-            Dispatcher.Invoke((System.Action)(() =>
-            {
-                _window.Logger.OkayText = $"Saving CSV file for {instrumentBatch}...";
-            }));
+            Dispatcher.Invoke((Action) (() =>
+                _window.Logger.OkayText = $"Saving CSV file for {instrumentBatch}..."));
 
             AutoItX.WinWait("Save As", timeout: 20);
             AutoItX.WinActivate("Save As");

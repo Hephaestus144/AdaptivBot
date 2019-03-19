@@ -56,10 +56,57 @@ namespace AdaptivBot
             }
         }
 
+
+        private string _extractionCompleteWithoutErrors;
+
+        public string ExtractionCompleteWithoutErrors
+        {
+            get => _extractionCompleteWithoutErrors;
+            set
+            {
+                if (_extractionCompleteWithoutErrors != value)
+                {
+                    _extractionCompleteWithoutErrors = value;
+                    this.OnPropertyChanged(nameof(ExtractionCompleteWithoutErrors));
+                }
+            }
+        }
+
+
+        private string _extractionCompleteWithErrors;
+
+        public string ExtractionCompleteWithErrors
+        {
+            get => _extractionCompleteWithErrors;
+            set
+            {
+                if (_extractionCompleteWithErrors != value)
+                {
+                    _extractionCompleteWithErrors = value;
+                    this.OnPropertyChanged(nameof(ExtractionCompleteWithErrors));
+                }
+            }
+        }
+
+        private string _extractionCompleteWithWarnings;
+
+        public string ExtractionCompleteWithWarnings
+        {
+            get => _extractionCompleteWithWarnings;
+            set
+            {
+                if (_extractionCompleteWithWarnings != value)
+                {
+                    _extractionCompleteWithWarnings = value;
+                    this.OnPropertyChanged(nameof(ExtractionCompleteWithWarnings));
+                }
+            }
+        }
+
         // It's difficult to generically determine the location of Excel
         public static List<string> PossibleExcelPaths
-            = new List<string>()
-            {
+            = new List<string>
+            { 
                  @"C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe",
                  @"C:\Program Files\Microsoft Office\root\Office16\Excel.exe"
             };

@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/robot-2.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/extractioncompletewithwarnings.html")]
 
 

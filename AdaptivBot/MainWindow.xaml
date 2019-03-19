@@ -34,26 +34,27 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="0.3*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="0.25*" />
+            <ColumnDefinition Width="26*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="39*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="95*" />
+            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="130*" />
+            <ColumnDefinition Width="33*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -84,7 +85,7 @@
                Grid.RowSpan="3"
                Grid.Column="2"
                Grid.ColumnSpan="2"
-               Margin="24,0,0,50">
+               Margin="23.8,0.2,0,50">
             <Image.Source>
                 <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot.png" />
             </Image.Source>
@@ -96,7 +97,7 @@
             Grid.RowSpan="5"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Margin="0,0,10,0">
+            Margin="0.4,0.2,9.8,0.2">
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -202,7 +203,7 @@
             Grid.RowSpan="5"
             Grid.Column="3"
             Grid.ColumnSpan="2"
-            Margin="10,0,0,0">
+            Margin="10.2,0.2,0,0.2">
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -215,7 +216,7 @@
             <Separator
                 DockPanel.Dock="Top"
                 Margin="4,0,4,10"/>
-            
+
             <materialDesign:Card
                 DockPanel.Dock="Top"
                 UniformCornerRadius="4"
@@ -246,6 +247,7 @@
                     <ComboBoxItem>Customer Limit Utilisation</ComboBoxItem>
                     <ComboBoxItem>Deal Risk Carriers</ComboBoxItem>
                     <ComboBoxItem>General Settings</ComboBoxItem>
+                    <ComboBoxItem>Test Functions</ComboBoxItem>
                     <ComboBoxItem>Email Bug/Suggestion</ComboBoxItem>
                 </ComboBox>
             </materialDesign:Card>
@@ -271,9 +273,9 @@
                             Margin="2,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
-                        </DockPanel>
+                    </DockPanel>
                 </Button.Content>
-                
+
             </Button>
 
             <Button
@@ -291,40 +293,40 @@
             </Button>
 
         </DockPanel>
-    
+
 
         <materialDesign:Flipper
             Grid.Row="5"
             Grid.RowSpan="6"
             Grid.Column="1"
             Grid.ColumnSpan="6"
-            Margin="5,20,0,20"
+            Margin="5.4,19.8,0.2,20"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             Background="Transparent">
             <materialDesign:Flipper.FrontContent>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <TextBlock
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -334,9 +336,9 @@
                     FontWeight="Regular"
                     Foreground="{StaticResource SecondaryAccentBrush}">
                     Logger
-                </TextBlock>
+                    </TextBlock>
 
-                <materialDesign:Card
+                    <materialDesign:Card
                     Grid.Row="1"
                     Grid.RowSpan="5"
                     Grid.Column="0"
@@ -346,7 +348,7 @@
                     VerticalAlignment="Stretch"
                     Margin="5,0,0,0"
                     UniformCornerRadius="6">
-                    <RichTextBox
+                        <RichTextBox
                         Name="rtbLogger"
                         VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
@@ -359,40 +361,40 @@
                         FontSize="11"
                         VerticalContentAlignment="Top"
                         VerticalScrollBarVisibility="Auto">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>
-                    </RichTextBox>
-                </materialDesign:Card>
-                <DockPanel
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </RichTextBox.Resources>
+                        </RichTextBox>
+                    </materialDesign:Card>
+                    <DockPanel
                     Grid.Row="6"
                     Grid.Column="3"
                     Grid.ColumnSpan="2">
-                    <Button
+                        <Button
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right"
                         VerticalContentAlignment="Center"
                         Style="{StaticResource MaterialDesignFlatButton}"
                         ToolTip="View the files extracted by the processes you just ran."
                         Command="{x:Static materialDesign:Flipper.FlipCommand}">
-                        <StackPanel
+                            <StackPanel
                             Orientation="Horizontal">
-                            <TextBlock
+                                <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="10">
                                 Extracted Files
-                            </TextBlock>
-                            <materialDesign:PackIcon
+                                </TextBlock>
+                                <materialDesign:PackIcon
                                 Kind="ArrowRightBoldOutline"
                                 Margin="5,0,0,0"
                                 HorizontalAlignment="Right" />
-                        </StackPanel>
-                    </Button>
+                            </StackPanel>
+                        </Button>
                     </DockPanel>
 
-            </Grid>
+                </Grid>
             </materialDesign:Flipper.FrontContent>
 
             <materialDesign:Flipper.BackContent>
@@ -426,7 +428,7 @@
                         Foreground="{StaticResource SecondaryAccentBrush}">
                         Extracted Files
                     </TextBlock>
-                    
+
                     <materialDesign:Card
                         UniformCornerRadius="6"
                         Grid.Row="1"
@@ -476,7 +478,7 @@
                                     Binding="{Binding FileType}">
                                     <DataGridTextColumn.Header>
                                         File Type
-                                    </DataGridTextColumn.Header>   
+                                    </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
                                 <DataGridTextColumn 
@@ -535,8 +537,8 @@
         <DockPanel 
             Grid.Row="0"
             Grid.RowSpan="11"
-            Grid.Column="8"
-            Grid.ColumnSpan="8">
+            Grid.Column="7"
+            Grid.ColumnSpan="11" Margin="38.8,0,32.6,0">
 
             <materialDesign:Transitioner
                 Name="FrameFunctions"
@@ -609,6 +611,18 @@
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
                     <Frame
+                        Name="FrmTestFunctions"
+                        NavigationUIVisibility="Hidden"
+                        Source="FunctionForms/TestFunctions.xaml"/>
+                </materialDesign:TransitioningContent>
+
+                <materialDesign:TransitioningContent>
+                    <materialDesign:TransitioningContent.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        <materialDesign:TransitionEffect Kind="FadeIn" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitioningContent.OpeningEffects>
+                    <Frame
                         Name="FrmEmailBugSuggestion"
                         NavigationUIVisibility="Hidden"
                         Source="FunctionForms/EmailBugSuggestion.xaml"/>
@@ -620,11 +634,10 @@
 
         <DockPanel 
             Grid.Row="10"
-            Grid.RowSpan="2"
             Grid.Column="1"
             Grid.ColumnSpan="7"
             VerticalAlignment="Top"
-            Margin="0,5,0,0"
+            Margin="0.4,5.2,0.4,0"
             LastChildFill="False">
             <Button
                 Name="BtnNetworkType"
@@ -658,10 +671,10 @@
 
         <DockPanel
             Grid.Row="11"
-            Grid.RowSpan="7"
+            Grid.RowSpan="8"
             Grid.Column="1"
-            Grid.ColumnSpan="15"
-            Margin="5,0,0,0">
+            Grid.ColumnSpan="17"
+            Margin="5.4,0,32.6,29.4">
             <DockPanel.Resources>
                 <Style TargetType="Border">
                     <Setter Property="BorderBrush" Value="DodgerBlue"/>
@@ -673,7 +686,7 @@
             <Border DockPanel.Dock="Top"/>
             <Border DockPanel.Dock="Right"/>
             <Border DockPanel.Dock="Bottom"/>
-            
+
             <WindowsFormsHost
                 Name="webBrowserHost"
                 Margin="1">
