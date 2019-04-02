@@ -176,6 +176,7 @@ namespace AdaptivBot
 
                 var message = new Run($"{value}")
                 {
+                    FontWeight = FontWeights.DemiBold,
                     Foreground = Brushes.Red,
                     FontFamily = new FontFamily("Courier")
                 };
@@ -204,12 +205,20 @@ namespace AdaptivBot
                     FontFamily = new FontFamily("Courier")
                 };
 
-                var dontPanic = new Run($"DON'T PANIC. This error has been 'gracefully' dealt with.")
+                var dontPanic = new Run($"DON'T PANIC: ")
                 {
-                    FontWeight = FontWeights.ExtraBold,
+                    FontWeight = FontWeights.Bold,
                     Foreground = Brushes.Red,
                     FontFamily = new FontFamily("Courier")
                 };
+
+                var dontPanicExplanation =
+                    new Run("This error is being 'gracefully' dealt with.")
+                    {
+                        Foreground = Brushes.Red,
+                        FontWeight = FontWeights.DemiBold,
+                        FontFamily = new FontFamily("Courier")
+                    };
 
                 var message = new Run($"{value}")
                 {
@@ -220,6 +229,7 @@ namespace AdaptivBot
                 var paragraph = new Paragraph();
                 paragraph.Inlines.Add(timeStamp);
                 paragraph.Inlines.Add(dontPanic);
+                paragraph.Inlines.Add(dontPanicExplanation);
                 loggerText.Blocks.Add(paragraph);
                 RtbLogger.Document.Blocks.Add(paragraph);
                 RtbLogger.ScrollToEnd();
@@ -295,6 +305,7 @@ namespace AdaptivBot
                 
                 var message = new Run($"{value}")
                 {
+                    FontWeight = FontWeights.DemiBold,
                     Foreground = Brushes.Red,
                     FontFamily = new FontFamily("Courier")
                 };

@@ -2,11 +2,10 @@
 using CredentialManagement;
 using System;
 using System.ComponentModel;
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Threading;
 
 
 namespace AdaptivBot
@@ -20,8 +19,10 @@ namespace AdaptivBot
 
         private static readonly object Padlock = new object();
 
+        public bool CancelRun = false;
 
         #region fields
+
         private Credential _credentials;
 
         public Credential Credentials
@@ -103,6 +104,7 @@ namespace AdaptivBot
 
 
         #region constructors
+
         private CredentialStore()
         { }
 
@@ -123,7 +125,7 @@ namespace AdaptivBot
                 return _instance;
             }
         }
-        
+
         #endregion constructors
 
 
@@ -146,25 +148,35 @@ namespace AdaptivBot
                 || this.Credentials.Password != _window.TxtPasswordBox.Password))
             {
                 var window = new AlertUpdateUserCredentials();
-                window.Show();
-                return false;
-                // TODO: Add message box to warn user that the credentials that have been entered are different 
-                // to the saved credentials & would they like to save them?
+                window.ShowDialog();
+                
+                if (window.UpdateCredentials)
+                {
+                    this.Credentials.Username = _window.TxtUserName.Text;
+                    this.Credentials.Password = _window.TxtPasswordBox.Password;
+                    this.Credentials.PersistanceType = PersistanceType.LocalComputer;
+                    this.Credentials.Save();
+                    _window.Logger.WarningText = "Updating credentials...";
+                    _window.Logger.OkayText = "Continuing with run...";
+                }
+                else if (!window.CancelRun)
+                {
+                    _window.Logger.WarningText = "Using new credentials but not updating old credentials...";
+                    _window.Logger.OkayText = "Continuing with run...";
+                }
+                CancelRun = window.CancelRun;
             }
 
-            if (_window.TxtUserName.Text == "")
+            if (_window.TxtUserName.Text?.Length == 0)
             {
                 _window.Logger.ErrorText = "User name blank.";
                 return false;
             }
 
-            if (_window.TxtPasswordBox.Password == "")
-            {
-                _window.Logger.ErrorText = "Password blank.";
-                return false;
-            }
+            if (_window.TxtPasswordBox.Password?.Length != 0) return true;
 
-            return true;
+            _window.Logger.ErrorText = "Password blank.";
+            return false;
         }
 
 
@@ -181,7 +193,7 @@ namespace AdaptivBot
 
             if (AutoItX.WinExists("Windows Security") != 0)
             {
-                _window.Dispatcher.BeginInvoke((Action) (() =>
+                _window.Dispatcher.BeginInvoke((Action)(() =>
                 {
                     _window.Logger.OkayText = "Entering credentials...";
                 }));
@@ -194,7 +206,6 @@ namespace AdaptivBot
 
                 // check if credentials failed then ask user to update credentials
                 AutoItX.Sleep(1000);
-
             }
             else
             {
@@ -212,8 +223,8 @@ namespace AdaptivBot
                 return false;
             }
             _window.Dispatcher.BeginInvoke(
-                (Action) (() =>
-                    _window.Logger.OkayText = "Acknowledging disclaimer..."));
+                (Action)(() =>
+                   _window.Logger.OkayText = "Acknowledging disclaimer..."));
 
             while (AutoItX.WinExists("Adaptiv Disclaimer -- Webpage Dialog") == 0)
             {
@@ -227,6 +238,7 @@ namespace AdaptivBot
 
 
         #region event handlers
+
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -234,6 +246,7 @@ namespace AdaptivBot
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         #endregion event handlers
     }
 }

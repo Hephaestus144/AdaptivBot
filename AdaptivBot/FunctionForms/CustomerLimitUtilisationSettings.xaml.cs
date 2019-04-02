@@ -68,6 +68,12 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
+            if (CredentialStore.Instance.CancelRun)
+            {
+                _window.Logger.WarningText = "Run cancelled by user!";
+                return;
+            }
+
             // TODO: Use binding here.
             var username = _window.TxtUserName.Text;
             var password = _window.TxtPasswordBox.Password;
@@ -82,8 +88,16 @@ namespace AdaptivBot.SettingForms
                     var currentAdaptivEnvironment
                         = _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
 
-                    CredentialStore.Instance.StoreUserCredentials();
-                    await Task.Run(() => _window.OpenAdaptivAndLogin(username, password, currentAdaptivEnvironment));
+                    //CredentialStore.Instance.StoreUserCredentials();
+                    var successfulLogin = await Task.Run(() =>
+                        _window.OpenAdaptivAndLogin(username, password,
+                            currentAdaptivEnvironment));
+
+                    if (!successfulLogin)
+                    {
+                        _window.Logger.ErrorText = "Failed to run customer limit utilisation extraction!";
+                        return;
+                    }
 
                     #region wait for browser
                     _window.completedLoading = false;

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
 namespace AdaptivBot
 {
@@ -19,9 +20,35 @@ namespace AdaptivBot
     /// </summary>
     public partial class AlertUpdateUserCredentials : Window
     {
+        public bool UpdateCredentials;
+        public bool CancelRun = false;
+
         public AlertUpdateUserCredentials()
         {
             InitializeComponent();
+            this.Owner = Application.Current.MainWindow;
+            this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        }
+
+
+        public void btnYes_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateCredentials = true;
+            this.Close();
+        }
+
+
+        public void btnNo_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateCredentials = false;
+            this.Close();
+        }
+
+        private void btnCancelRun_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateCredentials = false;
+            CancelRun = true;
+            this.Close();
         }
     }
 }

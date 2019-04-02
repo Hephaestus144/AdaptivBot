@@ -56,6 +56,12 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
+            if (CredentialStore.Instance.CancelRun)
+            {
+                _window.Logger.WarningText = "Run cancelled by user!";
+                return;
+            }
+
             // TODO: Use binding here.
             var username = _window.TxtUserName.Text;
             var password = _window.TxtPasswordBox.Password;
@@ -74,10 +80,11 @@ namespace AdaptivBot.SettingForms
                 {
                     var currentAdaptivEnvironment =
                         _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
-
-                    if (!(await Task.Run(() =>
+                    var successfulLogin = await Task.Run(() =>
                         _window.OpenAdaptivAndLogin(username, password,
-                            currentAdaptivEnvironment))))
+                            currentAdaptivEnvironment));
+
+                    if (!successfulLogin)
                     {
                         _window.Logger.ErrorText = "Failed to run deal risk carrier extraction!";
                         return;

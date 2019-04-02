@@ -137,7 +137,7 @@
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
-            Grid.Column="7"
+            Grid.Column="9"
             Grid.ColumnSpan="2">
 
             <Button

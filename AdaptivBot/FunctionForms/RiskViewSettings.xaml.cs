@@ -57,6 +57,12 @@ namespace AdaptivBot.SettingForms
                 return;
             }
 
+            if (CredentialStore.Instance.CancelRun)
+            {
+                _window.Logger.WarningText = "Run cancelled by user!";
+                return;
+            }
+
             // TODO: Use binding here.
             var username = _window?.TxtUserName.Text;
             var password = _window?.TxtPasswordBox.Password;
@@ -65,7 +71,7 @@ namespace AdaptivBot.SettingForms
                 select InstrumentLists.InstrumentGuiNameToFolderNameMapping[selectedItem.ToString()
                     .Replace("System.Windows.Controls.ListBoxItem: ", "")]).ToList();
 
-            var instrumentsToLoopOver = (selectedInstruments.Count != 0)
+            var instrumentsToLoopOver = selectedInstruments.Count != 0
                 ? selectedInstruments
                 : InstrumentLists.InstrumentFolderNameToInstrumentBatchMapping.Keys.ToList();
 
@@ -80,9 +86,15 @@ namespace AdaptivBot.SettingForms
                     try
                     {
                         _window.Logger.NewProcess($"{instrumentBatch} risk view extraction started...");
-                        await Task.Run(() =>
+                        var successfulLogin = await Task.Run(() =>
                             _window.OpenAdaptivAndLogin(username, password,
                                 currentAdaptivEnvironment));
+
+                        if (!successfulLogin)
+                        {
+                            _window.Logger.ErrorText = "Failed to run risk view extraction!";
+                            return;
+                        }
 
                         #region wait for browser
 
@@ -194,7 +206,8 @@ namespace AdaptivBot.SettingForms
                         else
                         {
                             numberOfFailedExtractions++;
-                            _window.Logger.ErrorText = $"{instrumentBatch} extraction failed {maxFailureCount} times. Moving on to next instrument set.";
+                            _window.Logger.ErrorText =
+                                $"{instrumentBatch} extraction failed {maxFailureCount} times. Moving on to next instrument set.";
                         }
                     }
                 }
@@ -215,8 +228,8 @@ namespace AdaptivBot.SettingForms
             }
 
             GlobalDataBindingValues.Instance.extractionEndTime = DateTime.Now;
-            var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime -
-                           GlobalDataBindingValues.Instance.extractionStartTime;
+            var timeSpan = GlobalDataBindingValues.Instance.extractionEndTime
+                           - GlobalDataBindingValues.Instance.extractionStartTime;
             _window.Logger.OkayTextWithoutTime
                 = $"Extraction took: {timeSpan.Minutes} minutes {timeSpan.Seconds % 60} seconds";
             //_window.WebBrowser.Url = new Uri("C:\\GitLab\\AdaptivBot\\ExtractionComplete.html");
@@ -248,6 +261,7 @@ namespace AdaptivBot.SettingForms
             AutoItX.Send("!s");
             await Task.Run(() => Thread.Sleep(1000));
             var fileSaved = true;
+
             if (AutoItX.WinExists("Confirm Save As") != 0)
             {
                 AutoItX.WinActivate("Confirm Save As");
@@ -289,6 +303,7 @@ namespace AdaptivBot.SettingForms
                     AutoItX.Sleep(100);
                 }
             }
+
             var filePath =
                 $"\\\\pcibtighnas1\\CBSData\\Portfolio Analysis\\Data\\{instrumentBatch}\\SBG\\STBUKTCPROD (Standard Bank Group) (Filtered){DateTime.Now:dd-MM-yyyy}.csv";
 
@@ -300,10 +315,10 @@ namespace AdaptivBot.SettingForms
             if (fileSaved)
             {
                 var fileSize = (new FileInfo(filePath).Length >= 1048576)
-                    ? $"{(new FileInfo(filePath).Length / 1048576):n}" + " MB"
-                    : $"{(new FileInfo(filePath).Length / 1024):n}" + " KB";
+                    ? $"{new FileInfo(filePath).Length / 1048576:n}" + " MB"
+                    : $"{new FileInfo(filePath).Length / 1024:n}" + " KB";
 
-                Dispatcher.Invoke((System.Action)(() =>
+                Dispatcher.Invoke(() =>
                 {
                     if (_window.extractedFiles.Any(x => x.FilePath == filePath))
                     {
@@ -317,7 +332,7 @@ namespace AdaptivBot.SettingForms
                         FileType = $"Risk View : {instrumentBatch}",
                         FileSize = fileSize
                     });
-                }));
+                });
             }
         }
 
