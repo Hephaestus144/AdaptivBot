@@ -12,6 +12,8 @@ namespace AdaptivBot.SettingForms
     /// </summary>
     public partial class GeneralSettings : Page
     {
+        private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
+
         public GeneralSettings()
         {
             InitializeComponent();
@@ -39,8 +41,8 @@ namespace AdaptivBot.SettingForms
         }
 
         private void BtnUpdateAdaptivCredentials_OnClick(object sender, RoutedEventArgs e)
-        {
-            CredentialStore.Instance.StoreUserCredentials();
+        { 
+            CredentialStore.Instance.UpdateCredentials();
         }
     }
 }

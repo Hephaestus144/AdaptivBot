@@ -48,7 +48,7 @@ namespace AdaptivBot
             {
                 if (_target != value)
                 {
-                    _target = "AdaptivBot" + value;
+                    _target = $"AdaptivBot{value}";
                     Credentials = new Credential { Target = _target };
                     credentialsFound = Credentials.Load();
                     if (credentialsFound)
@@ -128,6 +128,20 @@ namespace AdaptivBot
 
         #endregion constructors
 
+        public bool UpdateCredentials()
+        {
+            if ((bool)_window.chkBxRememberMe.IsChecked)
+            {
+                this.Credentials.Username = _window.TxtUserName.Text;
+                this.Credentials.Password = _window.TxtPasswordBox.Password;
+                this.Credentials.PersistanceType = PersistanceType.LocalComputer;
+                this.Credentials.Save();
+                _window.Logger.OkayText = "Updating credentials...";
+                return true;
+            }
+
+            return false;
+        }
 
         public bool StoreUserCredentials()
         {
