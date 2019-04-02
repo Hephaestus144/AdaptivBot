@@ -75,9 +75,13 @@ namespace AdaptivBot.SettingForms
                     var currentAdaptivEnvironment =
                         _window.CmbBxAdaptivEnvironments.SelectedValue.ToString();
 
-                    await Task.Run(() =>
+                    if (!(await Task.Run(() =>
                         _window.OpenAdaptivAndLogin(username, password,
-                            currentAdaptivEnvironment));
+                            currentAdaptivEnvironment))))
+                    {
+                        _window.Logger.ErrorText = "Failed to run deal risk carrier extraction!";
+                        return;
+                    }
 
                     #region wait for browser
                     _window.completedLoading = false;

@@ -167,13 +167,21 @@ namespace AdaptivBot
             return true;
         }
 
-        public void EnterAdaptivCredentials(string username, string password)
+
+        public bool EnterAdaptivCredentials(string username, string password)
         {
-            // There doesn't seem to be a better way other than waiting 5s for the windows security
-            AutoItX.Sleep(4000);
+            // There doesn't seem to be a better way other than waiting 4s for the windows security
+            for (var i = 0; i < 40; i++)
+            {
+                if (AutoItX.WinExists("Windows Security") == 0)
+                {
+                    AutoItX.Sleep(100);
+                }
+            }
+
             if (AutoItX.WinExists("Windows Security") != 0)
             {
-                _window.Dispatcher.BeginInvoke((Action)(() =>
+                _window.Dispatcher.BeginInvoke((Action) (() =>
                 {
                     _window.Logger.OkayText = "Entering credentials...";
                 }));
@@ -183,6 +191,10 @@ namespace AdaptivBot
                 AutoItX.Send(password);
                 AutoItX.Send("{TAB}");
                 AutoItX.Send("{ENTER}");
+
+                // check if credentials failed then ask user to update credentials
+                AutoItX.Sleep(1000);
+
             }
             else
             {
@@ -190,18 +202,28 @@ namespace AdaptivBot
                     (Action)(() => _window.Logger.OkayText = "Adaptiv already open."));
             }
 
+            if (AutoItX.WinExists("Windows Security") != 0)
+            {
+                AutoItX.Send("!c");
+                _window.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    _window.Logger.ErrorText = "Entering credentials failed. Please ensure they are up to date.";
+                }));
+                return false;
+            }
             _window.Dispatcher.BeginInvoke(
-                (Action)(() => _window.Logger.OkayText = "Acknowledging disclaimer..."));
+                (Action) (() =>
+                    _window.Logger.OkayText = "Acknowledging disclaimer..."));
 
             while (AutoItX.WinExists("Adaptiv Disclaimer -- Webpage Dialog") == 0)
             {
                 Task.Run(() => Thread.Sleep(100));
             }
+
             AutoItX.WinActivate("Adaptiv Disclaimer -- Webpage Dialog");
             AutoItX.Send("{ENTER}");
+            return true;
         }
-
-
 
 
         #region event handlers

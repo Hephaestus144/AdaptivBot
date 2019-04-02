@@ -349,7 +349,7 @@ namespace AdaptivBot
         }
 
 
-        public async void OpenAdaptivAndLogin(
+        public async Task<bool> OpenAdaptivAndLogin(
             string username,
             string password,
             string currentAdaptivEnvironment)
@@ -359,7 +359,7 @@ namespace AdaptivBot
                     currentAdaptivEnvironment]);
             InjectedScripts.Clear();
 
-            await Task.Run(()
+            return await Task.Run(()
                 => CredentialStore.Instance.EnterAdaptivCredentials(username, password));
         }
 
