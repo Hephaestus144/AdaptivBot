@@ -194,7 +194,7 @@
             <Button
                 Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager."
+                ToolTip="Purges all Adaptiv Credentials for the Bot from the Windows Credential manager."
                 Click="BtnPurgeAdaptivCredentials_Click">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Purge Adaptiv Credentials</TextBlock>
@@ -214,13 +214,27 @@
 
 
             <Button
-                Name="BtnDeleteAdaptivBotConfigFile"
+                Name="BtnResetAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]">
+                ToolTip="[Not Implemented]"
+                HorizontalContentAlignment="Stretch">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Stretch">Delete Config File</TextBlock>
+                    <TextBlock HorizontalAlignment="Center">Reset Config File</TextBlock>
                     <materialDesign:PackIcon Kind="RemoveCircleOutline" DockPanel.Dock="Left" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="3,0,0,0"/>
                 </DockPanel>
+            </Button>
+
+            <Button
+                Name="BtnDeleteAdaptivBotConfigFile"
+                DockPanel.Dock="Top"
+                ToolTip="The name says it all. Mainly used for debugging purposes. Only click if you know what you're doing."
+                HorizontalContentAlignment="Stretch"
+                Click="BtnDeleteAdaptivBotConfigFile_OnClick">
+                <Grid
+                    HorizontalAlignment="Stretch">
+                    <TextBlock HorizontalAlignment="Center">Delete Config File</TextBlock>
+                    <materialDesign:PackIcon Kind="FileRemove" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
             </Button>
 
             <Button
