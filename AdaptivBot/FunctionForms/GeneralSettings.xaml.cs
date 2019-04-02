@@ -44,5 +44,10 @@ namespace AdaptivBot.SettingForms
         { 
             CredentialStore.Instance.UpdateCredentials();
         }
+
+        private void BtnPurgeAdaptivCredentials_Click(object sender, RoutedEventArgs e)
+        {
+            CredentialStore.Instance.PurgeCredentials();
+        }
     }
 }

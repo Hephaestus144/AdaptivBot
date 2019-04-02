@@ -194,7 +194,8 @@
             <Button
                 Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager.">
+                ToolTip="[Not Implemented]Purges all Adaptiv Credentials for the Bot from the Windows Credentials manager."
+                Click="BtnPurgeAdaptivCredentials_Click">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Purge Adaptiv Credentials</TextBlock>
                     <materialDesign:PackIcon Kind="PasswordReset" HorizontalAlignment="Right" Margin="3,0,0,0"/>

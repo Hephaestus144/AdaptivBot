@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 
@@ -136,12 +137,14 @@ namespace AdaptivBot
                 this.Credentials.Password = _window.TxtPasswordBox.Password;
                 this.Credentials.PersistanceType = PersistanceType.LocalComputer;
                 this.Credentials.Save();
-                _window.Logger.OkayText = "Updating credentials...";
+                _window.Logger.OkayText = $"Credentials updated for {_window.CmbBxAdaptivEnvironments.SelectedValue} environment.";
                 return true;
             }
 
+            _window.Logger.WarningText = "\"Remember me\" not checked. Credentials not updated.";
             return false;
         }
+
 
         public bool StoreUserCredentials()
         {
@@ -170,7 +173,7 @@ namespace AdaptivBot
                     this.Credentials.Password = _window.TxtPasswordBox.Password;
                     this.Credentials.PersistanceType = PersistanceType.LocalComputer;
                     this.Credentials.Save();
-                    _window.Logger.WarningText = "Updating credentials...";
+                    _window.Logger.WarningText = $"Updating credentials for {_window.CmbBxAdaptivEnvironments.SelectedValue}...";
                     _window.Logger.OkayText = "Continuing with run...";
                 }
                 else if (!window.CancelRun)
@@ -250,6 +253,22 @@ namespace AdaptivBot
             return true;
         }
 
+
+        public void PurgeCredentials()
+        {
+            foreach (ComboBoxItem environment in _window.CmbBxAdaptivEnvironments.Items)
+            {
+                _target = $"AdaptivBot{environment.Content}";
+                var credentialsToDelete = new Credential { Target = _target };
+                if (!credentialsToDelete.Load()) continue;
+                _window.Logger.WarningText =
+                    $"Deleted {environment.Content} credentials...";
+                credentialsToDelete.Delete();
+            }
+
+            _window.Logger.OkayText =
+                "Completed purging Adaptiv credentials from system!";
+        }
 
         #region event handlers
 
