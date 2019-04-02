@@ -110,15 +110,6 @@ namespace AdaptivBot.SettingForms
                     _window.completedLoading = false;
                     #endregion wait for browser
                     
-                    #region wait for browser
-                    while (!_window.completedLoading)
-                    {
-                        await Task.Run(() => Thread.Sleep(100));
-                    }
-                    await Task.Run(() => Thread.Sleep(1000));
-                    _window.completedLoading = false;
-                    #endregion wait for browser
-
                     Action methodName = JavaScriptUtils.JavaScriptErrorDialogFound;
                     IAsyncResult result = methodName.BeginInvoke(null, null);
                     _window.InjectJavascript(
@@ -206,15 +197,15 @@ namespace AdaptivBot.SettingForms
 
                     #region wait for browser
 
-                    _window.completedLoading = false;
+                    //_window.completedLoading = false;
 
-                    while (!_window.completedLoading)
-                    {
-                        await Task.Run(() => Thread.Sleep(100));
-                    }
+                    //while (!_window.completedLoading)
+                    //{
+                    //    await Task.Run(() => Thread.Sleep(100));
+                    //}
 
-                    await Task.Run(() => Thread.Sleep(1000));
-                    _window.completedLoading = false;
+                    //await Task.Run(() => Thread.Sleep(1000));
+                    //_window.completedLoading = false;
 
                     #endregion wait for browser
 

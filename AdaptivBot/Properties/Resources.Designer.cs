@@ -81,13 +81,43 @@ namespace AdaptivBot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AdaptivBotGreenCheckMark {
+            get {
+                object obj = ResourceManager.GetObject("AdaptivBotGreenCheckMark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AdaptivBotOrangeCheckMark {
+            get {
+                object obj = ResourceManager.GetObject("AdaptivBotOrangeCheckMark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AdaptivBotRedCross {
+            get {
+                object obj = ResourceManager.GetObject("AdaptivBotRedCross", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;html&gt;
         ///&lt;header&gt;
         ///    &lt;title&gt;Extraction Complete with Errors&lt;/title&gt;
         ///&lt;/header&gt;
         ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
-        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete with Errors&lt;/h1&gt;
-        ///    &lt;img src=&quot;AdaptivBotRedCross.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 1.8; font-weight:100&quot;&gt;Extraction Complete with Errors&lt;/h1&gt;
+        ///    &lt;img src=&quot;AdaptivBotRedCross.png&quot; style=&quot;display: block; margin-left: 44%;&quot; width=&quot;25%&quot;&gt;
         ///&lt;/body&gt;
         ///&lt;/html&gt;.
         /// </summary>
@@ -102,9 +132,9 @@ namespace AdaptivBot.Properties {
         ///&lt;header&gt;
         ///    &lt;title&gt;Extraction Complete without Errors&lt;/title&gt;
         ///&lt;/header&gt;
-        ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
-        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete without Errors&lt;/h1&gt;
-        ///    &lt;img src=&quot;AdaptivBotGreenCheckMark.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///    &lt;body style=&quot;background-color:#212121;&quot;&gt;
+        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 1.8; font-weight:100&quot;&gt;Extraction Complete without Errors&lt;/h1&gt;
+        ///    &lt;img src=&quot;AdaptivBotGreenCheckMark.png&quot; style=&quot;display: block; margin-left: 44%;&quot; width=&quot;25%&quot;&gt;
         ///&lt;/body&gt;
         ///&lt;/html&gt;
         ///.
@@ -121,8 +151,8 @@ namespace AdaptivBot.Properties {
         ///    &lt;title&gt;Extraction Complete with Warnings&lt;/title&gt;
         ///&lt;/header&gt;
         ///&lt;body style=&quot;background-color:#212121;&quot;&gt;
-        ///&lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 2; font-weight:100&quot;&gt;Extraction Complete with Warnings&lt;/h1&gt;
-        ///&lt;img src=&quot;AdaptivBotOrangeCheckMark.png&quot; style=&quot;display: block; margin-left: 41%;&quot; width=&quot;30%&quot;&gt;
+        ///    &lt;h1 style=&quot;color:white; font-family:&apos;Corbel&apos;; font-size: 32; text-align: center; line-height: 1.8; font-weight:100&quot;&gt;Extraction Complete with Warnings&lt;/h1&gt;
+        ///    &lt;img src=&quot;AdaptivBotOrangeCheckMark.png&quot; style=&quot;display: block; margin-left: 44%;&quot; width=&quot;25%&quot;&gt;
         ///&lt;/body&gt;
         ///&lt;/html&gt;
         ///.

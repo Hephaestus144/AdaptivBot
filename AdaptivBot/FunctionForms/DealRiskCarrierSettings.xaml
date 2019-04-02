@@ -24,7 +24,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -38,7 +38,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Title -->
@@ -78,20 +78,24 @@
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,0"
+            LastChildFill="False">
+            <DockPanel.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignCaptionTextBlock}">
+                    <Setter Property="Margin" Value="9,10,4,9"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    <Setter Property="FontSize" Value="10"/>
+                </Style>
+            </DockPanel.Resources>
+
             <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="8">
+                DockPanel.Dock="Top">
                 Base Extraction Folder
             </TextBlock>
 
             <TextBlock
-                DockPanel.Dock="Top"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                HorizontalAlignment="Right"
-                Margin="8">
+                DockPanel.Dock="Top">
                 Risk Carrier File Folder
             </TextBlock>
         </DockPanel>
@@ -100,7 +104,8 @@
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="2"
-            Grid.ColumnSpan="3">
+            Grid.ColumnSpan="3"
+            LastChildFill="False">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -136,16 +141,18 @@
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.RowSpan="6"
             Grid.Column="9"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            LastChildFill="False">
 
             <Button
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 FontSize="10"
                 Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
+                Margin="5"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Copy Files to UAT</TextBlock>
                     <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
@@ -157,45 +164,43 @@
                 VerticalAlignment="Top"
                 FontSize="10"
                 Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
+                Margin="5"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Copy Files to Prod</TextBlock>
                     <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
                 </StackPanel>
             </Button>
+
+
+            <Button
+                Name="btnRunExtraction"
+                DockPanel.Dock="Top"
+                VerticalAlignment="Bottom"
+                FontSize="11"
+                Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                Margin="5" 
+                Click="btnRunExtraction_Click"
+                materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Run Extraction</TextBlock>
+                    <materialDesign:PackIcon Kind="PlayCircleOutline" VerticalAlignment="Center" Height="14" Width="14" Margin="3,0,0,0"/>
+                </StackPanel>
+            </Button>
+
+            <CheckBox
+                Name="chkBxOverrideExistingFiles"
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Center"
+                IsChecked="True"
+                Margin="5,0,5,5"
+                FontSize="11"
+                FlowDirection="RightToLeft">
+                <TextBlock
+                    Margin="0,-3,0,0">
+                    Override existing files
+                </TextBlock>
+            </CheckBox>
         </DockPanel>
-
-
-        <CheckBox
-            Name="chkBxOverrideExistingFiles"
-            Grid.Row="4"
-            Grid.Column="5"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            HorizontalAlignment="Center"
-            IsChecked="True"
-            Margin="5,50,5,5"
-            FlowDirection="RightToLeft">
-            <TextBlock
-                Margin="0,-3,0,0">
-                Override existing files
-            </TextBlock> 
-        </CheckBox>
-        <Button
-            Name="btnRunExtraction"
-            Grid.Row="4"
-            Grid.Column="7"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Bottom"
-            FontSize="11"
-            Style="{StaticResource MaterialDesignRaisedAccentButton}"
-            Margin="5" 
-            Click="btnRunExtraction_Click">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock>Run Extraction</TextBlock>
-                <materialDesign:PackIcon Kind="PlayCircleOutline" VerticalAlignment="Center" Height="14" Width="14" Margin="3,0,0,0"/>
-            </StackPanel>
-        </Button>
     </Grid>
 </Page>

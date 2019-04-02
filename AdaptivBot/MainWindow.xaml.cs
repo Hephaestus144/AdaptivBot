@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -11,10 +12,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Media;
 using System.Xml.Linq;
 using Action = System.Action;
 using Application = System.Windows.Application;
+using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 
 
@@ -200,57 +201,26 @@ namespace AdaptivBot
                 }
             }
 
-            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors))
-            //{
-            //    try
-            //    {
-            //        File.WriteAllText(
-            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors,
-            //            Properties.Resources.ExtractionCompleteWithErrors);
-            //        Logger.OkayText = "\"Extraction Complete with Errors\" HTML file created: " +
-            //                          $"{GlobalDataBindingValues.Instance.ExtractionCompleteWithErrors}";
-            //    }
-            //    catch (Exception exception)
-            //    {
-            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
-            //        Logger.WarningText = "\"Extraction Complete with Errors\" HTML file NOT created! However not critical bot will still function.";
-            //    }
-            //}
+            var imagesToSaveToAdaptivBotDirectory = new Dictionary<string, Bitmap>()
+            {
+                [nameof(Properties.Resources.AdaptivBotGreenCheckMark)] =
+                    Properties.Resources.AdaptivBotGreenCheckMark,
+                [nameof(Properties.Resources.AdaptivBotOrangeCheckMark)] =
+                    Properties.Resources.AdaptivBotOrangeCheckMark,
+                [nameof(Properties.Resources.AdaptivBotRedCross)] =
+                    Properties.Resources.AdaptivBotRedCross
+            };
 
-
-            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors))
-            //{
-            //    try
-            //    {
-            //        File.WriteAllText(
-            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors,
-            //            Properties.Resources.ExtractionCompleteWithoutErrors);
-            //        Logger.OkayText = $"\"Extraction Complete without Errors\" HTML file created: {GlobalDataBindingValues.Instance.ExtractionCompleteWithoutErrors}";
-            //    }
-            //    catch (Exception exception)
-            //    {
-            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
-            //        Logger.WarningText = "\"Extraction Complete without Errors\" HTML file NOT created! However not critical bot will still function.";
-            //    }
-            //}
-
-
-
-            //if (!File.Exists(GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings))
-            //{
-            //    try
-            //    {
-            //        File.WriteAllText(
-            //            GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings,
-            //            Properties.Resources.ExtractionCompleteWithWarnings);
-            //        Logger.OkayText = $"\"Extraction Complete with Warnings\" HTML file created: {GlobalDataBindingValues.Instance.ExtractionCompleteWithWarnings}";
-            //    }
-            //    catch (Exception exception)
-            //    {
-            //        Logger.ErrorText = $"Exception caught: {exception.Message}";
-            //        Logger.WarningText = "\"Extraction Complete with Warnings\" HTML file NOT created! However not critical bot will still function.";
-            //    }
-            //}
+            foreach (var image in imagesToSaveToAdaptivBotDirectory)
+            {
+                var imagePath = Path.Combine(
+                    GlobalDataBindingValues.Instance.AdaptivBotDirectory,
+                    image.Key + ".png");
+                if (!File.Exists(imagePath))
+                {
+                    image.Value.Save(imagePath);
+                }
+            }
         }
 
 
