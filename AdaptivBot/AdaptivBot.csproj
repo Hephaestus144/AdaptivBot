@@ -127,6 +127,9 @@
     <Compile Include="AlertForms\AlertUpdateUserCredentials.xaml.cs">
       <DependentUpon>AlertUpdateUserCredentials.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\ButtonWithIcon.xaml.cs">
+      <DependentUpon>ButtonWithIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExcelUtils.cs" />
     <Compile Include="ExtractedFile.cs" />
     <Compile Include="FileUtils.cs" />
@@ -159,6 +162,10 @@
       <DependentUpon>CustomerLimitUtilisationSettings.xaml</DependentUpon>
     </Compile>
     <Page Include="AlertForms\AlertUpdateUserCredentials.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\ButtonWithIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

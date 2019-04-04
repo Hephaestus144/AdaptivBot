@@ -109,11 +109,8 @@
             Grid.ColumnSpan="4"
             Margin="0,10,0,0">
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxBaseFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -122,11 +119,8 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxFileNameFormat"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -146,35 +140,22 @@
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
-                Margin="8,2,0,-2">
+                Margin="8,0,0,-2">
                 Instrument Batches
             </TextBlock>
+
             <materialDesign:Card
                 DockPanel.Dock="Top"
-                Margin="5"
-                VerticalAlignment="Top"
-                VerticalContentAlignment="Center">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <ListBox
                     Name="lstBxInstruments"
                     ToolTip="You can select multiple items. To run everything don't select anything from this list."
                     SelectionMode="Multiple"
                     SelectedValuePath="Content"
                     FontSize="11"
-                    Margin="5">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True" >
-                                    <Setter Property="FontWeight" Value="DemiBold" />
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Foreground" Value="DodgerBlue" />
-                                </Trigger>
-                            </Style.Triggers>
-                            <Style.Resources>
-                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightColorKey}" Color="Transparent"/>
-                            </Style.Resources>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
+                    Margin="5"
+                    ItemContainerStyle="{StaticResource AdaptivBotListBoxItem}">
+
                     <ListBoxItem>Bonds</ListBoxItem>
                     <ListBoxItem>Commodities : Agri</ListBoxItem>
                     <ListBoxItem>Commodities : Base Metals</ListBoxItem>

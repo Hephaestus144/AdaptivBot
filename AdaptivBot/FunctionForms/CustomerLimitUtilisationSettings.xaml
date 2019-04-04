@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
+      xmlns:customControls="clr-namespace:AdaptivBot.CustomControls"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Title="Customer Limit Utilisation Extraction Settings"
@@ -169,24 +170,20 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2">
-            <DockPanel.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="FontSize" Value="11"/>
-                    <Setter Property="Margin" Value="0,10,5,10"/>
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                </Style>
-            </DockPanel.Resources>
 
             <TextBlock
-                DockPanel.Dock="Top">
+                DockPanel.Dock="Top"
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}">
                 Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}"
                 ToolTip="e.g. CustLimitUtil{yyyy-MM-dd}.xlsx">
                 File Name Format
             </TextBlock>
+
         </DockPanel>
 
 
@@ -197,11 +194,8 @@
             Grid.Column="2"
             Grid.ColumnSpan="5">
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxExtractionFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -210,11 +204,8 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxFileNameFormat"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -231,9 +222,8 @@
             Grid.RowSpan="2"
             Grid.Column="7"
             Grid.ColumnSpan="2"
-            Margin="5"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center">
+            DockPanel.Dock="Top"
+            Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
             <DatePicker
                 Name ="datePicker"
                 materialDesign:HintAssist.FloatingScale="0.8"
@@ -327,8 +317,7 @@
 
             <materialDesign:Card
                 DockPanel.Dock="Top"
-                UniformCornerRadius="4"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <ComboBox
                     Name="cmbBxFilterField1"
                     Margin="5"

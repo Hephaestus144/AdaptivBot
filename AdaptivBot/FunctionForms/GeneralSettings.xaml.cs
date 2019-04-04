@@ -64,5 +64,31 @@ namespace AdaptivBot.SettingForms
                 _window.Logger.WarningText = "Config file not found!";
             }
         }
+
+        private void BtnResetAdaptivBotConfigFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            if(File.Exists(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath))
+            {
+                File.Delete(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+                _window.Logger.WarningText = "Config file deleted!";
+                try
+                {
+                    File.WriteAllText(
+                        GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
+                        Properties.Resources.AdaptivBot);
+                    _window.Logger.OkayText = $"Config file reset : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
+                }
+                catch(Exception exception)
+                {
+                    _window.Logger.ErrorText = $"Exception caught: {exception.Message}";
+                    _window.Logger.ErrorText = "Config file not created! Limited functionality.";
+                }
+            }
+            else
+            {
+                _window.Logger.WarningText = "Config file not found!";
+                _window.Logger.WarningText = "Config file not reset!";
+            }
+        }
     }
 }

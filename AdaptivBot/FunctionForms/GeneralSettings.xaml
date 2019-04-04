@@ -108,11 +108,8 @@
             Grid.ColumnSpan="5">
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxAdaptivBotConfigFilePath"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -120,11 +117,8 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxExcelPath"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -320,8 +314,9 @@
             <Button
                 Name="BtnResetAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]"
-                HorizontalContentAlignment="Stretch">
+                ToolTip="Resets the XML config file to its initial state."
+                HorizontalContentAlignment="Stretch"
+                Click="BtnResetAdaptivBotConfigFile_OnClick">
                 <Grid>
                     <TextBlock>Reset Config File</TextBlock>
                     <materialDesign:PackIcon Kind="Restore"/>

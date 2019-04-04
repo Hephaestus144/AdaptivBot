@@ -120,7 +120,7 @@
 
             <materialDesign:Card
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxUATFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -128,11 +128,8 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxProductionFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"

@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\GitLab\adaptivbot\AdaptivBot\App.xaml
-9524612473
+101638129775
 1-1934842315
-24810766539
+25-1199993493
 36669288021
-AlertForms\AlertUpdateUserCredentials.xaml;FunctionForms\EmailBugSuggestion.xaml;FunctionForms\TestFunctions.xaml;MainWindow.xaml;FunctionForms\GeneralSettings.xaml;FunctionForms\PortfolioAnalysisSettings.xaml;FunctionForms\DealRiskCarrierSettings.xaml;FunctionForms\RiskViewSettings.xaml;FunctionForms\CustomerLimitUtilisationSettings.xaml;
+AlertForms\AlertUpdateUserCredentials.xaml;CustomControls\ButtonWithIcon.xaml;FunctionForms\EmailBugSuggestion.xaml;FunctionForms\TestFunctions.xaml;MainWindow.xaml;FunctionForms\GeneralSettings.xaml;FunctionForms\PortfolioAnalysisSettings.xaml;FunctionForms\DealRiskCarrierSettings.xaml;FunctionForms\RiskViewSettings.xaml;FunctionForms\CustomerLimitUtilisationSettings.xaml;
 
 False
 

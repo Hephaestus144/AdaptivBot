@@ -112,11 +112,8 @@
             Grid.ColumnSpan="5"
             LastChildFill="False">
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBoxBaseFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -124,11 +121,8 @@
             </materialDesign:Card>
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxFileNameFormat"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
@@ -137,11 +131,8 @@
 
 
             <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
                 DockPanel.Dock="Top"
-                Margin="5">
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
                     Name="txtBxRiskCarrierFileFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
