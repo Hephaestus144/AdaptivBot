@@ -20,9 +20,30 @@ namespace AdaptivBot.SettingForms
     /// </summary>
     public partial class PortfolioAnalysisSettings : Page
     {
+        private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
+
         public PortfolioAnalysisSettings()
         {
             InitializeComponent();
+        }
+
+        private void PortfolioAnalysisSettings_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var xdp =
+                (XmlDataProvider)this.Resources["PortfolioAnalysisSettingsXml"];
+
+            xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+        }
+
+        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["PortfolioAnalysisSettingsXml"];
+            xdp.Refresh();
+            txtBxProductionFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            txtBxUATFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            xdp.Refresh();
+            _window.Logger.OkayText = "Portfolio Analysis Settings saved!";
         }
     }
 }

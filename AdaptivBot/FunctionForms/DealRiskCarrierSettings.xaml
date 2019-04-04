@@ -8,7 +8,11 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Loaded="DealRiskCarrierSettings_OnLoaded"
       Title="Deal Risk Carrier Settings">
+    <Page.Resources>
+        <XmlDataProvider x:Key="DealRiskCarrierSettingsXml" XPath="AdaptivBot/DealRiskCarrierSettings"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -72,39 +76,40 @@
         </StackPanel>
 
 
-
-
+        <!-- Labels for input boxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Margin="0,0,0,0"
             LastChildFill="False">
-            <DockPanel.Resources>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignCaptionTextBlock}">
-                    <Setter Property="Margin" Value="9,10,4,9"/>
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="FontSize" Value="10"/>
-                </Style>
-            </DockPanel.Resources>
-
+ 
             <TextBlock
-                DockPanel.Dock="Top">
-                Base Extraction Folder
+                DockPanel.Dock="Top"
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}">
+                Extraction Folder
             </TextBlock>
 
             <TextBlock
-                DockPanel.Dock="Top">
+                DockPanel.Dock="Top"
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}">
+                File Name Format
+            </TextBlock>
+
+            <TextBlock
+                DockPanel.Dock="Top"
+                Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}">
                 Risk Carrier File Folder
             </TextBlock>
         </DockPanel>
 
+
+        <!-- Input text boxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="2"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="5"
             LastChildFill="False">
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
@@ -114,12 +119,8 @@
                 Margin="5">
                 <TextBox
                     Name="txtBoxBaseFolder"
-                    FontSize="10"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=ExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -129,16 +130,27 @@
                 DockPanel.Dock="Top"
                 Margin="5">
                 <TextBox
-                    Name="txtBoxRiskCarrierFileFolder"
-                    FontSize="10"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+                    Name="txtBxFileNameFormat"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=FileNameFormat}"/>
+            </materialDesign:Card>
+
+
+            <materialDesign:Card
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                DockPanel.Dock="Top"
+                Margin="5">
+                <TextBox
+                    Name="txtBxRiskCarrierFileFolder"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=RiskCarrierFilesFolder}"/>
             </materialDesign:Card>
         </DockPanel>
 
+
+        <!-- Buttons -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="6"
@@ -154,7 +166,7 @@
                 Margin="5"
                 materialDesign:ShadowAssist.ShadowDepth="Depth5">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy Files to UAT</TextBlock>
+                    <TextBlock>Copy File(s) to UAT</TextBlock>
                     <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
                 </StackPanel>
             </Button>
@@ -167,7 +179,7 @@
                 Margin="5"
                 materialDesign:ShadowAssist.ShadowDepth="Depth5">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy Files to Prod</TextBlock>
+                    <TextBlock>Copy File(s) to Prod</TextBlock>
                     <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
                 </StackPanel>
             </Button>
@@ -202,5 +214,17 @@
                 </TextBlock>
             </CheckBox>
         </DockPanel>
+
+
+        <Image 
+            Grid.Column="9"
+            Grid.ColumnSpan="2"
+            Grid.Row="10"
+            Grid.RowSpan="3"
+            Margin="40,10,0,0">
+            <Image.Source>
+                <BitmapImage DecodePixelWidth="300" UriSource="/Images/robot-1.png" />
+            </Image.Source>
+        </Image>
     </Grid>
 </Page>

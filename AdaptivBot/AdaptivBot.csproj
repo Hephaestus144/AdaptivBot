@@ -273,6 +273,7 @@
     <Resource Include="Images\AdaptivBotGreenCheckMark.png" />
     <Resource Include="Images\AdaptivBotOrangeCheckMark.png" />
     <Resource Include="Images\AdaptivBotRedCross.png" />
+    <Resource Include="Images\robot-1.png" />
     <Content Include="Resources\ExtractionCompleteWithWarnings.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

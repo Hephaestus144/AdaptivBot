@@ -76,6 +76,7 @@
             <Separator DockPanel.Dock="Bottom"/>
         </StackPanel>
 
+        <!-- Labels for input boxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="5"
@@ -94,34 +95,17 @@
             </TextBlock>
 
             <TextBlock DockPanel.Dock="Top">
-                Excel.exe Path 
-            </TextBlock>
-
-            <TextBlock DockPanel.Dock="Top">
-                QlikView UAT Folder
-            </TextBlock>
-
-            <TextBlock DockPanel.Dock="Top">
-                QlikView Prod Folder
+                Excel.exe Path
             </TextBlock>
         </DockPanel>
 
 
+        <!-- Input textboxes -->
         <DockPanel
             Grid.Row="1"
             Grid.RowSpan="5"
             Grid.Column="2"
             Grid.ColumnSpan="5">
-            <DockPanel.Resources>
-                <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-                    <Setter Property="FontSize" Value="11"/>
-                    <Setter Property="Padding" Value="3,0,3,0"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                    <Setter Property="Margin" Value="0,1,0,0"/>
-                </Style>
-            </DockPanel.Resources>
-
 
             <materialDesign:Card
                 HorizontalAlignment="Stretch"
@@ -131,6 +115,7 @@
                 Margin="5">
                 <TextBox
                     Name="txtBxAdaptivBotConfigFilePath"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
                     Text="{Binding Source={x:Static adaptivBot:GlobalDataBindingValues.Instance}, Path=AdaptivBotConfigFilePath}"/>
             </materialDesign:Card>
 
@@ -142,98 +127,224 @@
                 Margin="5">
                 <TextBox
                     Name="txtBxExcelPath"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
                     Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=ExcelExecutablePath}"/>
-            </materialDesign:Card>
-
-            <materialDesign:Card
-                DockPanel.Dock="Top"
-                Margin="5">
-                <TextBox
-                    Name="txtBxQlikviewUATFolder"
-                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewUATFolder}"/>
-            </materialDesign:Card>
-
-            <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
-                DockPanel.Dock="Top"
-                Margin="5">
-                <TextBox
-                    Name="txtBxQlikviewProductionFolder"
-                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=QlikviewProductionFolder}"/>
             </materialDesign:Card>
         </DockPanel>
 
+            
+        <!-- About block -->
+        <DockPanel
+            Grid.Row="6"
+            Grid.RowSpan="5"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            LastChildFill="False"
+            Margin="15,0,0,0">
+            <TextBlock
+                DockPanel.Dock="Top"
+                Foreground="{StaticResource SecondaryAccentBrush}"
+                Margin="3,0,0,0">
+                About
+            </TextBlock>
+
+            <Separator DockPanel.Dock="Top" Height="2"/>
+
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.Resources>
+                    <Style x:Key="LeftColumn" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="10"/>
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="Margin" Value="3,0,0,0"/>
+                    </Style>
+
+                    <Style x:Key="RightColumn" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="10"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}"/>
+                        <Setter Property="FontWeight" Value="DemiBold"/>
+                    </Style>
+                </Grid.Resources>
+
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Current Version
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="0">
+                    0.0
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="1">
+                    Release Date
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                    2019-04-03
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="2">
+                    Latest Version
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="2">
+                    0.0
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="3">
+                    Latest Release Date
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="3">
+                    2019-04-03
+                </TextBlock>
+            </Grid>
+
+
+        </DockPanel>
 
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="7"
+            Grid.RowSpan="10"
             Grid.Column="8"
             Grid.ColumnSpan="3">
-            
+
             <DockPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="FontSize" Value="10"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="VerticalAlignment" Value="Top"/>
-                    <Setter Property="Margin" Value="0,5,0,5"/>
+                    <Setter Property="Margin" Value="5"/>
                     <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth5"/>
                 </Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="materialDesign:PackIcon">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    <Setter Property="Margin" Value="3,0,0,0"/>
+                    <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}"/>
+                    <Setter Property="Height" Value="18"/>
+                    <Setter Property="Width" Value="18"/> 
+                </Style>
             </DockPanel.Resources>
-            
+
+            <TextBlock
+                DockPanel.Dock="Top"
+                Margin="3,0,0,0"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                Credentials
+            </TextBlock>
+
+            <Separator DockPanel.Dock="Top"/>
+
             <Button
                 Name="BtnUpdateAdaptivCredentials"
                 DockPanel.Dock="Top"
                 ToolTip="Updates the credentials for the selected Adaptiv environment."
                 Click="BtnUpdateAdaptivCredentials_OnClick">
-                Update Adaptiv Credentials
+                <Grid>
+                    <TextBlock>Update Credentials</TextBlock>
+                    <materialDesign:PackIcon Kind="PasswordReset"/>
+                </Grid> 
             </Button>
 
             <Button
                 Name="BtnPurgeAdaptivCredentials"
                 DockPanel.Dock="Top"
-                ToolTip="Purges all Adaptiv Credentials for the Bot from the Windows Credential manager."
                 Click="BtnPurgeAdaptivCredentials_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Purge Adaptiv Credentials</TextBlock>
-                    <materialDesign:PackIcon Kind="PasswordReset" HorizontalAlignment="Right" Margin="3,0,0,0"/>
-                </StackPanel>
+                <Button.ToolTip>
+                    <TextBlock>
+                        Deletes <Run FontWeight="Bold">all</Run> Adaptiv credentials for all
+                        <LineBreak/>
+                        Adaptiv environments for <Run TextDecorations="Underline">the Bot</Run> in Windows.
+                    </TextBlock>
+                </Button.ToolTip>
+                <Grid>
+                    <TextBlock>Purge Credentials</TextBlock>
+                    <materialDesign:PackIcon Kind="DeleteForever"/>
+                </Grid>
             </Button>
 
-            <Button
-                Name="BtnConfigureTaskScheduler"
+            <TextBlock
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Configure Task Scheduler</TextBlock>
-                    <materialDesign:PackIcon Kind="ClockOutline" HorizontalAlignment="Right" Margin="3,0,0,0"/>
-                </StackPanel>            
-            </Button>
+                Margin="3,0,0,0"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                Config File
+            </TextBlock>
 
+            <Separator DockPanel.Dock="Top"/>
 
             <Button
                 Name="BtnResetAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]"
                 HorizontalContentAlignment="Stretch">
-                <DockPanel>
-                    <TextBlock HorizontalAlignment="Center">Reset Config File</TextBlock>
-                    <materialDesign:PackIcon Kind="RemoveCircleOutline" DockPanel.Dock="Left" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="3,0,0,0"/>
-                </DockPanel>
+                <Grid>
+                    <TextBlock>Reset Config File</TextBlock>
+                    <materialDesign:PackIcon Kind="Restore"/>
+                </Grid>
             </Button>
 
             <Button
                 Name="BtnDeleteAdaptivBotConfigFile"
                 DockPanel.Dock="Top"
-                ToolTip="The name says it all. Mainly used for debugging purposes. Only click if you know what you're doing."
                 HorizontalContentAlignment="Stretch"
                 Click="BtnDeleteAdaptivBotConfigFile_OnClick">
-                <Grid
-                    HorizontalAlignment="Stretch">
-                    <TextBlock HorizontalAlignment="Center">Delete Config File</TextBlock>
-                    <materialDesign:PackIcon Kind="FileRemove" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <Button.ToolTip>
+                    <TextBlock>
+                        The name says it all.
+                        <LineBreak/>
+                        Mainly used for debugging purposes.
+                        <LineBreak/>
+                        Only click if you know what you're doing.
+                    </TextBlock>
+                </Button.ToolTip>
+                <Grid>
+                    <TextBlock>Delete Config File</TextBlock>
+                    <materialDesign:PackIcon Kind="FileRemove"/>
                 </Grid>
             </Button>
 
@@ -241,10 +352,30 @@
                 Name="BtnOpenAdaptivBotConfigFileFolder"
                 DockPanel.Dock="Top"
                 ToolTip="[Not Implemented]">
-                <StackPanel Orientation="Horizontal">
+                <Grid>
                     <TextBlock>Open Config File Folder</TextBlock>
-                    <materialDesign:PackIcon Kind="FolderOpen" Margin="3,0,0,0"/>
-                </StackPanel>
+                    <materialDesign:PackIcon Kind="FolderOpen"/>
+                </Grid>
+            </Button>
+
+
+            <TextBlock
+                DockPanel.Dock="Top"
+                Margin="3,0,0,0"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                Miscellaneous
+            </TextBlock>
+
+            <Separator DockPanel.Dock="Top"/>
+
+            <Button
+                Name="BtnConfigureTaskScheduler"
+                DockPanel.Dock="Top"
+                ToolTip="[Not Implemented]">
+                <Grid>
+                    <TextBlock>Task Scheduler</TextBlock>
+                    <materialDesign:PackIcon Kind="ClockOutline"/>
+                </Grid>
             </Button>
 
         </DockPanel>

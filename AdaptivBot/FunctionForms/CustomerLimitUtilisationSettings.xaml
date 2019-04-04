@@ -11,7 +11,7 @@
       Title="Customer Limit Utilisation Extraction Settings"
       Loaded="CustomerLimitUtilisationSettings_OnLoaded">
     <Page.Resources>
-        <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings"/>
+        <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings" IsAsynchronous="False" IsInitialLoadEnabled="True"/>
 
         <Style x:Key="ComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
             <Style.Triggers>
@@ -130,7 +130,7 @@
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
 
-
+        
         <!-- Title -->
         <StackPanel
             Grid.Row="0"
@@ -151,7 +151,7 @@
 
                 <materialDesign:PackIcon
                     Kind="HelpCircleOutline"
-                    ToolTip="This is used to a filtered customer limit utilisation report from Adaptiv."
+                    ToolTip="This is used to extract a filtered customer limit utilisation report from Adaptiv."
                     Margin="10,0,0,0"
                     Foreground="{DynamicResource PrimaryHueMidBrush}"
                     VerticalAlignment="Bottom"
@@ -176,20 +176,15 @@
                     <Setter Property="HorizontalAlignment" Value="Right"/>
                 </Style>
             </DockPanel.Resources>
+
             <TextBlock
                 DockPanel.Dock="Top">
-                Base Extraction Folder
+                Extraction Folder
             </TextBlock>
 
             <TextBlock
                 DockPanel.Dock="Top"
-                ToolTip="The folder within the base extraction folder to save to. Leave blank if irrelevant.">
-                Sub Extraction Folder
-            </TextBlock>
-
-            <TextBlock
-                DockPanel.Dock="Top"
-                ToolTip="e.g. CustLimitUtil[yyyy-MM-dd].xlsx">
+                ToolTip="e.g. CustLimitUtil{yyyy-MM-dd}.xlsx">
                 File Name Format
             </TextBlock>
         </DockPanel>
@@ -208,15 +203,10 @@
                 DockPanel.Dock="Top"
                 Margin="5">
                 <TextBox
-                    Name="txtBoxBaseFolder"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
+                    Name="txtBxExtractionFolder"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
                     ToolTip="[Not Implemented]The folder to which the file will be saved."
-                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=BaseExtractionFolder}"/>
+                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=ExtractionFolder}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -226,31 +216,8 @@
                 DockPanel.Dock="Top"
                 Margin="5">
                 <TextBox
-                    Name="txtSubExtractionFolder"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    ToolTip="[Not Implemented]The folder within the base extraction folder to save to. Leave blank if irrelevant."
-                    Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=SubExtractionFolder}"/>
-            </materialDesign:Card>
-
-            <materialDesign:Card
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Center"
-                DockPanel.Dock="Top"
-                Margin="5">
-                <TextBox
-                    Name="txtFileNameFormat"
-                    FontSize="12"
-                    Padding="5,0,5,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
+                    Name="txtBxFileNameFormat"
+                    Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
                     ToolTip="[Not Implemented]The folder within the base extraction folder to save to. Leave blank if irrelevant."
                     Text="{Binding Source={StaticResource CustomerLimitUtilisationSettingsXml}, XPath=FileNameFormat}"/>
             </materialDesign:Card>

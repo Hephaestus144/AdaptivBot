@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -400,6 +401,16 @@ namespace AdaptivBot.SettingForms
             {
                 await Task.Run(() => Thread.Sleep(500));
             }
+        }
+
+
+        private void DealRiskCarrierSettings_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var xdp =
+                (XmlDataProvider)this.Resources["DealRiskCarrierSettingsXml"];
+
+            xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+
         }
     }
 }

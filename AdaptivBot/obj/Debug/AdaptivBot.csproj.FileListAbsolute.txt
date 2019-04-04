@@ -220,5 +220,5 @@ C:\GitLab\adaptivbot\AdaptivBot\bin\Debug\System.IO.Abstractions.dll
 C:\GitLab\adaptivbot\AdaptivBot\bin\Debug\System.IO.Abstractions.xml
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\FunctionForms\TestFunctions.g.cs
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\FunctionForms\TestFunctions.baml
-C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache
 C:\GitLab\AdaptivBot\AdaptivBot\obj\Debug\AdaptivBot_Content.g.cs
+C:\GitLab\adaptivbot\AdaptivBot\obj\Debug\AdaptivBot.csprojAssemblyReference.cache

@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Application = System.Windows.Application;
+using TextBox = System.Windows.Controls.TextBox;
 
 
 namespace AdaptivBot.SettingForms
@@ -21,7 +22,7 @@ namespace AdaptivBot.SettingForms
     {
         private readonly MainWindow _window = (MainWindow)Application.Current.MainWindow;
 
-        
+
         public RiskViewSettings()
         {
             InitializeComponent();
@@ -46,7 +47,7 @@ namespace AdaptivBot.SettingForms
         }
 
 
-        private async void btnRunExtraction_Click(object sender, RoutedEventArgs e)
+        private async void BtnRunExtraction_Click(object sender, RoutedEventArgs e)
         {
             GlobalDataBindingValues.Instance.extractionStartTime = DateTime.Now;
 
@@ -343,21 +344,13 @@ namespace AdaptivBot.SettingForms
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
         }
 
+
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            var document =
-                XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
-
-            document.Root.Element("RiskViewSettings").Element("BaseExtractionFolder")
-                .Value = txtBoxBaseFolder.Text;
-
-            document.Root.Element("RiskViewSettings").Element("SubExtractionFolder").Value
-                = txtFileNameFormat.Text;
-
-            document.Root.Element("RiskViewSettings").Element("FileNameFormat").Value =
-                txtBoxBaseFolder.Text;
-
-            document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            txtBxBaseFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            var xdp = (XmlDataProvider)this.Resources["RiskViewSettingsXml"];
+            xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
             _window.Logger.OkayText = "Risk view settings saved.";
         }
     }

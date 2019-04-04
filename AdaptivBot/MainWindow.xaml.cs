@@ -441,7 +441,7 @@ namespace AdaptivBot
 
         private void BtnEmailBug_OnClick(object sender, RoutedEventArgs e)
         {
-            FrameFunctions.SelectedIndex = 5;
+            FrameFunctions.SelectedIndex = 6;
             FrmEmailBugSuggestion.Visibility = Visibility.Visible;
         }
     }

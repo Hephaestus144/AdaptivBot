@@ -28,8 +28,8 @@ namespace AdaptivBot.SettingForms
         {
             var xdp =
                 (XmlDataProvider)this.Resources["CustomerLimitUtilisationSettingsXml"];
-
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            this.DataContext = xdp;
         }
 
 
@@ -551,7 +551,11 @@ namespace AdaptivBot.SettingForms
 
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            
+            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            var xdp = (XmlDataProvider)this.Resources["CustomerLimitUtilisationSettingsXml"];
+            xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            _window.Logger.OkayText = "Customer Limit Utilisation settings saved.";
         }
     }
 }
