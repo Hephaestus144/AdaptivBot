@@ -21,18 +21,6 @@ namespace AdaptivBot.SettingForms
         }
 
 
-        private void btnSaveSettings_Click(object sender, RoutedEventArgs e)
-        {
-            var configDocument =
-                XDocument.Load(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
-            if (txtBxExcelPath.Text
-                != configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value)
-            {
-                configDocument.Root.Element("GeneralSettings").Element("ExcelExecutablePath").Value =
-                    txtBxExcelPath.Text;
-                configDocument.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
-            }
-        }
 
 
         private void GeneralSettings_OnLoaded(object sender, RoutedEventArgs e)
@@ -76,6 +64,11 @@ namespace AdaptivBot.SettingForms
                     File.WriteAllText(
                         GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath,
                         Properties.Resources.AdaptivBot);
+                    EventHandler handler = _window.ConfigFileChanged;
+                    if(handler != null)
+                    {
+                        handler(this, e);
+                    }
                     _window.Logger.OkayText = $"Config file reset : {GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath}";
                 }
                 catch(Exception exception)
@@ -88,6 +81,37 @@ namespace AdaptivBot.SettingForms
             {
                 _window.Logger.WarningText = "Config file not found!";
                 _window.Logger.WarningText = "Config file not reset!";
+            }
+        }
+
+
+        private void btnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["GeneralSettingsXml"];
+            //xdp.Refresh();
+            txtBxExcelPath.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            txtBxAdaptivBotConfigFilePath.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            _window.Logger.OkayText = "General settings saved.";
+            xdp.Refresh();
+            OnSettingsSaved(EventArgs.Empty);
+        }
+
+        public void UpdateTargets(object sender, EventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["GeneralSettingsXml"];
+            xdp.Refresh();
+            txtBxAdaptivBotConfigFilePath.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+            txtBxExcelPath.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+        }
+
+
+        public void OnSettingsSaved(EventArgs e)
+        {
+            EventHandler handler = _window.ConfigFileChanged;
+            if(handler != null)
+            {
+                handler(this, e);
             }
         }
     }

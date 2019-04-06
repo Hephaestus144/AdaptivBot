@@ -8,7 +8,9 @@
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Title="Email Bug/Suggestion">
+      Title="Email Bug/Suggestion"     
+      d:DesignHeight="600" 
+      d:DesignWidth="1000">
 
     <Grid>
         <Grid.RowDefinitions>

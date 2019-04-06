@@ -11,12 +11,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using System.Xml.Linq;
+using AdaptivBot.SettingForms;
 using Action = System.Action;
 using Application = System.Windows.Application;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
+using ComboBox = System.Windows.Controls.ComboBox;
 
 
 namespace AdaptivBot
@@ -59,6 +63,7 @@ namespace AdaptivBot
 
         public Logger Logger;
 
+        public EventHandler ConfigFileChanged;
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -150,6 +155,26 @@ namespace AdaptivBot
             SetupExtractionCompletionWebpages();
 
             #endregion  config file & variables setup
+
+            ConfigFileChanged +=
+                ((CustomerLimitUtilisationSettings)this.FrmCustomerLimitUtilisationSettings.Content)
+                .UpdateTargets;
+
+            ConfigFileChanged +=
+                ((DealRiskCarrierSettings)this.FrmDealRiskCarrierSettings.Content)
+                .UpdateTargets;
+
+            ConfigFileChanged +=
+                ((GeneralSettings)this.FrmGeneralSettings.Content)
+                .UpdateTargets;
+
+            ConfigFileChanged +=
+                ((PortfolioAnalysisSettings) this.FrmPortfolioAnalysisSettings.Content)
+                .UpdateTargets;
+
+            ConfigFileChanged +=
+                ((RiskViewSettings)this.FrmRiskViewSettings.Content)
+                .UpdateTargets;
         }
 
         
@@ -238,6 +263,9 @@ namespace AdaptivBot
             WebBrowser.DocumentCompleted += webBrowser_DocumentCompleted;
 
             Logger = new Logger(rtbLogger);
+
+
+            //FrmPortfolioAnalysisSettings.ConfigFileUpdated += new EventHandler()
         }
 
 
@@ -444,5 +472,33 @@ namespace AdaptivBot
             FrameFunctions.SelectedIndex = 6;
             FrmEmailBugSuggestion.Visibility = Visibility.Visible;
         }
+
+
+        //private void CmbBxSelectFunction_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    XmlDataProvider xdp = null;
+        //    var text = (sender as ComboBox)?.SelectedValue as string;
+        //    switch(text)
+        //    {
+        //        case "Risk View Reports":
+        //            xdp = (XmlDataProvider)this.Resources["RiskViewSettingsXml"];
+        //            break;
+        //        case "Portfolio Analysis":
+        //            xdp = (XmlDataProvider)this.Resources["PortfolioAnalysisSettingsXml"];
+        //            break;
+        //        case "Customer Limit Utilisation":
+        //            xdp = (XmlDataProvider)this.Resources["CustomerLimitUtilisationSettingsXml"];
+        //            break;
+        //        case "Deal Risk Carriers":
+        //            xdp = (XmlDataProvider)this.Resources["DealRiskCarrierSettingsXml"];
+        //            break;
+        //        case "General Settings":
+        //            xdp = (XmlDataProvider)this.Resources["GeneralSettingsSettingsXml"];
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    xdp?.Refresh();
+        //}
     }
 }

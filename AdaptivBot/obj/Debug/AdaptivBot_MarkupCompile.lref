@@ -1,13 +1,14 @@
 ﻿
-FC:\GitLab\adaptivbot\AdaptivBot\App.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\AlertForms\AlertUpdateUserCredentials.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\CustomControls\ButtonWithIcon.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\EmailBugSuggestion.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\TestFunctions.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\MainWindow.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\GeneralSettings.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\PortfolioAnalysisSettings.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\DealRiskCarrierSettings.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\RiskViewSettings.xaml;;
-FC:\GitLab\adaptivbot\AdaptivBot\FunctionForms\CustomerLimitUtilisationSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\App.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\AlertForms\AlertUpdateUserCredentials.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\CustomControls\ButtonWithIcon.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\CustomControls\PrimaryButtonWithIcon.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\EmailBugSuggestion.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\TestFunctions.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\MainWindow.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\GeneralSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\PortfolioAnalysisSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\DealRiskCarrierSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\RiskViewSettings.xaml;;
+FC:\GitLab\AdaptivBot\AdaptivBot\FunctionForms\CustomerLimitUtilisationSettings.xaml;;
 

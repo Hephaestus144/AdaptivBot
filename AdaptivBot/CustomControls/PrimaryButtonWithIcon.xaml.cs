@@ -1,16 +1,27 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 
 namespace AdaptivBot.CustomControls
 {
     /// <summary>
-    /// Interaction logic for ButtonWithIcon.xaml
+    /// Interaction logic for PrimaryButtonWithIcon.xaml
     /// </summary>
-    public partial class ButtonWithIcon : Button
+    public partial class PrimaryButtonWithIcon : Button
     {
-        public ButtonWithIcon()
+        public PrimaryButtonWithIcon()
         {
             InitializeComponent();
             this.FontSize = 10;
@@ -18,7 +29,6 @@ namespace AdaptivBot.CustomControls
             this.IconKind = "Wifi";
             this.IconLeftMargin = 4;
             this.IconSize = 18;
-            this.Padding = new Thickness(5,0,5,0);
             this.Text = "Text";
         }
 
@@ -26,7 +36,7 @@ namespace AdaptivBot.CustomControls
         #region FontSize
 
         public new static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register("FontSize", typeof(int), typeof(ButtonWithIcon),
+            DependencyProperty.Register("FontSize", typeof(int), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(FontSizePropertyChangedCallback));
 
         private static void FontSizePropertyChangedCallback(
@@ -47,7 +57,7 @@ namespace AdaptivBot.CustomControls
         #region IconForeground
 
         public static readonly DependencyProperty IconForegroundProperty =
-            DependencyProperty.Register("IconForeground", typeof(Brush), typeof(ButtonWithIcon),
+            DependencyProperty.Register("IconForeground", typeof(Brush), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(IconForegroundPropertyChangedCallback));
 
         private static void IconForegroundPropertyChangedCallback(
@@ -68,7 +78,7 @@ namespace AdaptivBot.CustomControls
         #region IconKind
 
         public static readonly DependencyProperty IconKindProperty =
-            DependencyProperty.Register("IconKind", typeof(string), typeof(ButtonWithIcon),
+            DependencyProperty.Register("IconKind", typeof(string), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(IconKindPropertyChangedCallback));
 
         private static void IconKindPropertyChangedCallback(
@@ -89,7 +99,7 @@ namespace AdaptivBot.CustomControls
         #region IconSize
 
         public static readonly DependencyProperty IconSizeProperty =
-            DependencyProperty.Register("IconSize", typeof(int), typeof(ButtonWithIcon),
+            DependencyProperty.Register("IconSize", typeof(int), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(IconSizePropertyChangedCallback));
 
         private static void IconSizePropertyChangedCallback(
@@ -110,7 +120,7 @@ namespace AdaptivBot.CustomControls
         #region IconLeftMargin
 
         public static readonly DependencyProperty IconLeftMarginProperty =
-            DependencyProperty.Register("IconLeftMargin", typeof(int), typeof(ButtonWithIcon),
+            DependencyProperty.Register("IconLeftMargin", typeof(int), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(IconLeftMarginPropertyChangedCallback));
 
         private static void IconLeftMarginPropertyChangedCallback(
@@ -128,31 +138,10 @@ namespace AdaptivBot.CustomControls
         #endregion IconLeftMargin
 
 
-        #region Padding
-
-        public new static readonly DependencyProperty PaddingProperty =
-            DependencyProperty.Register("Padding", typeof(Thickness), typeof(ButtonWithIcon),
-                new FrameworkPropertyMetadata(PaddingPropertyChangedCallback));
-
-        private static void PaddingPropertyChangedCallback(
-            DependencyObject controlInstance,
-            DependencyPropertyChangedEventArgs args)
-        {
-        }
-
-        public new Thickness Padding
-        {
-            get => (Thickness)GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
-        }
-
-        #endregion Padding
-
-
         #region Text
 
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(ButtonWithIcon),
+            DependencyProperty.Register("Text", typeof(string), typeof(PrimaryButtonWithIcon),
                 new FrameworkPropertyMetadata(TextPropertyChangedCallback));
 
         private static void TextPropertyChangedCallback(DependencyObject controlInstance,
@@ -164,7 +153,7 @@ namespace AdaptivBot.CustomControls
         public string Text
         {
             get => (string)GetValue(TextProperty);
-            set => SetValue(ButtonWithIcon.TextProperty, value);
+            set => SetValue(PrimaryButtonWithIcon.TextProperty, value);
         }
 
         #endregion Text

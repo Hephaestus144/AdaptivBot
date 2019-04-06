@@ -551,11 +551,33 @@ namespace AdaptivBot.SettingForms
 
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty).UpdateSource();
             var xdp = (XmlDataProvider)this.Resources["CustomerLimitUtilisationSettingsXml"];
+            xdp.Refresh();
+            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
             _window.Logger.OkayText = "Customer Limit Utilisation settings saved.";
+            xdp.Refresh();
+            OnSettingsSaved(EventArgs.Empty);
+        }
+
+
+        public void UpdateTargets(object sender, EventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["CustomerLimitUtilisationSettingsXml"];
+            xdp.Refresh();
+            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+        }
+
+
+        public void OnSettingsSaved(EventArgs e)
+        {
+            EventHandler handler = _window.ConfigFileChanged;
+            if(handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

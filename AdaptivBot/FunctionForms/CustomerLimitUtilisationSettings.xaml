@@ -10,9 +10,11 @@
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Title="Customer Limit Utilisation Extraction Settings"
-      Loaded="CustomerLimitUtilisationSettings_OnLoaded">
+      Loaded="CustomerLimitUtilisationSettings_OnLoaded"
+      d:DesignHeight="600" 
+      d:DesignWidth="1000">
     <Page.Resources>
-        <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings" IsAsynchronous="False" IsInitialLoadEnabled="True"/>
+        <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
 
         <Style x:Key="ComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
             <Style.Triggers>
@@ -247,44 +249,32 @@
             Grid.ColumnSpan="2"
             LastChildFill="False">
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                VerticalContentAlignment="Center"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File to UAT</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconKind="ContentCopy"
+                IconForeground="#161616"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy File to UAT"/>
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File to Prod</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconKind="ContentCopy"
+                IconForeground="#161616"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy File to Prod"/>
 
-            <Button
-                Name="btnRunExtraction"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+            <customControls:PrimaryButtonWithIcon
+                x:Name="btnRunExtraction"
+                Click="btnRunExtraction_Click"
                 DockPanel.Dock="Top"
                 FontSize="11"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                Margin="5,5,5,10"
-                Click="btnRunExtraction_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Run Extraction</TextBlock>
-                    <materialDesign:PackIcon Kind="PlayCircleOutline" VerticalAlignment="Center" Height="14" Width="14" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconForeground="#161616"
+                IconKind="PlayCircleOutline"
+                IconSize="16"
+                Padding="5,0,7,0"
+                Text="Run Extraction"/>
 
             <CheckBox
                 Name="chkBxOverrideExistingFiles"

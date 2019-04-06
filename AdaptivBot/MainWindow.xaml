@@ -10,6 +10,7 @@
         Width="1920"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:customControls="clr-namespace:AdaptivBot.CustomControls"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -32,6 +33,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopUpBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <XmlDataProvider x:Key="CustomerLimitUtilisationSettingsXml" XPath="AdaptivBot/CustomerLimitUtilisationSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
+            <XmlDataProvider x:Key="DealRiskCarrierSettingsXml" XPath="AdaptivBot/DealRiskCarrierSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
+            <XmlDataProvider x:Key="PortfolioAnalysisSettingsXml" XPath="AdaptivBot/PortfolioAnalysisSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
+            <XmlDataProvider x:Key="RiskViewSettingsXml" XPath="AdaptivBot/RiskViewSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -203,7 +209,8 @@
             Grid.RowSpan="5"
             Grid.Column="3"
             Grid.ColumnSpan="2"
-            Margin="10.2,0.2,0,0.2">
+            Margin="10.2,0.2,0,0.2"
+            LastChildFill="False">
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -242,7 +249,7 @@
                             </Style.Triggers>
                         </Style>
                     </ComboBox.ItemContainerStyle>
-                    <ComboBoxItem>Porfolio Analysis</ComboBoxItem>
+                    <ComboBoxItem>Portfolio Analysis</ComboBoxItem>
                     <ComboBoxItem>Risk View Reports</ComboBoxItem>
                     <ComboBoxItem>Customer Limit Utilisation</ComboBoxItem>
                     <ComboBoxItem>Deal Risk Carriers</ComboBoxItem>
@@ -252,45 +259,24 @@
                 </ComboBox>
             </materialDesign:Card>
 
-            <Button
-                Name="BtnEmailBug"
+            <customControls:ButtonWithIcon
+                x:Name="BtnEmailBug"
+                Click="BtnEmailBug_OnClick"
                 DockPanel.Dock="Top"
-                FontSize="11"
-                Margin="5,6,5,0"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                ToolTip="Email the development team to alert them of a bug or a feature you'd like to add."
-                Click="BtnEmailBug_OnClick">
-                <Button.Content>
-                    <DockPanel>
-                        <TextBlock
-                            VerticalAlignment="Center">
-                            Email Bug/Suggestion
-                        </TextBlock>
-                        <materialDesign:PackIcon
-                            Kind="Bugfood"
-                            Width="16"
-                            Height="16"
-                            Margin="2,0,0,0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Right"/>
-                    </DockPanel>
-                </Button.Content>
+                IconForeground="Black"
+                IconKind="Bugfood"
+                Text="Email Bug / Suggestion"
+                ToolTip="Email the development team to alert them of a bug or a feature you'd like to add."/>
 
-            </Button>
 
-            <Button
-                Name="BtnQuitExecution"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+            <customControls:ButtonWithIcon
+                x:Name="BtnQuitExecution"
+                Click="BtnEmailBug_OnClick"
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="11"
-                Margin="5,10,5,5"
-                ToolTip="[Not Implemented] Cancel the current executing process.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Quit Execution</TextBlock>
-                    <materialDesign:PackIcon Kind="StopCircleOutline" Height="16" Width="16" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconForeground="Black"
+                IconKind="StopCircleOutline"
+                Text="Quit Execution"
+                ToolTip="[Not Implemented] Cancel the current executing process."/>
 
         </DockPanel>
 
@@ -550,6 +536,7 @@
                         <materialDesign:TransitionEffect Kind="FadeIn" />
                         <materialDesign:TransitionEffect Kind="ExpandIn" />
                     </materialDesign:TransitioningContent.OpeningEffects>
+
                     <Frame
                         Name="FrmPortfolioAnalysisSettings"
                         NavigationUIVisibility="Hidden"

@@ -6,12 +6,15 @@
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:customControls="clr-namespace:AdaptivBot.CustomControls"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Loaded="DealRiskCarrierSettings_OnLoaded"
-      Title="Deal Risk Carrier Settings">
+      Title="Deal Risk Carrier Settings"
+      d:DesignHeight="600" 
+      d:DesignWidth="1000">
     <Page.Resources>
-        <XmlDataProvider x:Key="DealRiskCarrierSettingsXml" XPath="AdaptivBot/DealRiskCarrierSettings"/>
+        <XmlDataProvider x:Key="DealRiskCarrierSettingsXml" XPath="AdaptivBot/DealRiskCarrierSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
     </Page.Resources>
 
     <Grid>
@@ -99,7 +102,7 @@
             <TextBlock
                 DockPanel.Dock="Top"
                 Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxLabel}">
-                Risk Carrier File Folder
+                Risk Carrier Files Folder
             </TextBlock>
         </DockPanel>
 
@@ -115,9 +118,9 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
-                    Name="txtBoxBaseFolder"
+                    Name="txtBxExtractionFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
-                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=ExtractionFolder}"/>
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=ExtractionFolder, UpdateSourceTrigger=Explicit, Mode=TwoWay}"/>
             </materialDesign:Card>
 
             <materialDesign:Card
@@ -126,7 +129,7 @@
                 <TextBox
                     Name="txtBxFileNameFormat"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
-                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=FileNameFormat}"/>
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=FileNameFormat, UpdateSourceTrigger=Explicit, Mode=TwoWay}"/>
             </materialDesign:Card>
 
 
@@ -134,9 +137,9 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource AdaptivBotFileOrFolderPathTextBoxCard}">
                 <TextBox
-                    Name="txtBxRiskCarrierFileFolder"
+                    Name="txtBxRiskCarrierFilesFolder"
                     Style="{StaticResource AdaptivBotFileOrFolderPathTextBox}"
-                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=RiskCarrierFilesFolder}"/>
+                    Text="{Binding Source={StaticResource DealRiskCarrierSettingsXml}, XPath=RiskCarrierFilesFolder, UpdateSourceTrigger=Explicit, Mode=TwoWay}"/>
             </materialDesign:Card>
         </DockPanel>
 
@@ -149,47 +152,32 @@
             Grid.ColumnSpan="2"
             LastChildFill="False">
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File(s) to UAT</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconKind="ContentCopy"
+                IconForeground="#161616"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy File to UAT"/>
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File(s) to Prod</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" VerticalAlignment="Center" Height="10" Width="10" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconKind="ContentCopy"
+                IconForeground="#161616"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy File to Prod"/>
 
-
-            <Button
-                Name="btnRunExtraction"
-                DockPanel.Dock="Top"
-                VerticalAlignment="Bottom"
-                FontSize="11"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                Margin="5" 
+            <customControls:PrimaryButtonWithIcon
+                x:Name="btnRunExtraction"
                 Click="btnRunExtraction_Click"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Run Extraction</TextBlock>
-                    <materialDesign:PackIcon Kind="PlayCircleOutline" VerticalAlignment="Center" Height="14" Width="14" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                DockPanel.Dock="Top"
+                FontSize="11"
+                IconForeground="#161616"
+                IconKind="PlayCircleOutline"
+                IconSize="16"
+                Padding="5,0,7,0"
+                Text="Run Extraction"/>
 
             <CheckBox
                 Name="chkBxOverrideExistingFiles"
@@ -205,6 +193,34 @@
                 </TextBlock>
             </CheckBox>
         </DockPanel>
+
+
+        <!-- Bottom most controls -->
+        <Button
+            Name="BtnSaveSettings"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Grid.Row="11"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Left"
+            Click="BtnSaveSettings_Click"
+            FontSize="11"
+            Style="{StaticResource MaterialDesignFlatButton}"
+            Margin="5,5,5,10">
+            <Button.Content>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock>Save Settings</TextBlock>
+                    <materialDesign:PackIcon
+                        Kind="ContentSaveSettingsOutline"
+                        Width="16"
+                        Height="16"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Button.Content>
+        </Button>
 
 
         <Image 

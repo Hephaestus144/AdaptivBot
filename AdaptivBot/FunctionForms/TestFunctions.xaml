@@ -8,7 +8,9 @@
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Title="Test Functions">
+      Title="Test Functions"
+      d:DesignHeight="600" 
+      d:DesignWidth="1000">
 
     <Grid>
         <Grid.RowDefinitions>

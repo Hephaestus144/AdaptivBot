@@ -6,13 +6,16 @@
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
+      xmlns:customControls="clr-namespace:AdaptivBot.CustomControls"
       mc:Ignorable="d" 
+      d:DesignHeight="600" 
+      d:DesignWidth="1000"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Loaded="PortfolioAnalysisSettings_OnLoaded"
       Title="Customer Limit Utilisation Extraction Settings">
 
     <Page.Resources>
-        <XmlDataProvider x:Key="PortfolioAnalysisSettingsXml" XPath="AdaptivBot/PortfolioAnalysisSettings"/>
+        <XmlDataProvider x:Key="PortfolioAnalysisSettingsXml" XPath="AdaptivBot/PortfolioAnalysisSettings" IsAsynchronous="True" IsInitialLoadEnabled="True"/>
     </Page.Resources>
 
     <Grid>
@@ -165,44 +168,31 @@
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
             </materialDesign:Card>
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File to UAT</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" Height="10" Width="10" VerticalAlignment="Center" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconForeground="#161616"
+                IconKind="ContentCopy"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy Files to UAT"/>
 
-            <Button
+            <customControls:ButtonWithIcon
                 DockPanel.Dock="Top"
-                VerticalAlignment="Top"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                FontSize="10"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Copy File to Prod</TextBlock>
-                    <materialDesign:PackIcon Kind="ContentCopy" Height="10" Width="10" VerticalAlignment="Center" Margin="2,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconForeground="#161616"
+                IconKind="ContentCopy"
+                IconSize="11"
+                Padding="5,0,9,0"
+                Text="Copy Files to Prod"/>
 
-            <Button
-                Name="btnRunExtraction"
-                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+            <customControls:PrimaryButtonWithIcon
+                x:Name="btnRunExtraction"
                 DockPanel.Dock="Top"
                 FontSize="11"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                Margin="5,5,5,10">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>Run Extraction</TextBlock>
-                    <materialDesign:PackIcon Kind="PlayCircleOutline" Height="14" Width="14" VerticalAlignment="Center" Margin="3,0,0,0"/>
-                </StackPanel>
-            </Button>
+                IconForeground="#161616"
+                IconKind="PlayCircleOutline"
+                IconSize="16"
+                Padding="5,0,7,0"
+                Text="Run Extraction"/>
 
             <CheckBox
                 Name="chkBxOverrideExistingFiles"

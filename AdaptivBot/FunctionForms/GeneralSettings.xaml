@@ -6,10 +6,13 @@
       xmlns:local="clr-namespace:AdaptivBot.SettingForms"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:adaptivBot="clr-namespace:AdaptivBot"
+      xmlns:customControls="clr-namespace:AdaptivBot.CustomControls"
       mc:Ignorable="d" 
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Loaded="GeneralSettings_OnLoaded"
-      Title="General Settings">
+      Title="General Settings"
+      d:DesignHeight="600" 
+      d:DesignWidth="1000">
     <Page.Resources>
         <XmlDataProvider x:Key="GeneralSettingsXml" XPath="AdaptivBot/GeneralSettings"/>
     </Page.Resources>
@@ -176,6 +179,7 @@
                     </Style>
                 </Grid.Resources>
 
+                <!-- Current version info -->
                 <TextBlock
                     Style="{StaticResource LeftColumn}"
                     Grid.Column="0"
@@ -186,9 +190,8 @@
                 <TextBlock
                     Style="{StaticResource RightColumn}"
                     Grid.Column="1"
-                    Grid.Row="0">
-                    0.0
-                </TextBlock>
+                    Grid.Row="0"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=AdaptivBotVersion}"/>
 
                 <TextBlock
                     Style="{StaticResource LeftColumn}"
@@ -200,70 +203,79 @@
                 <TextBlock
                     Style="{StaticResource RightColumn}"
                     Grid.Column="1"
-                    Grid.Row="1">
-                    2019-04-03
-                </TextBlock>
+                    Grid.Row="1"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=AdaptivBotVersionReleaseDate, Mode=TwoWay}"/>
 
+
+                <!-- Previous version info -->
                 <TextBlock
                     Style="{StaticResource LeftColumn}"
                     Grid.Column="0"
                     Grid.Row="2">
+                    Previous Version
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=PreviousAdaptivBotVersion}"/>
+
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="3">
+                    Previous Release Date
+                </TextBlock>
+
+                <TextBlock
+                    Style="{StaticResource RightColumn}"
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    Text="{Binding Source={StaticResource GeneralSettingsXml}, XPath=PreviousAdaptivBotVersionReleaseDate}"/>
+
+
+                <!-- Latest version info -->
+                <TextBlock
+                    Style="{StaticResource LeftColumn}"
+                    Grid.Column="0"
+                    Grid.Row="4">
                     Latest Version
                 </TextBlock>
 
                 <TextBlock
                     Style="{StaticResource RightColumn}"
                     Grid.Column="1"
-                    Grid.Row="2">
-                    0.0
+                    Grid.Row="4">
+                    Bind to SqlLite DB
                 </TextBlock>
 
                 <TextBlock
                     Style="{StaticResource LeftColumn}"
                     Grid.Column="0"
-                    Grid.Row="3">
+                    Grid.Row="5">
                     Latest Release Date
                 </TextBlock>
 
                 <TextBlock
                     Style="{StaticResource RightColumn}"
                     Grid.Column="1"
-                    Grid.Row="3">
-                    2019-04-03
+                    Grid.Row="5">
+                    Bind to SqlLite DB
                 </TextBlock>
             </Grid>
 
 
         </DockPanel>
 
+
+        <!-- Buttons -->
         <DockPanel
             Grid.Row="1"
-            Grid.RowSpan="10"
+            Grid.RowSpan="11"
             Grid.Column="8"
-            Grid.ColumnSpan="3">
-
-            <DockPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-                    <Setter Property="FontSize" Value="10"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalAlignment" Value="Top"/>
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth5"/>
-                </Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                </Style>
-                <Style TargetType="materialDesign:PackIcon">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="Margin" Value="3,0,0,0"/>
-                    <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}"/>
-                    <Setter Property="Height" Value="18"/>
-                    <Setter Property="Width" Value="18"/> 
-                </Style>
-            </DockPanel.Resources>
+            Grid.ColumnSpan="3"
+            LastChildFill="False">
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -274,21 +286,20 @@
 
             <Separator DockPanel.Dock="Top"/>
 
-            <Button
-                Name="BtnUpdateAdaptivCredentials"
+            <customControls:ButtonWithIcon
+                x:Name="BtnUpdateAdaptivCredentials"
+                Click="BtnUpdateAdaptivCredentials_OnClick"
                 DockPanel.Dock="Top"
+                IconKind="PasswordReset"
                 ToolTip="Updates the credentials for the selected Adaptiv environment."
-                Click="BtnUpdateAdaptivCredentials_OnClick">
-                <Grid>
-                    <TextBlock>Update Credentials</TextBlock>
-                    <materialDesign:PackIcon Kind="PasswordReset"/>
-                </Grid> 
-            </Button>
-
-            <Button
-                Name="BtnPurgeAdaptivCredentials"
+                Text="Update Credentials"/>
+            
+            <customControls:ButtonWithIcon
+                x:Name="BtnPurgeAdaptivCredentials"
+                Click="BtnPurgeAdaptivCredentials_Click"
                 DockPanel.Dock="Top"
-                Click="BtnPurgeAdaptivCredentials_Click">
+                IconKind="DeleteForever"
+                Text="Purge Credentials">
                 <Button.ToolTip>
                     <TextBlock>
                         Deletes <Run FontWeight="Bold">all</Run> Adaptiv credentials for all
@@ -296,11 +307,7 @@
                         Adaptiv environments for <Run TextDecorations="Underline">the Bot</Run> in Windows.
                     </TextBlock>
                 </Button.ToolTip>
-                <Grid>
-                    <TextBlock>Purge Credentials</TextBlock>
-                    <materialDesign:PackIcon Kind="DeleteForever"/>
-                </Grid>
-            </Button>
+            </customControls:ButtonWithIcon>
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -311,23 +318,22 @@
 
             <Separator DockPanel.Dock="Top"/>
 
-            <Button
-                Name="BtnResetAdaptivBotConfigFile"
-                DockPanel.Dock="Top"
-                ToolTip="Resets the XML config file to its initial state."
-                HorizontalContentAlignment="Stretch"
-                Click="BtnResetAdaptivBotConfigFile_OnClick">
-                <Grid>
-                    <TextBlock>Reset Config File</TextBlock>
-                    <materialDesign:PackIcon Kind="Restore"/>
-                </Grid>
-            </Button>
 
-            <Button
-                Name="BtnDeleteAdaptivBotConfigFile"
+            <customControls:ButtonWithIcon
+                x:Name="BtnResetAdaptivBotConfigFile"
+                Click="BtnResetAdaptivBotConfigFile_OnClick"
                 DockPanel.Dock="Top"
-                HorizontalContentAlignment="Stretch"
-                Click="BtnDeleteAdaptivBotConfigFile_OnClick">
+                IconKind="Restore"
+                ToolTip="Resets the XML config file to its initial state."
+                Text="Reset Config File"/>
+
+
+            <customControls:ButtonWithIcon
+                x:Name="BtnDeleteAdaptivBotConfigFile"
+                Click="BtnDeleteAdaptivBotConfigFile_OnClick"
+                DockPanel.Dock="Top"
+                IconKind="FileRemove"
+                Text="Delete Config File">
                 <Button.ToolTip>
                     <TextBlock>
                         The name says it all.
@@ -337,22 +343,14 @@
                         Only click if you know what you're doing.
                     </TextBlock>
                 </Button.ToolTip>
-                <Grid>
-                    <TextBlock>Delete Config File</TextBlock>
-                    <materialDesign:PackIcon Kind="FileRemove"/>
-                </Grid>
-            </Button>
+            </customControls:ButtonWithIcon>
 
-            <Button
-                Name="BtnOpenAdaptivBotConfigFileFolder"
+            <customControls:ButtonWithIcon
+                x:Name="BtnOpenAdaptivBotConfigFileFolder"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]">
-                <Grid>
-                    <TextBlock>Open Config File Folder</TextBlock>
-                    <materialDesign:PackIcon Kind="FolderOpen"/>
-                </Grid>
-            </Button>
-
+                IconKind="FolderOpen"
+                ToolTip="[Not Implemented]"
+                Text="Open Config File Folder"/>
 
             <TextBlock
                 DockPanel.Dock="Top"
@@ -363,16 +361,12 @@
 
             <Separator DockPanel.Dock="Top"/>
 
-            <Button
-                Name="BtnConfigureTaskScheduler"
+            <customControls:ButtonWithIcon
+                x:Name="BtnConfigureTaskScheduler"
                 DockPanel.Dock="Top"
-                ToolTip="[Not Implemented]">
-                <Grid>
-                    <TextBlock>Task Scheduler</TextBlock>
-                    <materialDesign:PackIcon Kind="ClockOutline"/>
-                </Grid>
-            </Button>
-
+                IconKind="ClockOutline"
+                ToolTip="[Not Implemented]"
+                Text="Task Scheduler"/>
         </DockPanel>
 
 

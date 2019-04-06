@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 using Excel = Microsoft.Office.Interop.Excel;
+using TextBox = System.Windows.Controls.TextBox;
 
 
 namespace AdaptivBot.SettingForms
@@ -411,6 +412,39 @@ namespace AdaptivBot.SettingForms
 
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
 
+        }
+
+        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["DealRiskCarrierSettingsXml"];
+            xdp.Refresh();
+            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            txtBxRiskCarrierFilesFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            _window.Logger.OkayText = "Deal Risk Carrier settings saved.";
+            xdp.Refresh();
+            OnSettingsSaved(EventArgs.Empty);
+        }
+
+
+        public void UpdateTargets(object sender, EventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["DealRiskCarrierSettingsXml"];
+            xdp.Refresh();
+            txtBxExtractionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+            txtBxFileNameFormat.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+            txtBxRiskCarrierFilesFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+        }
+
+
+        public void OnSettingsSaved(EventArgs e)
+        {
+            EventHandler handler = _window.ConfigFileChanged;
+            if(handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

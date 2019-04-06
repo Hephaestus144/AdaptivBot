@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace AdaptivBot.SettingForms
 {
@@ -27,6 +18,7 @@ namespace AdaptivBot.SettingForms
             InitializeComponent();
         }
 
+        
         private void PortfolioAnalysisSettings_OnLoaded(object sender, RoutedEventArgs e)
         {
             var xdp =
@@ -35,15 +27,37 @@ namespace AdaptivBot.SettingForms
             xdp.Source = new Uri(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
         }
 
+        
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
             var xdp = (XmlDataProvider)this.Resources["PortfolioAnalysisSettingsXml"];
             xdp.Refresh();
-            txtBxProductionFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            txtBxUATFolder.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            txtBxProductionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            txtBxUATFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             xdp.Document.Save(GlobalDataBindingValues.Instance.AdaptivBotConfigFilePath);
+            _window.Logger.OkayText = "Portfolio Analysis Settings saved.";
             xdp.Refresh();
-            _window.Logger.OkayText = "Portfolio Analysis Settings saved!";
+            OnSettingsSaved(EventArgs.Empty);
+        }
+
+
+        //public event EventHandler SettingsSaved;
+
+        public void UpdateTargets(object sender, EventArgs e)
+        {
+            var xdp = (XmlDataProvider)this.Resources["PortfolioAnalysisSettingsXml"];
+            xdp.Refresh();
+            txtBxProductionFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+            txtBxUATFolder.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+        }
+
+        public void OnSettingsSaved(EventArgs e)
+        {
+            EventHandler handler = _window.ConfigFileChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }
